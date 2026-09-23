@@ -39,10 +39,14 @@ reste dans `app/(boutique)/`, mais on n'y travaille plus sans nouvelle demande.
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :
   https://sakababeauty-nu.vercel.app/avis
-- Chaque réponse part par email à **Sakababeauty1@gmail.com** via Web3Forms
-  (gratuit, 250 réponses/mois). Clé dans la variable Vercel
-  `NEXT_PUBLIC_WEB3FORMS_KEY` (publique par conception, liée à cette adresse).
-  Sans clé, la page affiche « pas encore activé ».
+- Chaque réponse part par email via Web3Forms (gratuit, 250 réponses/mois).
+  Clé dans la variable Vercel `NEXT_PUBLIC_WEB3FORMS_KEY` (publique par
+  conception, liée à UNE adresse). Sans clé, la page affiche « pas encore activé ».
+- **Pendant les tests (depuis le 23/09/2026)** : clé liée à l'email de Birima
+  (papebirima10894@gmail.com), posée dans Vercel.
+- **Avant l'envoi aux clientes** : créer une clé pour **Sakababeauty1@gmail.com**
+  (Birima attend l'accès à cette boîte), la mettre à la place dans Vercel,
+  puis Redeploy. Aucun changement de code nécessaire.
 - Prochaine demande annoncée : **inscriptions à une masterclass** (événement).
 
 ### Ancien état de la boutique (avant la pause)
