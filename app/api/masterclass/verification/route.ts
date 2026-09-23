@@ -40,8 +40,21 @@ export async function GET() {
     } else if (rep.status === 404) {
       r.conclusion = "Adresse introuvable : recopier l'URL de l'application Web (elle finit par /exec) dans MASTERCLASS_SCRIPT_URL.";
     } else {
-      const extrait = texte.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 200);
-      r.conclusion = "Google a répondu par une page au lieu des données (souvent : programme mal collé ou erreur dans le script).";
+      const titre = texte.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim() ?? "";
+      const extrait = texte
+        .replace(/<script[\s\S]*?<\/script>/gi, " ")
+        .replace(/<style[\s\S]*?<\/style>/gi, " ")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&[a-z#0-9]+;/gi, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 300);
+      if (/introuvable|not found|doGet/i.test(extrait)) {
+        r.conclusion = "Le programme publié ne contient pas doGet : dans Apps Script, Déployer > Gérer les déploiements > crayon > Version : Nouvelle version > Déployer.";
+      } else {
+        r.conclusion = "Google a répondu par une page au lieu des données (souvent : programme mal collé ou erreur dans le script).";
+      }
+      r.titre_page_google = titre;
       r.extrait_page_google = extrait;
     }
   } catch (e) {
