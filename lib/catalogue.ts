@@ -131,6 +131,7 @@ export type Produit = {
   note: number;
   avis: number;
   teinte?: string; // couleur du visuel provisoire
+  image?: string; // photo dans public/produits/, ex. "/produits/cerave-nettoyant.webp"
 };
 
 export type Marque = { slug: string; nom: string; histoire: string };

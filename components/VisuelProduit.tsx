@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { nomMarque, type Produit } from "@/lib/catalogue";
 
 // Visuel provisoire en attendant les vraies photos (protocole photo, §5.2) :
@@ -10,6 +11,31 @@ export default function VisuelProduit({
   taille?: "mini" | "carte" | "grand";
 }) {
   const fond = produit.teinte ?? "#F3EEE6";
+  const alt = `${nomMarque(produit.marque)} ${produit.nom} ${produit.contenance}`;
+
+  // Vraie photo : fond blanc uni, produit entier visible, cadrage constant.
+  if (produit.image) {
+    if (taille === "mini") {
+      return (
+        <span className="relative w-12 h-12 rounded-lg bg-white border border-bordure overflow-hidden shrink-0" aria-hidden>
+          <Image src={produit.image} alt="" fill sizes="48px" className="object-contain p-1" />
+        </span>
+      );
+    }
+    return (
+      <div className="relative w-full aspect-square rounded-2xl bg-white border border-bordure overflow-hidden">
+        <Image
+          src={produit.image}
+          alt={alt}
+          fill
+          sizes={taille === "grand" ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
+          className={`object-contain ${taille === "grand" ? "p-8" : "p-4"}`}
+          priority={taille === "grand"}
+        />
+      </div>
+    );
+  }
+
   if (taille === "mini") {
     return (
       <span
@@ -26,7 +52,7 @@ export default function VisuelProduit({
       className={`relative w-full aspect-square rounded-2xl grid place-items-center overflow-hidden ${taille === "grand" ? "p-10" : "p-5"}`}
       style={{ background: fond }}
       role="img"
-      aria-label={`${nomMarque(produit.marque)} ${produit.nom}`}
+      aria-label={alt}
     >
       <div className="w-2/5 h-3/5 rounded-xl bg-white/80 shadow-md flex flex-col items-center justify-center text-center px-2">
         <span className={`titre ${taille === "grand" ? "text-2xl" : "text-base"} leading-tight`}>
