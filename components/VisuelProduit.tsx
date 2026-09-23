@@ -8,7 +8,7 @@ export default function VisuelProduit({
   taille = "carte",
 }: {
   produit: Produit;
-  taille?: "mini" | "carte" | "grand";
+  taille?: "mini" | "vignette" | "carte" | "grand";
 }) {
   const fond = produit.teinte ?? "#F3EEE6";
   const alt = `${nomMarque(produit.marque)} ${produit.nom} ${produit.contenance}`;
@@ -23,13 +23,13 @@ export default function VisuelProduit({
       );
     }
     return (
-      <div className="relative w-full aspect-square rounded-3xl bg-white ring-1 ring-bordure/70 overflow-hidden">
+      <div className={`relative w-full aspect-square bg-white ring-1 ring-bordure/70 overflow-hidden ${taille === "vignette" ? "rounded-2xl" : "rounded-3xl"}`}>
         <Image
           src={produit.image}
           alt={alt}
           fill
-          sizes={taille === "grand" ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
-          className={`object-contain transition duration-500 group-hover:scale-105 ${taille === "grand" ? "p-5 sm:p-8" : "p-6"}`}
+          sizes={taille === "grand" ? "(min-width: 768px) 50vw, 100vw" : taille === "vignette" ? "96px" : "(min-width: 1024px) 25vw, 50vw"}
+          className={`object-contain transition duration-500 group-hover:scale-105 ${taille === "grand" ? "p-5 sm:p-8" : taille === "vignette" ? "p-1.5" : "p-6"}`}
           priority={taille === "grand"}
         />
       </div>

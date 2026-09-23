@@ -104,8 +104,8 @@ export default function ListeProduits({ produits }: { produits: Produit[] }) {
     (filtres.budget ? 1 : 0) + (filtres.enStock ? 1 : 0) + (filtres.nouveautes ? 1 : 0);
 
   const groupe = (titre: string, contenu: React.ReactNode) => (
-    <fieldset className="border-b border-bordure pb-4 mb-4">
-      <legend className="font-semibold text-sm mb-2">{titre}</legend>
+    <fieldset className="border-b border-bordure/80 pb-4 mb-4 last:border-0">
+      <legend className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or mb-2">{titre}</legend>
       <div className="flex flex-wrap gap-2">{contenu}</div>
     </fieldset>
   );
@@ -116,7 +116,7 @@ export default function ListeProduits({ produits }: { produits: Produit[] }) {
       type="button"
       onClick={action}
       aria-pressed={actif}
-      className={`rounded-full border px-3 py-1.5 text-sm ${actif ? "bg-noir text-white border-noir" : "border-bordure hover:border-or"}`}
+      className={`rounded-full border px-3 py-1.5 text-sm transition ${actif ? "bg-noir text-white border-noir" : "border-bordure bg-white hover:border-or"}`}
     >
       {libelle}
     </button>
@@ -151,7 +151,7 @@ export default function ListeProduits({ produits }: { produits: Produit[] }) {
 
   return (
     <div className="md:grid md:grid-cols-[240px_1fr] md:gap-8">
-      <aside className="hidden md:block">{panneau}</aside>
+      <aside className="hidden md:block self-start sticky top-36 rounded-3xl bg-creme p-5 max-h-[calc(100vh-10rem)] overflow-y-auto">{panneau}</aside>
 
       <div>
         <div className="flex items-center justify-between gap-3 mb-5">

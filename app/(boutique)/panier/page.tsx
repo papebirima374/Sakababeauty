@@ -14,6 +14,7 @@ import {
 } from "@/lib/config";
 import { usePanier } from "@/lib/panier";
 import VisuelProduit from "@/components/VisuelProduit";
+import BandeauPage from "@/components/BandeauPage";
 
 type MoyenId = (typeof MOYENS_PAIEMENT)[number]["id"];
 
@@ -39,14 +40,15 @@ export default function Panier() {
 
   if (lignes.length === 0) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <h1 className="titre text-4xl">Votre panier est vide</h1>
-        <p className="text-gris mt-3">Trouvez vos produits en quelques secondes, ou laissez-nous composer votre routine.</p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Link href="/boutique" className="rounded-full border border-noir px-6 py-3 font-semibold">Voir la boutique</Link>
-          <Link href="/diagnostic" className="rounded-full bg-or text-white px-6 py-3 font-semibold">Faire le diagnostic</Link>
-        </div>
-      </div>
+      <>
+        <BandeauPage surtitre="Votre panier" titre="Votre panier est vide" texte="Trouvez vos produits en quelques secondes, ou laissez-nous composer votre routine.">
+          <div className="flex flex-wrap gap-3">
+            <Link href="/boutique" className="rounded-full border border-creme/30 px-6 py-3 font-semibold transition hover:border-or-clair hover:text-or-clair">Voir la boutique</Link>
+            <Link href="/diagnostic" className="rounded-full bg-gradient-to-r from-or to-[#B0852A] text-white px-6 py-3 font-semibold">Faire le diagnostic</Link>
+          </div>
+        </BandeauPage>
+        <div className="h-24" />
+      </>
     );
   }
 
@@ -63,11 +65,15 @@ export default function Panier() {
   ].filter(Boolean).join("\n");
 
   return (
+    <>
+    <BandeauPage
+      surtitre="Votre panier"
+      titre={<>Votre panier <span className="italic text-or-clair">({lignes.reduce((t, l) => t + l.quantite, 0)})</span></>}
+      texte="Sans créer de compte · Paiement Wave, Orange Money, carte ou à la livraison."
+    />
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="titre text-4xl md:text-5xl">Votre panier</h1>
-
       {/* Livraison offerte : montant restant (§9.2) */}
-      <div className="mt-5 rounded-2xl bg-creme p-4">
+      <div className="rounded-3xl bg-creme p-5">
         {livraisonOfferte ? (
           <p className="font-semibold text-green-800">✓ La livraison vous est offerte.</p>
         ) : (
@@ -76,23 +82,23 @@ export default function Panier() {
           </p>
         )}
         <div className="mt-2 h-2 rounded-full bg-white overflow-hidden">
-          <div className="h-full bg-or" style={{ width: `${Math.min(100, (sousTotal / SEUIL_LIVRAISON_OFFERTE) * 100)}%` }} />
+          <div className="h-full rounded-full bg-gradient-to-r from-or-clair to-or" style={{ width: `${Math.min(100, (sousTotal / SEUIL_LIVRAISON_OFFERTE) * 100)}%` }} />
         </div>
       </div>
 
       <div className="mt-8 grid md:grid-cols-[1fr_380px] gap-10">
-        <ul className="divide-y divide-bordure">
+        <ul className="space-y-3">
           {lignes.map((l) => (
-            <li key={l.slug} className="py-4 flex gap-4">
-              <Link href={`/produit/${l.slug}`} className="w-24 shrink-0">
-                <VisuelProduit produit={l.produit} />
+            <li key={l.slug} className="group flex gap-4 rounded-3xl bg-white p-4 ring-1 ring-bordure/70">
+              <Link href={`/produit/${l.slug}`} className="w-20 sm:w-24 shrink-0">
+                <VisuelProduit produit={l.produit} taille="vignette" />
               </Link>
               <div className="flex-1 min-w-0">
-                <p className="text-xs uppercase tracking-wider text-gris">{nomMarque(l.produit.marque)}</p>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-gris">{nomMarque(l.produit.marque)}</p>
                 <Link href={`/produit/${l.slug}`} className="font-semibold hover:text-or">{l.produit.nom}</Link>
                 <p className="text-sm text-gris">{l.produit.contenance} · {formatPrix(l.produit.prix)}</p>
                 <div className="mt-2 flex items-center gap-3">
-                  <div className="flex items-center rounded-full border border-bordure">
+                  <div className="flex items-center rounded-full bg-creme">
                     <button type="button" onClick={() => modifier(l.slug, l.quantite - 1)} className="w-9 h-9" aria-label="Retirer un">−</button>
                     <span className="prix w-6 text-center">{l.quantite}</span>
                     <button type="button" onClick={() => modifier(l.slug, l.quantite + 1)} className="w-9 h-9" aria-label="Ajouter un" disabled={l.quantite >= l.produit.stock}>+</button>
@@ -105,12 +111,13 @@ export default function Panier() {
           ))}
         </ul>
 
-        <aside className="rounded-2xl border border-bordure p-5 h-fit space-y-5">
+        <aside className="relative rounded-3xl bg-white p-6 h-fit space-y-6 shadow-[0_25px_70px_-30px_rgba(20,16,11,0.45)] overflow-hidden md:sticky md:top-36">
+          <span className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-or-clair via-or to-or-clair" aria-hidden />
           <fieldset>
-            <legend className="font-semibold mb-2">Livraison</legend>
+            <legend className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or mb-2">Livraison</legend>
             <div className="space-y-2">
               {ZONES_LIVRAISON.map((z) => (
-                <label key={z.id} className={`flex items-start gap-3 rounded-xl border p-3 cursor-pointer ${zone === z.id ? "border-or bg-creme" : "border-bordure"}`}>
+                <label key={z.id} className={`flex items-start gap-3 rounded-2xl border p-3 cursor-pointer transition ${zone === z.id ? "border-or bg-creme" : "border-bordure hover:border-or/50"}`}>
                   <input type="radio" name="zone" checked={zone === z.id} onChange={() => setZone(z.id)} className="mt-1 accent-[#C59735]" />
                   <span className="flex-1 text-sm">
                     <span className="font-semibold block">{z.nom}</span>
@@ -123,21 +130,21 @@ export default function Panier() {
           </fieldset>
 
           <fieldset className="space-y-2">
-            <legend className="font-semibold mb-2">Vos coordonnées <span className="font-normal text-gris text-sm">(sans créer de compte)</span></legend>
-            <input value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Prénom et nom" autoComplete="name" className="w-full rounded-xl border border-bordure px-4 py-3" />
-            <input value={telephone} onChange={(e) => setTelephone(e.target.value)} placeholder="Téléphone (WhatsApp)" type="tel" autoComplete="tel" className="w-full rounded-xl border border-bordure px-4 py-3" />
+            <legend className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or mb-2">Vos coordonnées <span className="normal-case tracking-normal font-normal text-gris">(sans créer de compte)</span></legend>
+            <input value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Prénom et nom" autoComplete="name" className="w-full rounded-2xl border border-bordure bg-creme/60 px-4 py-3 outline-none transition focus:bg-white focus:border-or focus:ring-4 focus:ring-or/15" />
+            <input value={telephone} onChange={(e) => setTelephone(e.target.value)} placeholder="Téléphone (WhatsApp)" type="tel" autoComplete="tel" className="w-full rounded-2xl border border-bordure bg-creme/60 px-4 py-3 outline-none transition focus:bg-white focus:border-or focus:ring-4 focus:ring-or/15" />
             {zone !== "retrait" && (
-              <textarea value={adresse} onChange={(e) => setAdresse(e.target.value)} placeholder="Adresse de livraison, repère" rows={2} autoComplete="street-address" className="w-full rounded-xl border border-bordure px-4 py-3" />
+              <textarea value={adresse} onChange={(e) => setAdresse(e.target.value)} placeholder="Adresse de livraison, repère" rows={2} autoComplete="street-address" className="w-full rounded-2xl border border-bordure bg-creme/60 px-4 py-3 outline-none transition focus:bg-white focus:border-or focus:ring-4 focus:ring-or/15" />
             )}
           </fieldset>
 
           <fieldset>
-            <legend className="font-semibold mb-2">Paiement</legend>
+            <legend className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or mb-2">Paiement</legend>
             <div className="space-y-2">
               {MOYENS_PAIEMENT.map((m) => {
                 const indisponible = m.id === "livraison" && !paiementLivraisonPossible;
                 return (
-                  <label key={m.id} className={`flex items-start gap-3 rounded-xl border p-3 ${indisponible ? "opacity-50" : "cursor-pointer"} ${moyenEffectif === m.id ? "border-or bg-creme" : "border-bordure"}`}>
+                  <label key={m.id} className={`flex items-start gap-3 rounded-2xl border p-3 transition ${indisponible ? "opacity-50" : "cursor-pointer"} ${moyenEffectif === m.id ? "border-or bg-creme" : "border-bordure hover:border-or/50"}`}>
                     <input type="radio" name="moyen" disabled={indisponible} checked={moyenEffectif === m.id} onChange={() => setMoyen(m.id)} className="mt-1 accent-[#C59735]" />
                     <span className="text-sm">
                       <span className="font-semibold block">{m.nom}</span>
@@ -154,7 +161,7 @@ export default function Panier() {
           <dl className="space-y-1 text-sm border-t border-bordure pt-4">
             <div className="flex justify-between"><dt>Sous-total</dt><dd className="prix">{formatPrix(sousTotal)}</dd></div>
             <div className="flex justify-between"><dt>Livraison</dt><dd className="prix">{frais === 0 ? "Gratuit" : formatPrix(frais)}</dd></div>
-            <div className="flex justify-between text-lg font-bold pt-2"><dt>Total</dt><dd className="prix">{formatPrix(total)}</dd></div>
+            <div className="flex justify-between items-baseline pt-2"><dt className="titre text-2xl">Total</dt><dd className="prix titre text-3xl font-semibold">{formatPrix(total)}</dd></div>
           </dl>
 
           <a
@@ -162,7 +169,7 @@ export default function Panier() {
             target="_blank"
             rel="noopener noreferrer"
             aria-disabled={!complet}
-            className={`block text-center rounded-full py-3.5 font-semibold text-white ${complet ? "bg-or hover:bg-noir" : "bg-gris/40 pointer-events-none"}`}
+            className={`block text-center rounded-full py-4 font-semibold text-white transition ${complet ? "bg-gradient-to-r from-or to-[#B0852A] shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] hover:brightness-110" : "bg-gris/40 pointer-events-none"}`}
           >
             Valider ma commande
           </a>
@@ -173,5 +180,6 @@ export default function Panier() {
         </aside>
       </div>
     </div>
+    </>
   );
 }

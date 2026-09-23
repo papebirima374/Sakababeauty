@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import BandeauPage from "@/components/BandeauPage";
 
 export const metadata: Metadata = {
   title: "Notre engagement d'authenticité",
@@ -21,19 +22,19 @@ export default function Authenticite() {
     ["Le prix", "Un prix très inférieur au marché est souvent le premier signe d'une copie."],
   ];
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-or">Notre engagement</p>
-      <h1 className="titre text-5xl mt-3 leading-tight">Le vrai, pas une copie.</h1>
-      <p className="mt-5 text-lg text-gris">
-        Un cosmétique contrefait n&apos;est pas seulement décevant : sa composition est inconnue, et il peut irriter ou abîmer
-        la peau. C&apos;est pourquoi nous importons nous-mêmes, directement des États-Unis.
-      </p>
+    <>
+    <BandeauPage
+      surtitre="Notre engagement"
+      titre={<>Le vrai, <span className="italic text-or-clair">pas une copie.</span></>}
+      texte="Un cosmétique contrefait n'est pas seulement décevant : sa composition est inconnue, et il peut irriter ou abîmer la peau. C'est pourquoi nous importons nous-mêmes, directement des États-Unis."
+    />
+    <div className="mx-auto max-w-3xl px-4 py-4">
 
       <h2 className="titre text-3xl mt-12">Le chemin d&apos;un produit jusqu&apos;à vous</h2>
       <ol className="mt-6 space-y-4">
         {etapes.map(([titre, texte], i) => (
           <li key={titre} className="flex gap-4">
-            <span className="prix shrink-0 w-9 h-9 rounded-full bg-or text-white grid place-items-center font-bold">{i + 1}</span>
+            <span className="titre shrink-0 w-10 h-10 rounded-full bg-gradient-to-b from-or-clair to-or text-white grid place-items-center text-xl">{i + 1}</span>
             <div>
               <p className="font-semibold">{titre}</p>
               <p className="text-gris">{texte}</p>
@@ -45,18 +46,20 @@ export default function Authenticite() {
       <h2 className="titre text-3xl mt-12">Comment reconnaître un produit authentique</h2>
       <div className="mt-6 grid sm:grid-cols-2 gap-4">
         {reperes.map(([titre, texte]) => (
-          <div key={titre} className="rounded-2xl border border-bordure p-5">
+          <div key={titre} className="rounded-3xl bg-creme p-5">
             <p className="font-semibold">{titre}</p>
             <p className="text-sm text-gris mt-1">{texte}</p>
           </div>
         ))}
       </div>
 
-      <div className="mt-12 rounded-2xl bg-noir text-creme p-6">
-        <p className="titre text-2xl text-or-clair">Un doute sur un produit ?</p>
-        <p className="text-creme/80 mt-2">Passez à la boutique de Mermoz : nous vous montrons le produit, son lot et sa date.</p>
-        <Link href="/boutique" className="mt-4 inline-block rounded-full bg-or px-6 py-3 font-semibold text-white">Voir la boutique</Link>
+      <div className="my-12 relative overflow-hidden rounded-3xl bg-noir text-creme p-8">
+        <div className="absolute inset-0 opacity-70" style={{ background: "radial-gradient(60% 100% at 100% 0%, rgba(197,151,53,0.35), transparent 70%)" }} aria-hidden />
+        <p className="relative titre text-3xl text-or-clair">Un doute sur un produit ?</p>
+        <p className="relative text-creme/80 mt-2">Passez à la boutique de Mermoz : nous vous montrons le produit, son lot et sa date.</p>
+        <Link href="/boutique" className="relative mt-5 inline-block rounded-full bg-gradient-to-r from-or to-[#B0852A] px-6 py-3 font-semibold text-white">Voir la boutique</Link>
       </div>
     </div>
+    </>
   );
 }

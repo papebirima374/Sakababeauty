@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PRODUITS, UNIVERS, universParSlug } from "@/lib/catalogue";
+import BandeauPage from "@/components/BandeauPage";
 import ListeProduits from "@/components/ListeProduits";
 
 export const dynamicParams = false;
@@ -34,13 +34,14 @@ export default async function PageCategorie({ params }: PageProps<"/[univers]/[c
   const produits = PRODUITS.filter((p) => p.univers === u.slug && p.categorie === c.slug);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <nav className="text-sm text-gris" aria-label="Fil d'Ariane">
-        <Link href="/boutique" className="hover:text-or">Boutique</Link> /{" "}
-        <Link href={`/${u.slug}`} className="hover:text-or">{u.nom}</Link> / {c.nom}
-      </nav>
-      <h1 className="titre text-4xl md:text-5xl mt-2 mb-8">{c.nom}</h1>
-      <ListeProduits produits={produits} />
-    </div>
+    <>
+      <BandeauPage
+        ariane={[{ href: "/boutique", nom: "Boutique" }, { href: `/${u.slug}`, nom: u.nom }, { nom: c.nom }]}
+        titre={c.nom}
+      />
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <ListeProduits produits={produits} />
+      </div>
+    </>
   );
 }

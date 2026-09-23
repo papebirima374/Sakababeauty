@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MARQUES, PRODUITS, marqueParSlug } from "@/lib/catalogue";
+import BandeauPage from "@/components/BandeauPage";
 import ListeProduits from "@/components/ListeProduits";
 
 export const dynamicParams = false;
@@ -24,13 +24,11 @@ export default async function PageMarque({ params }: PageProps<"/marques/[slug]"
   const m = marqueParSlug((await params).slug);
   if (!m) notFound();
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <nav className="text-sm text-gris" aria-label="Fil d'Ariane">
-        <Link href="/marques" className="hover:text-or">Marques</Link> / {m.nom}
-      </nav>
-      <h1 className="titre text-4xl md:text-5xl mt-2">{m.nom}</h1>
-      <p className="text-gris mt-3 max-w-2xl mb-8">{m.histoire}</p>
-      <ListeProduits produits={PRODUITS.filter((p) => p.marque === m.slug)} />
-    </div>
+    <>
+      <BandeauPage ariane={[{ href: "/marques", nom: "Marques" }, { nom: m.nom }]} surtitre="Marque" titre={m.nom} texte={m.histoire} />
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <ListeProduits produits={PRODUITS.filter((p) => p.marque === m.slug)} />
+      </div>
+    </>
   );
 }
