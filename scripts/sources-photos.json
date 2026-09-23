@@ -9,10 +9,17 @@
     "https://www.cerave.com/skincare/moisturizers/moisturizing-cream"
   ],
   "the-ordinary-niacinamide-zinc-30ml": [
-    "https://theordinary.com/en-us/niacinamide-10-zinc-1-serum-100436.html"
+    "https://theordinary.com/en-us/niacinamide-10-zinc-1-serum-100436.html",
+    "https://skinshop.havanaskinclinic.com/products/the-ordinary-niacinamide-10-zinc-1-30ml",
+    "https://us.oliveyoung.com/products/UA66298331",
+    "https://www.stylevana.com/en_US/the-ordinary-niacinamide-10-zinc-1-30ml25376.html",
+    "https://www.yesstyle.com/en/the-ordinary-niacinamide-10-zinc-1-serum-30ml/info.html/pid.1109245252"
   ],
   "the-ordinary-acide-hyaluronique-30ml": [
-    "https://theordinary.com/en-us/hyaluronic-acid-2-b5-serum-original-formulation-100425.html"
+    "https://theordinary.com/en-us/hyaluronic-acid-2-b5-serum-original-formulation-100425.html",
+    "https://skinshop.havanaskinclinic.com/products/the-ordinary-hyaluronic-acid-2-b5-30ml",
+    "https://www.stylevana.com/en_US/the-ordinary-hyaluronic-acid-2-b5-30ml25372.html",
+    "https://www.spacenk.com/us/skincare/treatment/serums/hyaluronic-acid-2-b5-MUK200048425.html"
   ],
   "neutrogena-hydro-boost-gel-50ml": [
     "https://www.neutrogena.com/products/skincare/neutrogena-hydro-boost-water-gel-with-hyaluronic-acid/6811047"
@@ -30,10 +37,17 @@
     "https://www.shopbeautyplus.com/palmer-cocoa-butter-formula-lotion-pump-135-oz.html"
   ],
   "shea-moisture-curl-smoothie-340g": [
-    "https://www.sheamoisture.com/us/en/p/coconut-&-hibiscus-curl-enhancing-smoothie-12oz.html/00764302290223"
+    "https://www.sheamoisture.com/us/en/p/coconut-&-hibiscus-curl-enhancing-smoothie-12oz.html/00764302290223",
+    "https://www.mqbsupply.com/products/shea-moisture-curl-enhancing-smoothie-coconut-hibiscus-12-oz",
+    "https://www.supremebeauty.com/products/shea-moisture-coconut-hibiscus-curl-enhancing-smoothie-12-oz",
+    "https://www.kiyobeauty.com/products/sheamoisture-coconut-hibiscus-curl-enhancing-smoothie-12oz",
+    "https://www.iherb.com/pr/sheamoisture-curl-enhancing-smoothie-coconut-hibiscus-12-oz-340-g/97590"
   ],
   "shea-moisture-shampooing-jbco-384ml": [
-    "https://www.sheamoisture.com/us/en/p/jamaican-black-castor-oil-strengthen-&-restore-shampoo.html/00764302215837"
+    "https://www.sheamoisture.com/us/en/p/jamaican-black-castor-oil-strengthen-&-restore-shampoo.html/00764302215837",
+    "https://thisisbeauty.us/products/sheamoisture-jamaican-black-castor-oil-strengthen-38-restore-shampoo-13-fl-oz",
+    "https://www.iherb.com/pr/sheamoisture-jamaican-black-castor-oil-strengthen-restore-shampoo-13-fl-oz-384-ml/100354",
+    "https://www.cvs.com/shop/sheamoisture-jamaican-black-castor-oil-strengthen-restore-shampoo-13-oz-prodid-1180296"
   ],
   "mielle-huile-romarin-menthe-59ml": [
     "https://mielleorganics.com/products/rosemary-mint-oil"
@@ -44,16 +58,27 @@
     "https://beautybraidsandbeyond.com/products/cantu-shea-butter-leave-in-repair-conditioner-16oz"
   ],
   "nyx-butter-gloss": [
-    "https://www.nyxcosmetics.com/lip/lip-gloss/butter-gloss-non-sticky-lip-gloss/NYX_089.html"
+    "https://www.nyxcosmetics.com/lip/lip-gloss/butter-gloss-non-sticky-lip-gloss/NYX_089.html",
+    "https://hbbeautybar.com/products/nyx-butter-gloss",
+    "https://www.shopbeautydepot.com/products/nyx-butter-gloss",
+    "https://camerareadycosmetics.com/products/nyx-butter-gloss",
+    "https://www.nyxcosmetics.co.uk/lips/lip-gloss/butter-gloss-lip-gloss/NYX_089.html"
   ],
   "maybelline-fit-me-fond-de-teint": [
     "https://www.maybelline.com/face-makeup/foundation-makeup/fit-me-matte-poreless-foundation"
   ],
   "bath-body-works-brume-a-thousand-wishes-236ml": [
-    "https://www.bathandbodyworks.com/p/a-thousand-wishes-fine-fragrance-mist-028005120"
+    "https://www.bathandbodyworks.com/p/a-thousand-wishes-fine-fragrance-mist-028005120",
+    "https://thebeautybrewshop.myshopify.com/products/bath-and-body-works-a-thousand-wishes-fine-fragrance-body-mist-8-fl-oz",
+    "https://whlsome.com/products/bath-body-works-a-thousand-wishes-by-bath-body-works-for-women-8-oz-fine-fragrance-mist-8-oz",
+    "https://shop.simon.com/products/a-thousand-wishes-by-bath-and-body-works-for-women-8-oz-fine-fragrance-mist"
   ],
   "shea-moisture-huile-barbe-96ml": [
-    "https://www.sheamoisture.com/us/en/p/maracuja-&-shea-oils-beard-conditioning-oil-moisturize-&-soften.html/00764302250715"
+    "https://www.sheamoisture.com/us/en/p/maracuja-&-shea-oils-beard-conditioning-oil-moisturize-&-soften.html/00764302250715",
+    "https://pasteurpharmacy.com/products/shea-moisture-maracuja-shea-oils-beard-conditioning-oil-3-2-oz",
+    "https://www.supremebeauty.com/products/shea-moisture-maracuja-oil-shea-butter-beard-conditioning-oil-for-a-full-beard-3-2-oz",
+    "https://www.barbersupplyandco.com/products/sheamoisture-mens-beard-conditioning-oil-maracuja-oil-and-shea-butter-3-2-oz",
+    "https://wellnessbetter.com/products/shea-moisture-beard-conditioning-oil-with-maracuja-and-shea-oils-3-2-oz"
   ],
   "cantu-kids-soin-sans-rincage-283g": [
     "https://www.target.com/p/cantu-care-leave-in-conditioner-10oz/-/A-18766880",

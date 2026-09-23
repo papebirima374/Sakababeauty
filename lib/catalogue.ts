@@ -184,7 +184,7 @@ const PRODUITS_BRUTS: Produit[] = [
     categorie: "cremes",
     prix: 14500,
     stock: 15,
-    contenance: "340 g",
+    contenance: "453 g",
     peau: ["seche", "normale", "sensible"],
     besoins: ["hydratation"],
     accroche: "Hydrate 24 h, visage et corps.",
