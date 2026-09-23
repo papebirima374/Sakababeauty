@@ -1,21 +1,28 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { headers } from "next/headers";
 import { lireEvenement, MASTERCLASS_CONFIGUREE } from "@/lib/masterclass";
 import FormulaireMasterclass from "@/components/FormulaireMasterclass";
 
 // Places restantes lues en direct dans le Google Sheet à chaque visite.
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const ev = await lireEvenement();
-  const titre = ev?.titre || "Masterclass Sakaba Beauty";
-  const quand = [ev?.date, ev?.heure].filter(Boolean).join(" à ");
-  const description = [quand, ev?.lieu, "Inscription gratuite, places limitées."].filter(Boolean).join(" · ");
-  return { title: titre, description, openGraph: { title: titre, description } };
-}
+// Aperçu de lien fixe : WhatsApp et les autres n'attendent pas la réponse de Google.
+export const metadata: Metadata = {
+  title: "Masterclass Sakaba Beauty",
+  description: "Inscription gratuite · places limitées. Réservez votre place en 1 minute.",
+  openGraph: {
+    title: "Masterclass Sakaba Beauty",
+    description: "Inscription gratuite · places limitées. Réservez votre place en 1 minute.",
+  },
+};
+
+// Robots d'aperçu de liens : ils n'ont besoin que du titre et de l'image.
+const ROBOTS_APERCU = /WhatsApp|facebookexternalhit|facebookcatalog|Twitterbot|TelegramBot|Slackbot|LinkedInBot|Discordbot|SkypeUriPreview|Snapchat|Pinterest|vkShare|redditbot/i;
 
 export default async function PageMasterclass() {
-  const ev = await lireEvenement();
+  const agent = (await headers()).get("user-agent") ?? "";
+  const ev = ROBOTS_APERCU.test(agent) ? null : await lireEvenement();
 
   return (
     <main className="flex-1 bg-creme">
