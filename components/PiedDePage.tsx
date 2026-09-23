@@ -29,6 +29,8 @@ export default function PiedDePage() {
             <li><Link href="/diagnostic" className="hover:text-or-clair">Diagnostic beauté</Link></li>
             <li><Link href="/marques" className="hover:text-or-clair">Toutes les marques</Link></li>
             <li><Link href="/livraison" className="hover:text-or-clair">Livraison et retrait</Link></li>
+            <li><Link href="/masterclass" className="hover:text-or-clair">Masterclass</Link></li>
+            <li><Link href="/avis" className="hover:text-or-clair">Donner mon avis</Link></li>
           </ul>
         </div>
         <div>

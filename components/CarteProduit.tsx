@@ -9,27 +9,32 @@ export default function CarteProduit({ produit }: { produit: Produit }) {
   const epuise = produit.stock <= 0;
   return (
     <article className="group flex flex-col">
-      <Link href={`/produit/${produit.slug}`} className="relative block">
+      <Link href={`/produit/${produit.slug}`} className="relative block rounded-3xl transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_25px_50px_-30px_rgba(20,16,11,0.55)]">
         <VisuelProduit produit={produit} />
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
+        <div className="absolute top-3 left-3 flex flex-col gap-1">
           {produit.nouveaute && (
-            <span className="rounded-full bg-noir text-creme text-[11px] font-semibold px-2.5 py-1">Nouveau</span>
+            <span className="rounded-full bg-noir text-creme text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1">Nouveau</span>
           )}
           {produit.prixBarre && (
-            <span className="rounded-full bg-or text-white text-[11px] font-semibold px-2.5 py-1">Bon plan</span>
+            <span className="rounded-full bg-gradient-to-r from-or to-[#B0852A] text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1">Bon plan</span>
           )}
         </div>
-        <span className="absolute top-2 right-2 rounded-full bg-white/90 text-[11px] font-semibold px-2.5 py-1 text-or">
+        <span className="absolute top-3 right-3 rounded-full bg-creme/90 text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 text-or">
           ✦ USA
         </span>
+        {epuise && (
+          <span className="absolute inset-x-3 bottom-3 rounded-full bg-white/90 text-center text-xs font-semibold py-1.5 text-gris">
+            Épuisé pour le moment
+          </span>
+        )}
       </Link>
-      <div className="pt-3 flex-1 flex flex-col">
-        <p className="text-xs uppercase tracking-wider text-gris">{nomMarque(produit.marque)}</p>
-        <Link href={`/produit/${produit.slug}`} className="font-semibold leading-snug hover:text-or">
+      <div className="pt-4 px-1 flex-1 flex flex-col">
+        <p className="text-[11px] uppercase tracking-[0.18em] text-gris">{nomMarque(produit.marque)}</p>
+        <Link href={`/produit/${produit.slug}`} className="mt-1 font-semibold leading-snug line-clamp-2 hover:text-or">
           {produit.nom}
         </Link>
-        <p className="text-xs text-gris mt-0.5">
-          {produit.contenance} · ★ {produit.note.toFixed(1)} ({produit.avis})
+        <p className="text-xs text-gris mt-1">
+          {produit.contenance} · <span className="text-or">★</span> {produit.note.toFixed(1)} ({produit.avis})
         </p>
         <p className="mt-2 flex items-baseline gap-2">
           <span className="prix text-lg font-bold">{formatPrix(produit.prix)}</span>
@@ -37,9 +42,9 @@ export default function CarteProduit({ produit }: { produit: Produit }) {
             <span className="prix text-sm text-gris line-through">{formatPrix(produit.prixBarre)}</span>
           )}
         </p>
-        <p className={`text-xs font-semibold ${epuise ? "text-red-700" : produit.stock <= 5 ? "text-amber-700" : "text-green-700"}`}>
-          {epuise ? "Épuisé — alerte de retour possible" : produit.stock <= 5 ? `Plus que ${produit.stock} en stock` : "En stock"}
-        </p>
+        {!epuise && produit.stock <= 5 && (
+          <p className="text-xs font-semibold text-amber-700">Plus que {produit.stock} en stock</p>
+        )}
         <div className="mt-auto pt-3">
           <BoutonAjouter produit={produit} compact />
         </div>

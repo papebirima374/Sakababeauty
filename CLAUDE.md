@@ -32,9 +32,11 @@ le code, les bases Firebase ni les comptes des deux projets.
 
 ## Où on en est (23/09/2026)
 
-### Boutique en ligne : EN PAUSE
-La directrice a confié le site à un autre prestataire. Le code de la boutique
-reste dans `app/(boutique)/`, mais on n'y travaille plus sans nouvelle demande.
+### Boutique en ligne : DÉMO POUR CONVAINCRE LA DIRECTRICE
+La directrice a confié le site à un autre prestataire. Birima continue la
+boutique de son côté (décision du 23/09/2026) pour la lui proposer : priorité à
+une démo qui impressionne (style noir et or, comme /avis et /masterclass).
+Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc.
 
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :

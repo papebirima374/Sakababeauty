@@ -200,7 +200,7 @@ const PRODUITS_BRUTS: Produit[] = [
   },
   {
     slug: "the-ordinary-niacinamide-zinc-30ml",
-    nom: "Niacinamide 10 % + Zinc 1 %",
+    nom: "Niacinamide 10\u00a0% + Zinc 1\u00a0%",
     marque: "the-ordinary",
     univers: "soin-visage",
     categorie: "serums",
@@ -223,7 +223,7 @@ const PRODUITS_BRUTS: Produit[] = [
   },
   {
     slug: "the-ordinary-acide-hyaluronique-30ml",
-    nom: "Acide hyaluronique 2 % + B5",
+    nom: "Acide hyaluronique 2\u00a0% + B5",
     marque: "the-ordinary",
     univers: "soin-visage",
     categorie: "serums",

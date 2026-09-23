@@ -61,7 +61,7 @@ export default async function FicheProduit({ params }: PageProps<"/produit/[slug
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-4 py-8 pb-28 md:pb-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(donneesStructurees).replace(/</g, "\\u003c") }} />
       <nav className="text-sm text-gris mb-6" aria-label="Fil d'Ariane">
         <Link href="/boutique" className="hover:text-or">Boutique</Link>
@@ -76,7 +76,7 @@ export default async function FicheProduit({ params }: PageProps<"/produit/[slug
           <Link href={`/marques/${p.marque}`} className="text-sm uppercase tracking-wider text-gris hover:text-or">
             {nomMarque(p.marque)}
           </Link>
-          <h1 className="titre text-4xl md:text-5xl leading-tight mt-1">{p.nom}</h1>
+          <h1 className="titre text-4xl md:text-5xl leading-tight mt-1 text-balance">{p.nom}</h1>
           <p className="text-gris mt-2">
             {p.contenance} · ★ {p.note.toFixed(1)} ({p.avis} avis)
           </p>
@@ -94,6 +94,23 @@ export default async function FicheProduit({ params }: PageProps<"/produit/[slug
           <div className="mt-6">
             <BoutonAjouter produit={p} />
           </div>
+
+          <ul className="mt-5 grid grid-cols-2 gap-2 text-sm">
+            {[
+              ["✦", "100 % authentique", "Importé des USA"],
+              ["⌂", "Retrait gratuit", "Mermoz, prêt en 2 h"],
+              ["➜", "Livraison rapide", "Dakar sous 24 h"],
+              ["₣", "Wave & Orange Money", "ou à la livraison"],
+            ].map(([icone, titre, texte]) => (
+              <li key={titre} className="flex items-center gap-3 rounded-2xl bg-creme px-3 py-2.5">
+                <span className="grid place-items-center w-8 h-8 shrink-0 rounded-full bg-white text-or">{icone}</span>
+                <span className="leading-tight">
+                  <span className="block font-semibold text-[13px]">{titre}</span>
+                  <span className="block text-xs text-gris">{texte}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
 
           {/* Preuve d'authenticité (§7.1) */}
           <div className="mt-6 rounded-2xl border border-or-clair bg-creme p-5">
@@ -153,6 +170,16 @@ export default async function FicheProduit({ params }: PageProps<"/produit/[slug
             Faire le diagnostic
           </Link>
         </aside>
+      </div>
+
+      <div className="md:hidden fixed inset-x-0 bottom-[60px] z-30 border-t border-bordure bg-white/95 backdrop-blur px-4 py-3 flex items-center gap-3">
+        <div className="min-w-0">
+          <p className="text-xs text-gris truncate">{p.nom}</p>
+          <p className="prix font-bold">{formatPrix(p.prix)}</p>
+        </div>
+        <div className="flex-1">
+          <BoutonAjouter produit={p} compact />
+        </div>
       </div>
 
       {routine.length > 0 && (

@@ -23,13 +23,13 @@ export default function VisuelProduit({
       );
     }
     return (
-      <div className="relative w-full aspect-square rounded-2xl bg-white border border-bordure overflow-hidden">
+      <div className="relative w-full aspect-square rounded-3xl bg-white ring-1 ring-bordure/70 overflow-hidden">
         <Image
           src={produit.image}
           alt={alt}
           fill
           sizes={taille === "grand" ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
-          className={`object-contain ${taille === "grand" ? "p-8" : "p-4"}`}
+          className={`object-contain transition duration-500 group-hover:scale-105 ${taille === "grand" ? "p-5 sm:p-8" : "p-6"}`}
           priority={taille === "grand"}
         />
       </div>

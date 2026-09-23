@@ -32,7 +32,13 @@ export default function BoutonAjouter({ produit, compact = false }: { produit: P
         setAjoute(true);
         setTimeout(() => setAjoute(false), 1600);
       }}
-      className={`w-full rounded-full font-semibold text-white transition ${ajoute ? "bg-noir" : "bg-or hover:bg-noir"} ${taille}`}
+      className={`w-full rounded-full font-semibold text-white transition ${
+        ajoute
+          ? "bg-green-800"
+          : compact
+            ? "bg-noir hover:bg-or"
+            : "bg-gradient-to-r from-or to-[#B0852A] shadow-[0_12px_30px_-12px_rgba(197,151,53,0.8)] hover:brightness-110"
+      } ${taille}`}
     >
       {ajoute ? "✓ Ajouté au panier" : "Ajouter au panier"}
     </button>
