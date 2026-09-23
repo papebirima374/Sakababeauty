@@ -47,7 +47,18 @@ reste dans `app/(boutique)/`, mais on n'y travaille plus sans nouvelle demande.
 - **Avant l'envoi aux clientes** : créer une clé pour **Sakababeauty1@gmail.com**
   (Birima attend l'accès à cette boîte), la mettre à la place dans Vercel,
   puis Redeploy. Aucun changement de code nécessaire.
-- Prochaine demande annoncée : **inscriptions à une masterclass** (événement).
+
+### Inscriptions masterclass : `/masterclass`
+- Gratuite, places limitées, confirmation à l'écran (choix de Birima, 23/09/2026).
+- Liste des inscrits dans un **Google Sheet** + programme Apps Script
+  (`scripts/masterclass-google-sheet.gs`). Onglet « Réglages » : titre, date,
+  lieu, places, ouvert OUI/NON — modifiable par la directrice sans code.
+- Le site passe par `/api/masterclass` (côté serveur) : variables Vercel
+  `MASTERCLASS_SCRIPT_URL` et `MASTERCLASS_SECRET` (secret : jamais dans Git).
+- Doublons refusés (9 derniers chiffres du téléphone), verrou contre les
+  inscriptions simultanées, « Annulé » dans la colonne Statut libère la place.
+- Mise en place pas à pas : `docs/MASTERCLASS.md`. Tests : Google de Birima ;
+  vrai événement : refaire avec Sakababeauty1@gmail.com.
 
 ### Ancien état de la boutique (avant la pause)
 - Étape 1 (vitrine) en place : accueil, univers/catégories, marques, fiche produit
