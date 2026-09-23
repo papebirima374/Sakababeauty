@@ -50,7 +50,7 @@ function Choix({ options, valeur, onChange }: { options: string[]; valeur: strin
           type="button"
           aria-pressed={valeur === o}
           onClick={() => onChange(valeur === o ? "" : o)}
-          className={`rounded-full border px-4 py-2 text-sm ${valeur === o ? "bg-noir text-white border-noir" : "border-bordure bg-white hover:border-or"}`}
+          className={`rounded-full border px-4 py-2 text-sm ${valeur === o ? "bg-noir text-white border-noir" : "border-bordure bg-creme/60 hover:border-or"}`}
         >
           {o}
         </button>
@@ -123,7 +123,7 @@ export default function FormulaireAvis() {
 
   if (!CLE_WEB3FORMS) {
     return (
-      <p className="rounded-2xl bg-creme p-6 text-center">
+      <p className="rounded-3xl bg-white p-8 text-center shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)]">
         Le formulaire n&apos;est pas encore activé. Merci de revenir un peu plus tard.
       </p>
     );
@@ -131,19 +131,20 @@ export default function FormulaireAvis() {
 
   if (etat === "merci") {
     return (
-      <div className="rounded-3xl bg-creme p-8 text-center">
-        <p className="text-5xl text-or">✦</p>
-        <h2 className="titre text-4xl mt-3">Merci pour votre avis !</h2>
+      <div className="rounded-3xl bg-white p-8 sm:p-10 text-center shadow-[0_25px_70px_-30px_rgba(20,16,11,0.45)]">
+        <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(197,151,53,0.7)]">✓</div>
+        <h2 className="titre text-4xl mt-4">Merci pour votre avis !</h2>
         <p className="text-gris mt-3">
           Chaque réponse est lue par l&apos;équipe Sakaba Beauty. Elle nous aide à mieux vous recevoir et à mieux vous conseiller.
         </p>
+        <p className="titre text-2xl text-or mt-6">À très bientôt à Mermoz ✦</p>
       </div>
     );
   }
 
-  const bloc = "rounded-2xl border border-bordure bg-white p-5 sm:p-6";
+  const bloc = "rounded-3xl bg-white p-6 sm:p-7 shadow-[0_18px_50px_-28px_rgba(20,16,11,0.45)]";
   const titreBloc = "font-semibold text-lg";
-  const champ = "w-full rounded-xl border border-bordure bg-white px-4 py-3 outline-none focus:border-or";
+  const champ = "w-full rounded-2xl border border-bordure bg-creme/60 px-4 py-3.5 outline-none transition focus:bg-white focus:border-or focus:ring-4 focus:ring-or/15";
 
   return (
     <form onSubmit={envoyer} className="space-y-5" noValidate>
@@ -237,7 +238,7 @@ export default function FormulaireAvis() {
       <button
         type="submit"
         disabled={etat === "envoi"}
-        className="w-full rounded-full bg-or py-4 text-lg font-semibold text-white hover:bg-noir disabled:bg-gris/50"
+        className="w-full rounded-full bg-gradient-to-r from-or to-[#B0852A] py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
       >
         {etat === "envoi" ? "Envoi en cours…" : "Envoyer mon avis"}
       </button>
