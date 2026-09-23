@@ -15,7 +15,13 @@ export const BOUTIQUE = {
 // Les aperçus de test restent invisibles des moteurs (erreur relevée au §1.2).
 export const EST_PRODUCTION = process.env.NEXT_PUBLIC_SITE_ENV === "production";
 
-export const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sakababeauty.com";
+// Adresse utilisée dans les aperçus de liens (WhatsApp, Facebook…). Sans réglage,
+// on prend l'adresse Vercel du projet : sakababeauty.com est encore l'ancien site.
+export const URL_SITE =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://sakababeauty-nu.vercel.app");
 
 // À CONFIRMER (semaine 5) : zones, tarifs et délais de livraison.
 export const ZONES_LIVRAISON = [

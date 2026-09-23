@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sakaba Beauty — Votre avis compte",
     description: "2 minutes pour nous dire ce qui vous plaît et ce que nous pouvons améliorer.",
-    images: ["/logo-sakaba.png"],
   },
 };
 
