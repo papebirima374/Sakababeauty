@@ -24,6 +24,8 @@ Next.js + TypeScript + Tailwind. Firebase viendra pour les données (catalogue, 
 - `NEXT_PUBLIC_SITE_ENV` : `production` uniquement sur le vrai site.
 - `NEXT_PUBLIC_SITE_URL` : `https://sakababeauty.com`.
 
+Lien de test : https://sakababeauty-nu.vercel.app/
+
 ## Vérifier
 ```
 npx tsc --noEmit
