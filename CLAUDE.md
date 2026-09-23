@@ -31,6 +31,21 @@ le code, les bases Firebase ni les comptes des deux projets.
   `npm run build`.
 
 ## Où on en est (23/09/2026)
+
+### Boutique en ligne : EN PAUSE
+La directrice a confié le site à un autre prestataire. Le code de la boutique
+reste dans `app/(boutique)/`, mais on n'y travaille plus sans nouvelle demande.
+
+### Formulaire d'avis clients : `/avis`
+- Page autonome (sans menu ni prix), lien à envoyer aux clientes :
+  https://sakababeauty-nu.vercel.app/avis
+- Chaque réponse part par email à **Sakababeauty1@gmail.com** via Web3Forms
+  (gratuit, 250 réponses/mois). Clé dans la variable Vercel
+  `NEXT_PUBLIC_WEB3FORMS_KEY` (publique par conception, liée à cette adresse).
+  Sans clé, la page affiche « pas encore activé ».
+- Prochaine demande annoncée : **inscriptions à une masterclass** (événement).
+
+### Ancien état de la boutique (avant la pause)
 - Étape 1 (vitrine) en place : accueil, univers/catégories, marques, fiche produit
   avec preuve d'authenticité, recherche tolérante aux fautes, filtres, diagnostic
   beauté, panier sans compte (commande envoyée par WhatsApp pour l'instant).

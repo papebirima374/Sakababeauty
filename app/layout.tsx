@@ -2,10 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import { BOUTIQUE, EST_PRODUCTION, URL_SITE } from "@/lib/config";
-import { PanierProvider } from "@/lib/panier";
-import Entete from "@/components/Entete";
-import PiedDePage from "@/components/PiedDePage";
-import BarreMobile from "@/components/BarreMobile";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -37,14 +33,7 @@ export const viewport: Viewport = { themeColor: "#14100B" };
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${cormorant.variable} ${manrope.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        <PanierProvider>
-          <Entete />
-          <main className="flex-1 pb-20 md:pb-0">{children}</main>
-          <PiedDePage />
-          <BarreMobile />
-        </PanierProvider>
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
