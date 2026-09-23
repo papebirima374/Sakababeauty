@@ -1,70 +1,87 @@
 {
   "cerave-nettoyant-hydratant-236ml": {
     "image": "/produits/cerave-nettoyant-hydratant-236ml.jpg",
-    "source": "https://www.cerave.com/skincare/cleansers/hydrating-facial-cleanser"
+    "source": "https://www.cerave.com/skincare/cleansers/hydrating-facial-cleanser",
+    "verifie": true
   },
   "cerave-creme-hydratante-340g": {
     "image": "/produits/cerave-creme-hydratante-340g.webp",
-    "source": "https://www.cerave.com/skincare/moisturizers/moisturizing-cream"
+    "source": "https://www.cerave.com/skincare/moisturizers/moisturizing-cream",
+    "verifie": true
   },
   "neutrogena-hydro-boost-gel-50ml": {
     "image": "/produits/neutrogena-hydro-boost-gel-50ml.webp",
-    "source": "https://www.neutrogena.com/products/skincare/neutrogena-hydro-boost-water-gel-with-hyaluronic-acid/6811047"
+    "source": "https://www.neutrogena.com/products/skincare/neutrogena-hydro-boost-water-gel-with-hyaluronic-acid/6811047",
+    "verifie": true
   },
   "palmers-serum-anti-taches-30ml": {
     "image": "/produits/palmers-serum-anti-taches-30ml.avif",
-    "source": "https://www.target.com/p/palmers-skin-success-dark-spot-corrector-fade-serum-1-fl-oz/-/A-83664364"
+    "source": "https://www.target.com/p/palmers-skin-success-dark-spot-corrector-fade-serum-1-fl-oz/-/A-83664364",
+    "verifie": true
   },
   "black-girl-sunscreen-spf30-88ml": {
     "image": "/produits/black-girl-sunscreen-spf30-88ml.webp",
-    "source": "https://blackgirlsunscreen.com/product/black-girl-sunscreen-spf-30/"
+    "source": "https://blackgirlsunscreen.com/product/black-girl-sunscreen-spf-30/",
+    "verifie": true
   },
   "palmers-lait-beurre-cacao-400ml": {
     "image": "/produits/palmers-lait-beurre-cacao-400ml.jpg",
-    "source": "https://www.shopbeautyplus.com/palmer-cocoa-butter-formula-lotion-pump-135-oz.html"
+    "source": "https://www.shopbeautyplus.com/palmer-cocoa-butter-formula-lotion-pump-135-oz.html",
+    "verifie": true
   },
   "mielle-huile-romarin-menthe-59ml": {
     "image": "/produits/mielle-huile-romarin-menthe-59ml.webp",
-    "source": "https://mielleorganics.com/products/rosemary-mint-oil"
+    "source": "https://mielleorganics.com/products/rosemary-mint-oil",
+    "verifie": true
   },
   "cantu-creme-sans-rincage-453g": {
     "image": "/produits/cantu-creme-sans-rincage-453g.webp",
-    "source": "https://hairtobeauty.com/products/cantu-leave-in-cream-16oz-repair"
+    "source": "https://hairtobeauty.com/products/cantu-leave-in-cream-16oz-repair",
+    "verifie": true
   },
   "maybelline-fit-me-fond-de-teint": {
     "image": "/produits/maybelline-fit-me-fond-de-teint.jpg",
-    "source": "https://www.maybelline.com/face-makeup/foundation-makeup/fit-me-matte-poreless-foundation"
+    "source": "https://www.maybelline.com/face-makeup/foundation-makeup/fit-me-matte-poreless-foundation",
+    "verifie": true
   },
   "cantu-kids-soin-sans-rincage-283g": {
     "image": "/produits/cantu-kids-soin-sans-rincage-283g.webp",
-    "source": "https://epbeautysupply.com/products/cantu-for-kids-leave-in-conditioner-10-oz"
+    "source": "https://epbeautysupply.com/products/cantu-for-kids-leave-in-conditioner-10-oz",
+    "verifie": true
   },
   "the-ordinary-niacinamide-zinc-30ml": {
     "image": "/produits/the-ordinary-niacinamide-zinc-30ml.jpg",
-    "source": "https://www.stylevana.com/en_US/the-ordinary-niacinamide-10-zinc-1-30ml25376.html"
+    "source": "https://www.stylevana.com/en_US/the-ordinary-niacinamide-10-zinc-1-30ml25376.html",
+    "verifie": true
   },
   "the-ordinary-acide-hyaluronique-30ml": {
     "image": "/produits/the-ordinary-acide-hyaluronique-30ml.jpg",
-    "source": "https://www.stylevana.com/en_US/the-ordinary-hyaluronic-acid-2-b5-30ml25372.html"
+    "source": "https://www.stylevana.com/en_US/the-ordinary-hyaluronic-acid-2-b5-30ml25372.html",
+    "verifie": true
   },
   "shea-moisture-curl-smoothie-340g": {
     "image": "/produits/shea-moisture-curl-smoothie-340g.webp",
-    "source": "https://www.mqbsupply.com/products/shea-moisture-curl-enhancing-smoothie-coconut-hibiscus-12-oz"
+    "source": "https://www.mqbsupply.com/products/shea-moisture-curl-enhancing-smoothie-coconut-hibiscus-12-oz",
+    "verifie": true
   },
   "shea-moisture-shampooing-jbco-384ml": {
     "image": "/produits/shea-moisture-shampooing-jbco-384ml.webp",
-    "source": "https://thisisbeauty.us/products/sheamoisture-jamaican-black-castor-oil-strengthen-38-restore-shampoo-13-fl-oz"
+    "source": "https://thisisbeauty.us/products/sheamoisture-jamaican-black-castor-oil-strengthen-38-restore-shampoo-13-fl-oz",
+    "verifie": true
   },
   "nyx-butter-gloss": {
     "image": "/produits/nyx-butter-gloss.jpg",
-    "source": "https://hbbeautybar.com/products/nyx-butter-gloss"
+    "source": "https://hbbeautybar.com/products/nyx-butter-gloss",
+    "verifie": true
   },
   "bath-body-works-brume-a-thousand-wishes-236ml": {
     "image": "/produits/bath-body-works-brume-a-thousand-wishes-236ml.webp",
-    "source": "https://shop.simon.com/products/a-thousand-wishes-by-bath-and-body-works-for-women-8-oz-fine-fragrance-mist"
+    "source": "https://shop.simon.com/products/a-thousand-wishes-by-bath-and-body-works-for-women-8-oz-fine-fragrance-mist",
+    "verifie": true
   },
   "shea-moisture-huile-barbe-96ml": {
     "image": "/produits/shea-moisture-huile-barbe-96ml.webp",
-    "source": "https://pasteurpharmacy.com/products/shea-moisture-maracuja-shea-oils-beard-conditioning-oil-3-2-oz"
+    "source": "https://pasteurpharmacy.com/products/shea-moisture-maracuja-shea-oils-beard-conditioning-oil-3-2-oz",
+    "verifie": true
   }
 }
