@@ -66,6 +66,18 @@ Tout changement ici apparaît sur la page du site au prochain chargement.
 - **Le jour J** : imprimer l'onglet Inscrits, ou cocher les présents dans une
   nouvelle colonne à droite.
 
-## Si vous modifiez le programme plus tard
-Déployer > **Gérer les déploiements** > crayon > Version : **Nouvelle version** >
-Déployer. L'URL ne change pas.
+## Mettre à jour le programme (quand Claude en livre une nouvelle version)
+1. Apps Script : **Ctrl + A**, **Suppr** (fenêtre vide), coller le nouveau
+   contenu de `scripts/masterclass-google-sheet.gs`. La ligne 1 doit commencer
+   par `/**`. Enregistrer (disquette).
+2. **Ne pas** relancer « installer » (les onglets existent déjà).
+3. Déployer > **Gérer les déploiements** > crayon > Version : **Nouvelle
+   version** > Déployer. L'URL ne change pas, rien à toucher dans Vercel.
+   (Si cela ne suffit pas : **Nouveau déploiement**, puis coller la nouvelle URL
+   dans `MASTERCLASS_SCRIPT_URL` sur Vercel et faire Redeploy.)
+4. Vérifier : https://sakababeauty-nu.vercel.app/api/masterclass/verification
+   doit dire « Tout fonctionne ».
+
+## En cas de problème
+Ouvrir la page de vérification ci-dessus : elle dit ce qui bloque, sans jamais
+afficher le mot secret. On peut la copier-coller à Claude sans risque.

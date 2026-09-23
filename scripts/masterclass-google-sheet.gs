@@ -55,9 +55,16 @@ function installer() {
 }
 
 function lireReglages_() {
-  const lignes = SpreadsheetApp.getActive().getSheetByName(REGLAGES).getDataRange().getValues();
+  const plage = SpreadsheetApp.getActive().getSheetByName(REGLAGES).getDataRange();
+  const valeurs = plage.getValues();
+  const affichees = plage.getDisplayValues();
   const r = {};
-  lignes.forEach(function (l) { if (l[0]) r[String(l[0]).trim()] = l[1]; });
+  valeurs.forEach(function (l, i) {
+    if (!l[0]) return;
+    const cle = String(l[0]).trim();
+    r[cle] = l[1];
+    r[cle + "__affiche"] = affichees[i][1]; // tel que visible dans la case
+  });
   return r;
 }
 
@@ -68,16 +75,22 @@ const MOIS_ = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet",
 /** Date en français, quelle que soit la langue du compte Google : « samedi 15 novembre 2026 ». */
 function formaterDate_(v) {
   if (v instanceof Date) {
-    const fuseau = Session.getScriptTimeZone();
+    const fuseau = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
     const n = function (motif) { return Number(Utilities.formatDate(v, fuseau, motif)); };
     return JOURS_[n("u") % 7] + " " + n("d") + " " + MOIS_[n("M") - 1] + " " + n("yyyy");
   }
   return String(v || "").trim();
 }
 
-function formaterHeure_(v) {
-  if (v instanceof Date) return Utilities.formatDate(v, Session.getScriptTimeZone(), "HH'h'mm");
-  return String(v || "").trim();
+/**
+ * Heure telle qu'elle est écrite dans la case (« 10:00 » → « 10h00 »).
+ * On lit le texte affiché : une heure seule est stockée au 30/12/1899, date à
+ * laquelle les fuseaux horaires donnent des décalages faux (ex. 08h50).
+ */
+function formaterHeure_(affiche) {
+  const t = String(affiche || "").trim();
+  const m = t.match(/^(\d{1,2})[:h](\d{2})/);
+  return m ? ("0" + m[1]).slice(-2) + "h" + m[2] : t;
 }
 
 /** Les 9 derniers chiffres : 77 123 45 67, +221771234567 et 00221 77… sont le même numéro. */
@@ -101,7 +114,7 @@ function etat_() {
     titre: String(r["Titre"] || ""),
     sousTitre: String(r["Sous-titre"] || ""),
     date: formaterDate_(r["Date"]),
-    heure: formaterHeure_(r["Heure"]),
+    heure: formaterHeure_(r["Heure__affiche"]),
     lieu: String(r["Lieu"] || ""),
     description: String(r["Description"] || ""),
     places: places,
