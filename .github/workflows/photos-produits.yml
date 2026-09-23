@@ -1,0 +1,41 @@
+name: Photos des produits
+
+# Récupère les photos des produits (le réseau de GitHub a accès aux sites des
+# marques) et les enregistre dans le dépôt.
+on:
+  workflow_dispatch:
+    inputs:
+      forcer:
+        description: "Retélécharger toutes les photos"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - scripts/sources-photos.json
+      - scripts/photos-produits.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Télécharger les photos
+        run: node scripts/photos-produits.mjs ${{ inputs.forcer && '--forcer' || '' }}
+      - name: Enregistrer dans le dépôt
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add public/produits lib/photos-produits.json
+          if git diff --cached --quiet; then
+            echo "Aucune nouvelle photo."
+          else
+            git commit -m "Photos des produits (récupération automatique)"
+            git push
+          fi

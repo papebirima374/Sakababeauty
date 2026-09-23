@@ -1,3 +1,5 @@
+import photos from "./photos-produits.json";
+
 // Catalogue de démonstration. Les produits, prix et stocks ci-dessous sont des
 // EXEMPLES pour tester le site : ils seront remplacés par l'export des 2 700
 // références de WooCommerce (cahier des charges §19), puis servis par Firestore.
@@ -150,7 +152,7 @@ export const MARQUES: Marque[] = [
   { slug: "bath-body-works", nom: "Bath & Body Works", histoire: "Des brumes et soins parfumés aux senteurs qui durent." },
 ];
 
-export const PRODUITS: Produit[] = [
+const PRODUITS_BRUTS: Produit[] = [
   {
     slug: "cerave-nettoyant-hydratant-236ml",
     nom: "Nettoyant hydratant",
@@ -265,7 +267,7 @@ export const PRODUITS: Produit[] = [
   },
   {
     slug: "palmers-serum-anti-taches-30ml",
-    nom: "Skin Success sérum anti-taches",
+    nom: "Skin Success sérum correcteur anti-taches",
     marque: "palmers",
     univers: "soin-visage",
     categorie: "anti-taches",
@@ -276,8 +278,8 @@ export const PRODUITS: Produit[] = [
     besoins: ["taches", "eclat"],
     accroche: "Pour un teint plus uniforme, sans agresser.",
     description: "Un sérum qui aide à atténuer l'apparence des taches brunes et à unifier le teint. Toujours associer à une protection solaire le matin.",
-    utilisation: "Le soir sur peau propre, en évitant le contour des yeux. Protection solaire indispensable le lendemain.",
-    actifs: ["Niacinamide", "Vitamine C"],
+    utilisation: "Le soir sur peau propre, en évitant le contour des yeux. Contient du rétinol : protection solaire indispensable le lendemain.",
+    actifs: ["Niacinamide", "Rétinol", "Vitamine C", "Vitamine E"],
     peremption: "09/2027",
     routine: ["cerave-nettoyant-hydratant-236ml", "black-girl-sunscreen-spf30-88ml"],
     nouveaute: true,
@@ -529,6 +531,16 @@ export const PRODUITS: Produit[] = [
     teinte: "#E6EEE0",
   },
 ];
+
+// Photos récupérées par scripts/photos-produits.mjs. Une photo ne s'affiche
+// qu'une fois vérifiée à l'œil (bon produit, bonne contenance) : "verifie": true.
+type Photo = { image: string; source: string; verifie?: boolean };
+const PHOTOS = photos as Record<string, Photo>;
+
+export const PRODUITS: Produit[] = PRODUITS_BRUTS.map((p) => {
+  const photo = PHOTOS[p.slug];
+  return photo?.verifie ? { ...p, image: photo.image } : p;
+});
 
 export function produitParSlug(slug: string) {
   return PRODUITS.find((p) => p.slug === slug);
