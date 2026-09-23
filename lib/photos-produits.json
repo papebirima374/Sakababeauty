@@ -1,1 +1,42 @@
-{}
+{
+  "cerave-nettoyant-hydratant-236ml": {
+    "image": "/produits/cerave-nettoyant-hydratant-236ml.jpg",
+    "source": "https://www.cerave.com/skincare/cleansers/hydrating-facial-cleanser"
+  },
+  "cerave-creme-hydratante-340g": {
+    "image": "/produits/cerave-creme-hydratante-340g.webp",
+    "source": "https://www.cerave.com/skincare/moisturizers/moisturizing-cream"
+  },
+  "neutrogena-hydro-boost-gel-50ml": {
+    "image": "/produits/neutrogena-hydro-boost-gel-50ml.webp",
+    "source": "https://www.neutrogena.com/products/skincare/neutrogena-hydro-boost-water-gel-with-hyaluronic-acid/6811047"
+  },
+  "palmers-serum-anti-taches-30ml": {
+    "image": "/produits/palmers-serum-anti-taches-30ml.avif",
+    "source": "https://www.target.com/p/palmers-skin-success-dark-spot-corrector-fade-serum-1-fl-oz/-/A-83664364"
+  },
+  "black-girl-sunscreen-spf30-88ml": {
+    "image": "/produits/black-girl-sunscreen-spf30-88ml.webp",
+    "source": "https://blackgirlsunscreen.com/product/black-girl-sunscreen-spf-30/"
+  },
+  "palmers-lait-beurre-cacao-400ml": {
+    "image": "/produits/palmers-lait-beurre-cacao-400ml.jpg",
+    "source": "https://www.shopbeautyplus.com/palmer-cocoa-butter-formula-lotion-pump-135-oz.html"
+  },
+  "mielle-huile-romarin-menthe-59ml": {
+    "image": "/produits/mielle-huile-romarin-menthe-59ml.webp",
+    "source": "https://mielleorganics.com/products/rosemary-mint-oil"
+  },
+  "cantu-creme-sans-rincage-453g": {
+    "image": "/produits/cantu-creme-sans-rincage-453g.webp",
+    "source": "https://hairtobeauty.com/products/cantu-leave-in-cream-16oz-repair"
+  },
+  "maybelline-fit-me-fond-de-teint": {
+    "image": "/produits/maybelline-fit-me-fond-de-teint.jpg",
+    "source": "https://www.maybelline.com/face-makeup/foundation-makeup/fit-me-matte-poreless-foundation"
+  },
+  "cantu-kids-soin-sans-rincage-283g": {
+    "image": "/produits/cantu-kids-soin-sans-rincage-283g.webp",
+    "source": "https://epbeautysupply.com/products/cantu-for-kids-leave-in-conditioner-10-oz"
+  }
+}
