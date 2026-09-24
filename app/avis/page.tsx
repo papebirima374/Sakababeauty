@@ -5,11 +5,11 @@ import FormulaireAvis from "@/components/FormulaireAvis";
 export const metadata: Metadata = {
   title: "Votre avis compte",
   description:
-    "1 minute pour partager vos suggestions, vos réclamations ou les problèmes rencontrés. Votre retour aidera Sakaba Beauty à améliorer ses services et à trouver une solution adaptée.",
+    "Partagez une suggestion, signalez un problème ou faites une réclamation. Votre avis aide Sakaba Beauty à améliorer ses services.",
   openGraph: {
     title: "Sakaba Beauty — Votre avis compte",
     description:
-      "1 minute pour partager vos suggestions, vos réclamations ou les problèmes rencontrés. Votre retour aidera Sakaba Beauty à améliorer ses services et à trouver une solution adaptée.",
+      "Partagez une suggestion, signalez un problème ou faites une réclamation. Votre avis aide Sakaba Beauty à améliorer ses services.",
   },
 };
 
@@ -35,8 +35,7 @@ export default function PageAvis() {
             <span className="h-px w-12 bg-gradient-to-l from-transparent to-or" />
           </div>
           <p className="mt-4 text-creme/80">
-            1 minute pour partager vos suggestions, vos réclamations ou les problèmes rencontrés. Votre retour aidera
-            Sakaba Beauty à améliorer ses services et à trouver une solution adaptée.
+            Partagez une suggestion, signalez un problème ou faites une réclamation. Votre avis aide Sakaba Beauty à améliorer ses services.
           </p>
         </div>
       </section>
