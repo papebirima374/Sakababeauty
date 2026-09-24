@@ -7,50 +7,21 @@ import { useState } from "react";
 // elle est publique par conception (elle ne permet que d'envoyer vers cette adresse).
 const CLE_WEB3FORMS = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
 
-const CONNU = ["Instagram", "TikTok", "Snapchat", "Bouche à oreille", "En passant devant la boutique", "Autre"];
-const ACHAT = ["À la boutique de Mermoz", "Par WhatsApp / livraison", "Les deux"];
-const ASPECTS = [
-  { id: "accueil", nom: "L'accueil" },
-  { id: "conseils", nom: "Les conseils" },
-  { id: "choix", nom: "Le choix de produits" },
-  { id: "prix", nom: "Les prix" },
-  { id: "confiance", nom: "La confiance dans l'authenticité" },
-  { id: "livraison", nom: "La livraison" },
-];
-const LIBELLES_NOTE = ["", "Très déçu(e)", "Déçu(e)", "Moyen", "Satisfait(e)", "Ravi(e)"];
+const OBJETS = ["Suggestion", "Réclamation", "Problème rencontré"];
 
 type Etat = "saisie" | "envoi" | "merci" | "erreur";
 
-function Etoiles({ valeur, onChange, taille = "text-3xl", nom }: { valeur: number; onChange: (n: number) => void; taille?: string; nom: string }) {
+function Choix({ options, valeur, onChange, nom }: { options: string[]; valeur: string; onChange: (v: string) => void; nom: string }) {
   return (
-    <div className="flex gap-1" role="radiogroup" aria-label={nom}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <button
-          key={n}
-          type="button"
-          role="radio"
-          aria-checked={valeur === n}
-          aria-label={`${n} sur 5`}
-          onClick={() => onChange(n)}
-          className={`${taille} leading-none transition ${n <= valeur ? "text-or" : "text-bordure hover:text-or-clair"}`}
-        >
-          ★
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function Choix({ options, valeur, onChange }: { options: string[]; valeur: string; onChange: (v: string) => void }) {
-  return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={nom}>
       {options.map((o) => (
         <button
           key={o}
           type="button"
-          aria-pressed={valeur === o}
-          onClick={() => onChange(valeur === o ? "" : o)}
-          className={`rounded-full border px-4 py-2 text-sm ${valeur === o ? "bg-noir text-white border-noir" : "border-bordure bg-creme/60 hover:border-or"}`}
+          role="radio"
+          aria-checked={valeur === o}
+          onClick={() => onChange(o)}
+          className={`rounded-full border px-5 py-2.5 transition ${valeur === o ? "bg-noir text-white border-noir" : "border-bordure bg-creme/60 hover:border-or"}`}
         >
           {o}
         </button>
@@ -61,51 +32,43 @@ function Choix({ options, valeur, onChange }: { options: string[]; valeur: strin
 
 export default function FormulaireAvis() {
   const [etat, setEtat] = useState<Etat>("saisie");
-  const [note, setNote] = useState(0);
-  const [aspects, setAspects] = useState<Record<string, number>>({});
-  const [connu, setConnu] = useState("");
-  const [achat, setAchat] = useState("");
-  const [aime, setAime] = useState("");
-  const [ameliorer, setAmeliorer] = useState("");
-  const [souhaits, setSouhaits] = useState("");
-  const [recommande, setRecommande] = useState<number | null>(null);
-  const [prenom, setPrenom] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [email, setEmail] = useState("");
-  const [recontact, setRecontact] = useState(false);
+  const [objet, setObjet] = useState("");
+  const [message, setMessage] = useState("");
+  const [recontact, setRecontact] = useState("");
+  const [contact, setContact] = useState("");
   const [piege, setPiege] = useState(false); // champ invisible anti-robots
-  const [manque, setManque] = useState(false);
+  const [verifier, setVerifier] = useState(false);
+
+  const manques = {
+    objet: !objet,
+    message: !message.trim(),
+    recontact: !recontact,
+    contact: recontact === "Oui" && !contact.trim(),
+  };
 
   async function envoyer(e: React.FormEvent) {
     e.preventDefault();
-    if (note === 0) {
-      setManque(true);
-      document.getElementById("note-globale")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const premier = (Object.keys(manques) as (keyof typeof manques)[]).find((k) => manques[k]);
+    if (premier) {
+      setVerifier(true);
+      document.getElementById(`q-${premier}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
     if (piege) return;
     setEtat("envoi");
 
-    const etoiles = (n?: number) => (n ? `${"★".repeat(n)}${"☆".repeat(5 - n)} (${n}/5)` : "—");
+    const coordonnees = recontact === "Oui" ? contact.trim() : "";
     const donnees: Record<string, string | boolean> = {
       access_key: CLE_WEB3FORMS,
-      subject: `Avis client ${note}/5${prenom ? ` — ${prenom}` : ""}`,
+      subject: `${objet} — avis client Sakaba Beauty`,
       from_name: "Formulaire avis Sakaba Beauty",
       botcheck: false,
-      "Note globale": etoiles(note),
-      ...Object.fromEntries(ASPECTS.map((a) => [a.nom, etoiles(aspects[a.id])])),
-      "Ce qui lui plaît": aime || "—",
-      "Ce qui ne va pas / à améliorer": ameliorer || "—",
-      "Produits souhaités": souhaits || "—",
-      "Recommanderait Sakaba (0 à 10)": recommande === null ? "—" : String(recommande),
-      "Nous a connus par": connu || "—",
-      "Achète": achat || "—",
-      "Prénom": prenom || "—",
-      "Téléphone / WhatsApp": telephone || "—",
-      "Email": email || "—",
-      "Accepte d'être recontacté(e)": recontact ? "Oui" : "Non",
+      "Objet": objet,
+      "Message": message.trim(),
+      "Souhaite être recontacté(e)": recontact,
+      "E-mail ou téléphone": coordonnees || "—",
     };
-    if (email) donnees.replyto = email;
+    if (/^\S+@\S+\.\S+$/.test(coordonnees)) donnees.replyto = coordonnees;
 
     try {
       const rep = await fetch("https://api.web3forms.com/submit", {
@@ -133,9 +96,10 @@ export default function FormulaireAvis() {
     return (
       <div className="rounded-3xl bg-white p-8 sm:p-10 text-center shadow-[0_25px_70px_-30px_rgba(20,16,11,0.45)]">
         <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(197,151,53,0.7)]">✓</div>
-        <h2 className="titre text-4xl mt-4">Merci pour votre avis !</h2>
+        <h2 className="titre text-4xl mt-4">Merci pour votre message !</h2>
         <p className="text-gris mt-3">
-          Chaque réponse est lue par l&apos;équipe Sakaba Beauty. Elle nous aide à mieux vous recevoir et à mieux vous conseiller.
+          Il a bien été transmis à l&apos;équipe Sakaba Beauty.
+          {recontact === "Oui" ? " Nous vous recontacterons dès que possible." : ""}
         </p>
         <p className="titre text-2xl text-or mt-6">À très bientôt à Mermoz ✦</p>
       </div>
@@ -145,92 +109,44 @@ export default function FormulaireAvis() {
   const bloc = "rounded-3xl bg-white p-6 sm:p-7 shadow-[0_18px_50px_-28px_rgba(20,16,11,0.45)]";
   const titreBloc = "font-semibold text-lg";
   const champ = "w-full rounded-2xl border border-bordure bg-creme/60 px-4 py-3.5 outline-none transition focus:bg-white focus:border-or focus:ring-4 focus:ring-or/15";
+  const erreur = (k: keyof typeof manques, texte: string) =>
+    verifier && manques[k] ? <p className="text-sm text-red-700 mt-2">{texte}</p> : null;
+  const numero = (n: number) => (
+    <span className="mr-2 inline-grid place-items-center w-7 h-7 rounded-full bg-gradient-to-b from-or-clair to-or text-white text-sm align-middle">{n}</span>
+  );
 
   return (
     <form onSubmit={envoyer} className="space-y-5" noValidate>
       {etat === "erreur" && (
         <p className="rounded-2xl border-2 border-red-700 bg-red-50 p-4 text-sm">
-          L&apos;envoi n&apos;a pas abouti. Vérifiez votre connexion internet puis appuyez de nouveau sur « Envoyer mon avis ».
+          L&apos;envoi n&apos;a pas abouti. Vérifiez votre connexion internet puis appuyez de nouveau sur « Envoyer ».
         </p>
       )}
 
-      <div id="note-globale" className={`${bloc} ${manque && note === 0 ? "border-red-700" : ""}`}>
-        <p className={titreBloc}>
-          Globalement, êtes-vous satisfait(e) de Sakaba Beauty ? <span className="text-red-700">*</span>
-        </p>
-        <div className="mt-3 flex items-center gap-4 flex-wrap">
-          <Etoiles valeur={note} onChange={(n) => { setNote(n); setManque(false); }} taille="text-5xl" nom="Note globale" />
-          <span className="text-gris">{LIBELLES_NOTE[note]}</span>
-        </div>
-        {manque && note === 0 && <p className="text-sm text-red-700 mt-2">Choisissez une note de 1 à 5 étoiles.</p>}
+      <div id="q-objet" className={bloc}>
+        <p className={titreBloc}>{numero(1)}Quel est l&apos;objet de votre message&nbsp;?&nbsp;<span className="text-red-700">*</span></p>
+        <div className="mt-4"><Choix options={OBJETS} valeur={objet} onChange={setObjet} nom="Objet du message" /></div>
+        {erreur("objet", "Choisissez l'objet de votre message.")}
       </div>
 
-      <div className={bloc}>
-        <p className={titreBloc}>Donnez une note à chaque point</p>
-        <p className="text-sm text-gris">Facultatif. Laissez vide ce qui ne vous concerne pas.</p>
-        <ul className="mt-4 space-y-3">
-          {ASPECTS.map((a) => (
-            <li key={a.id} className="flex items-center justify-between gap-3 flex-wrap">
-              <span>{a.nom}</span>
-              <Etoiles valeur={aspects[a.id] ?? 0} onChange={(n) => setAspects((x) => ({ ...x, [a.id]: n }))} taille="text-2xl" nom={a.nom} />
-            </li>
-          ))}
-        </ul>
+      <div id="q-message" className={bloc}>
+        <label htmlFor="message" className={titreBloc}>{numero(2)}Que souhaitez-vous nous dire&nbsp;?&nbsp;<span className="text-red-700">*</span></label>
+        <p className="text-sm text-gris mt-1">En quelques mots ou quelques phrases.</p>
+        <textarea id="message" value={message} onChange={(e) => setMessage(e.target.value)} rows={4} className={`${champ} mt-3`} />
+        {erreur("message", "Écrivez votre message.")}
       </div>
 
-      <div className={bloc}>
-        <label htmlFor="aime" className={titreBloc}>Qu&apos;est-ce qui vous plaît le plus chez nous ?</label>
-        <textarea id="aime" value={aime} onChange={(e) => setAime(e.target.value)} rows={3} className={`${champ} mt-3`} placeholder="Les produits, l'accueil, les conseils…" />
-      </div>
-
-      <div className={bloc}>
-        <label htmlFor="ameliorer" className={titreBloc}>Qu&apos;est-ce qui ne va pas, ou que devrions-nous améliorer ?</label>
-        <p className="text-sm text-gris">Soyez franc(he) : c&apos;est ce qui nous aide le plus.</p>
-        <textarea id="ameliorer" value={ameliorer} onChange={(e) => setAmeliorer(e.target.value)} rows={3} className={`${champ} mt-3`} />
-      </div>
-
-      <div className={bloc}>
-        <label htmlFor="souhaits" className={titreBloc}>Un produit ou une marque que vous aimeriez trouver chez nous ?</label>
-        <input id="souhaits" value={souhaits} onChange={(e) => setSouhaits(e.target.value)} className={`${champ} mt-3`} />
-      </div>
-
-      <div className={bloc}>
-        <p className={titreBloc}>Recommanderiez-vous Sakaba Beauty à un proche ?</p>
-        <p className="text-sm text-gris">0 = pas du tout, 10 = sans hésiter</p>
-        <div className="mt-3 grid grid-cols-6 sm:grid-cols-11 gap-1.5">
-          {Array.from({ length: 11 }, (_, n) => (
-            <button
-              key={n}
-              type="button"
-              aria-pressed={recommande === n}
-              onClick={() => setRecommande(recommande === n ? null : n)}
-              className={`prix rounded-lg border py-2 text-sm font-semibold ${recommande === n ? "bg-or text-white border-or" : "border-bordure hover:border-or"}`}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className={bloc}>
-        <p className={titreBloc}>Comment nous avez-vous connus ?</p>
-        <div className="mt-3"><Choix options={CONNU} valeur={connu} onChange={setConnu} /></div>
-        <p className={`${titreBloc} mt-6`}>Vous achetez plutôt…</p>
-        <div className="mt-3"><Choix options={ACHAT} valeur={achat} onChange={setAchat} /></div>
-      </div>
-
-      <div className={bloc}>
-        <p className={titreBloc}>Vos coordonnées <span className="font-normal text-gris text-sm">(facultatif)</span></p>
-        <p className="text-sm text-gris">Vous pouvez répondre de façon anonyme.</p>
-        <div className="mt-3 grid sm:grid-cols-2 gap-3">
-          <input value={prenom} onChange={(e) => setPrenom(e.target.value)} placeholder="Prénom" autoComplete="given-name" className={champ} />
-          <input value={telephone} onChange={(e) => setTelephone(e.target.value)} placeholder="Téléphone / WhatsApp" type="tel" autoComplete="tel" className={champ} />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type="email" autoComplete="email" className={`${champ} sm:col-span-2`} />
-        </div>
-        <label className="mt-4 flex items-start gap-3 text-sm cursor-pointer">
-          <input type="checkbox" checked={recontact} onChange={(e) => setRecontact(e.target.checked)} className="mt-0.5 w-5 h-5 accent-[#C59735]" />
-          J&apos;accepte que Sakaba Beauty me recontacte au sujet de mon avis.
-        </label>
+      <div id="q-recontact" className={bloc}>
+        <p className={titreBloc}>{numero(3)}Souhaitez-vous que Sakaba vous recontacte&nbsp;?&nbsp;<span className="text-red-700">*</span></p>
+        <div className="mt-4"><Choix options={["Oui", "Non"]} valeur={recontact} onChange={(v) => { setRecontact(v); if (v === "Oui") setVerifier(false); }} nom="Être recontacté(e)" /></div>
+        {erreur("recontact", "Répondez Oui ou Non.")}
+        {recontact === "Oui" && (
+          <div id="q-contact" className="mt-5">
+            <label htmlFor="contact" className="font-semibold">Quelle est votre adresse e-mail ou votre numéro de téléphone ?</label>
+            <input id="contact" value={contact} onChange={(e) => setContact(e.target.value)} className={`${champ} mt-3`} placeholder="exemple@gmail.com ou 77 000 00 00" />
+            {erreur("contact", "Indiquez un e-mail ou un numéro pour qu'on puisse vous recontacter.")}
+          </div>
+        )}
       </div>
 
       <input type="checkbox" name="botcheck" checked={piege} onChange={(e) => setPiege(e.target.checked)} className="hidden" tabIndex={-1} aria-hidden />
@@ -240,7 +156,7 @@ export default function FormulaireAvis() {
         disabled={etat === "envoi"}
         className="w-full rounded-full bg-gradient-to-r from-or to-[#B0852A] py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
       >
-        {etat === "envoi" ? "Envoi en cours…" : "Envoyer mon avis"}
+        {etat === "envoi" ? "Envoi en cours…" : "Envoyer"}
       </button>
       <p className="text-xs text-gris text-center">
         Vos réponses sont transmises uniquement à l&apos;équipe Sakaba Beauty.
