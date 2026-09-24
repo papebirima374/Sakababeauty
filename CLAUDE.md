@@ -50,6 +50,9 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
   (Birima attend l'accès à cette boîte), la mettre à la place dans Vercel,
   puis Redeploy. Aucun changement de code nécessaire.
 
+- Pied de page de /avis : adresse « Mermoz Ancienne Piste, à côté de la Case des
+  Tout-Petits » et numéros 78 588 54 54 / 78 303 24 24 (donnés par Birima le 24/09/2026).
+
 ### Inscriptions masterclass : `/masterclass`
 - Gratuite, places limitées, confirmation à l'écran (choix de Birima, 23/09/2026).
 - Liste des inscrits dans un **Google Sheet** + programme Apps Script

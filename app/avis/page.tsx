@@ -43,7 +43,12 @@ export default function PageAvis() {
         <FormulaireAvis />
         <footer className="mt-12 text-center">
           <p className="titre text-lg text-or">Sakaba Beauty</p>
-          <p className="text-xs text-gris mt-1">La beauté authentique, avec le bon conseil · Mermoz Ancienne Piste, Dakar</p>
+          <p className="text-sm text-gris mt-1">Mermoz Ancienne Piste, à côté de la Case des Tout-Petits</p>
+          <p className="text-sm mt-1">
+            <a href="tel:+221785885454" className="prix font-semibold text-noir hover:text-or">78 588 54 54</a>
+            <span className="text-gris"> ou </span>
+            <a href="tel:+221783032424" className="prix font-semibold text-noir hover:text-or">78 303 24 24</a>
+          </p>
         </footer>
       </div>
     </main>
