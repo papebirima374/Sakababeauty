@@ -38,6 +38,12 @@ boutique de son côté (décision du 23/09/2026) pour la lui proposer : priorit�
 une démo qui impressionne (style noir et or, comme /avis et /masterclass).
 Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc.
 
+- Page **/contact** : adresse, 2 numéros (tel:), itinéraire Google Maps vers le
+  repère (Case des Tout-Petits). Numéro WhatsApp et horaires : À CONFIRMER.
+- Démo **/gestion** (espace de gestion, non indexé, sans lien depuis la boutique) :
+  chiffres, commandes et avis INVENTÉS (`lib/demo-gestion.ts`), stocks du catalogue
+  d'exemple. Sert à montrer à la directrice ce que l'outil fera.
+
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :
   https://sakababeauty-nu.vercel.app/avis
