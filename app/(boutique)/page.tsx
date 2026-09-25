@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MARQUES, PRODUITS, UNIVERS, produitParSlug, type Produit } from "@/lib/catalogue";
-import { SEUIL_LIVRAISON_OFFERTE, formatPrix } from "@/lib/config";
 import CarteProduit from "@/components/CarteProduit";
 
 // Photo qui représente chaque univers (produits d'exemple du catalogue).
@@ -115,8 +114,8 @@ export default function Accueil() {
             {[
               ["100 % authentiques", "Lot et péremption sur chaque fiche"],
               ["Le bon conseil", "Diagnostic en ligne ou en boutique"],
-              ["Retrait à Mermoz", "Gratuit, prêt en 2 heures"],
-              ["Wave & Orange Money", `Livraison offerte dès ${formatPrix(SEUIL_LIVRAISON_OFFERTE)}`],
+              ["Retrait à Mermoz", "Gratuit, on vous prévient sur WhatsApp"],
+              ["Livraison", "Prix convenu directement avec le livreur"],
             ].map(([titre, texte]) => (
               <li key={titre} className="flex gap-3">
                 <span className="text-or-clair">✦</span>
@@ -272,7 +271,7 @@ export default function Accueil() {
             <h2 className="titre text-4xl md:text-5xl mt-3">Chaque achat vous rapporte des points.</h2>
             <div className="mt-5 flex justify-center"><Separateur /></div>
             <p className="text-gris mt-5 max-w-xl mx-auto">
-              En ligne comme en boutique : livraison offerte, accès en avant-première aux nouveautés et cadeau d&apos;anniversaire.
+              En ligne comme en boutique : accès en avant-première aux nouveautés et cadeau d&apos;anniversaire.
             </p>
             <p className="mt-6 inline-block rounded-full bg-creme px-5 py-2 text-sm font-semibold">Bientôt disponible sur le site</p>
           </div>

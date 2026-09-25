@@ -4,13 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { nomMarque } from "@/lib/catalogue";
 import {
+  MODES_RECEPTION,
   MOYENS_PAIEMENT,
   PLAFOND_PAIEMENT_LIVRAISON,
-  SEUIL_LIVRAISON_OFFERTE,
-  ZONES_LIVRAISON,
   formatPrix,
   lienWhatsApp,
-  type ZoneId,
+  type ModeReception,
 } from "@/lib/config";
 import { usePanier } from "@/lib/panier";
 import VisuelProduit from "@/components/VisuelProduit";
@@ -18,23 +17,21 @@ import BandeauPage from "@/components/BandeauPage";
 
 type MoyenId = (typeof MOYENS_PAIEMENT)[number]["id"];
 
-// Achat sans création de compte, frais de livraison annoncés avant le paiement (§9.3).
+// Achat sans création de compte. Livraison : la cliente règle le prix
+// directement avec le livreur (décision de Sakaba), le site n'ajoute aucun frais.
 // Étape provisoire : la commande est transmise par WhatsApp en attendant le
 // branchement de l'agrégateur de paiement (Wave, Orange Money, carte).
 export default function Panier() {
   const { lignes, sousTotal, modifier, retirer } = usePanier();
-  const [zone, setZone] = useState<ZoneId>("dakar");
+  const [zone, setZone] = useState<ModeReception>("livraison");
   const [moyen, setMoyen] = useState<MoyenId>("wave");
   const [nom, setNom] = useState("");
   const [telephone, setTelephone] = useState("");
   const [adresse, setAdresse] = useState("");
 
-  const zoneChoisie = ZONES_LIVRAISON.find((z) => z.id === zone)!;
-  const livraisonOfferte = sousTotal >= SEUIL_LIVRAISON_OFFERTE;
-  const frais = livraisonOfferte ? 0 : zoneChoisie.tarif;
-  const total = sousTotal + frais;
-  const reste = SEUIL_LIVRAISON_OFFERTE - sousTotal;
-  const paiementLivraisonPossible = total <= PLAFOND_PAIEMENT_LIVRAISON && zone !== "regions";
+  const zoneChoisie = MODES_RECEPTION.find((z) => z.id === zone)!;
+  const total = sousTotal;
+  const paiementLivraisonPossible = total <= PLAFOND_PAIEMENT_LIVRAISON;
   const moyenEffectif = moyen === "livraison" && !paiementLivraisonPossible ? "wave" : moyen;
   const complet = nom.trim() && telephone.trim() && (zone === "retrait" || adresse.trim());
 
@@ -55,13 +52,12 @@ export default function Panier() {
   const message = [
     "Bonjour Sakaba Beauty, je souhaite commander :",
     ...lignes.map((l) => `• ${l.quantite} × ${nomMarque(l.produit.marque)} ${l.produit.nom} (${l.produit.contenance}) — ${formatPrix(l.quantite * l.produit.prix)}`),
-    `Sous-total : ${formatPrix(sousTotal)}`,
-    `${zoneChoisie.nom} : ${frais === 0 ? "gratuit" : formatPrix(frais)}`,
-    `TOTAL : ${formatPrix(total)}`,
+    `TOTAL produits : ${formatPrix(total)}`,
+    `Réception : ${zoneChoisie.nom}${zone === "livraison" ? " (prix à convenir avec le livreur)" : ""}`,
     `Paiement : ${MOYENS_PAIEMENT.find((m) => m.id === moyenEffectif)!.nom}`,
     `Nom : ${nom}`,
     `Téléphone : ${telephone}`,
-    zone !== "retrait" ? `Adresse : ${adresse}` : "",
+    zone !== "retrait" ? `Adresse de livraison : ${adresse}` : "",
   ].filter(Boolean).join("\n");
 
   return (
@@ -72,18 +68,12 @@ export default function Panier() {
       texte="Sans créer de compte · Paiement Wave, Orange Money, carte ou à la livraison."
     />
     <div className="mx-auto max-w-6xl px-4 py-10">
-      {/* Livraison offerte : montant restant (§9.2) */}
-      <div className="rounded-3xl bg-creme p-5">
-        {livraisonOfferte ? (
-          <p className="font-semibold text-green-800">✓ La livraison vous est offerte.</p>
-        ) : (
-          <p>
-            Plus que <strong className="prix">{formatPrix(reste)}</strong> pour la livraison offerte.
-          </p>
-        )}
-        <div className="mt-2 h-2 rounded-full bg-white overflow-hidden">
-          <div className="h-full rounded-full bg-gradient-to-r from-or-clair to-or" style={{ width: `${Math.min(100, (sousTotal / SEUIL_LIVRAISON_OFFERTE) * 100)}%` }} />
-        </div>
+      <div className="rounded-3xl bg-creme p-5 flex gap-3 items-start">
+        <span className="text-or text-xl leading-none" aria-hidden>✦</span>
+        <p className="text-sm">
+          <strong>Livraison :</strong> après votre commande, le livreur vous appelle. Vous convenez directement avec lui
+          du prix, de l&apos;heure et du lieu. Ou retirez gratuitement à la boutique de Mermoz.
+        </p>
       </div>
 
       <div className="mt-8 grid md:grid-cols-[1fr_380px] gap-10">
@@ -114,16 +104,15 @@ export default function Panier() {
         <aside className="relative rounded-3xl bg-white p-6 h-fit space-y-6 shadow-[0_25px_70px_-30px_rgba(20,16,11,0.45)] overflow-hidden md:sticky md:top-36">
           <span className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-or-clair via-or to-or-clair" aria-hidden />
           <fieldset>
-            <legend className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or mb-2">Livraison</legend>
+            <legend className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or mb-2">Réception</legend>
             <div className="space-y-2">
-              {ZONES_LIVRAISON.map((z) => (
+              {MODES_RECEPTION.map((z) => (
                 <label key={z.id} className={`flex items-start gap-3 rounded-2xl border p-3 cursor-pointer transition ${zone === z.id ? "border-or bg-creme" : "border-bordure hover:border-or/50"}`}>
                   <input type="radio" name="zone" checked={zone === z.id} onChange={() => setZone(z.id)} className="mt-1 accent-[#C59735]" />
                   <span className="flex-1 text-sm">
                     <span className="font-semibold block">{z.nom}</span>
-                    <span className="text-gris">{z.delai}</span>
+                    <span className="text-gris">{z.detail}</span>
                   </span>
-                  <span className="prix text-sm font-semibold">{z.tarif === 0 || livraisonOfferte ? "Gratuit" : formatPrix(z.tarif)}</span>
                 </label>
               ))}
             </div>
@@ -149,7 +138,7 @@ export default function Panier() {
                     <span className="text-sm">
                       <span className="font-semibold block">{m.nom}</span>
                       <span className="text-gris">
-                        {indisponible ? `Non disponible en régions ni au-delà de ${formatPrix(PLAFOND_PAIEMENT_LIVRAISON)}` : m.detail}
+                        {indisponible ? `Non disponible au-delà de ${formatPrix(PLAFOND_PAIEMENT_LIVRAISON)}` : m.detail}
                       </span>
                     </span>
                   </label>
@@ -159,9 +148,8 @@ export default function Panier() {
           </fieldset>
 
           <dl className="space-y-1 text-sm border-t border-bordure pt-4">
-            <div className="flex justify-between"><dt>Sous-total</dt><dd className="prix">{formatPrix(sousTotal)}</dd></div>
-            <div className="flex justify-between"><dt>Livraison</dt><dd className="prix">{frais === 0 ? "Gratuit" : formatPrix(frais)}</dd></div>
-            <div className="flex justify-between items-baseline pt-2"><dt className="titre text-2xl">Total</dt><dd className="prix titre text-3xl font-semibold">{formatPrix(total)}</dd></div>
+            <div className="flex justify-between"><dt>Livraison</dt><dd className="text-gris">{zone === "retrait" ? "Gratuit" : "À régler au livreur"}</dd></div>
+            <div className="flex justify-between items-baseline pt-2"><dt className="titre text-2xl">Total produits</dt><dd className="prix titre text-3xl font-semibold">{formatPrix(total)}</dd></div>
           </dl>
 
           <a

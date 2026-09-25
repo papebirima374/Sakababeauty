@@ -76,10 +76,11 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
 - Étape 1 (vitrine) en place : accueil, univers/catégories, marques, fiche produit
   avec preuve d'authenticité, recherche tolérante aux fautes, filtres, diagnostic
   beauté, panier sans compte (commande envoyée par WhatsApp pour l'instant).
-- **Provisoire** : 17 produits d'exemple (`lib/catalogue.ts`), zones et tarifs de
-  livraison (`lib/config.ts`), règles du diagnostic (`lib/diagnostic.ts`), texte de
+- **Provisoire** : 17 produits d'exemple (`lib/catalogue.ts`), règles du diagnostic (`lib/diagnostic.ts`), texte de
   la page Authenticité.
-- **À obtenir de Sakaba** : zones et tarifs de livraison, accès
+- **Livraison (décision du 25/09/2026)** : aucun tarif sur le site, la cliente
+  convient du prix directement avec le livreur (`MODES_RECEPTION`, `lib/config.ts`).
+- **À obtenir de Sakaba** : accès
   WordPress/WooCommerce (export des 2 700 produits), règles du diagnostic.
 - **Étapes suivantes** : Firebase (catalogue, commandes, stocks), paiement Wave /
   Orange Money via agrégateur, plateforme de gestion.

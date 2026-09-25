@@ -30,18 +30,22 @@ export const URL_SITE =
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : "https://sakababeauty-nu.vercel.app");
 
-// À CONFIRMER (semaine 5) : zones, tarifs et délais de livraison.
-export const ZONES_LIVRAISON = [
-  { id: "retrait", nom: "Retrait en boutique à Mermoz", tarif: 0, delai: "Prête en 2 h" },
-  { id: "dakar", nom: "Dakar centre", tarif: 1500, delai: "Livrée le jour même ou le lendemain" },
-  { id: "banlieue", nom: "Banlieue (Pikine, Guédiawaye, Rufisque…)", tarif: 2500, delai: "24 à 48 h" },
-  { id: "regions", nom: "Régions", tarif: 4000, delai: "2 à 4 jours" },
+// Réception de la commande. Décision de Sakaba (25/09/2026) : pas de tarif de
+// livraison fixé par le site, la cliente convient du prix directement avec le livreur.
+export const MODES_RECEPTION = [
+  {
+    id: "retrait",
+    nom: "Retrait à la boutique de Mermoz",
+    detail: "Gratuit. On vous prévient sur WhatsApp quand c'est prêt.",
+  },
+  {
+    id: "livraison",
+    nom: "Livraison",
+    detail: "Le livreur vous appelle : le prix et l'heure se règlent directement avec lui.",
+  },
 ] as const;
 
-export type ZoneId = (typeof ZONES_LIVRAISON)[number]["id"];
-
-// À CONFIRMER : seuil de livraison offerte.
-export const SEUIL_LIVRAISON_OFFERTE = 30000;
+export type ModeReception = (typeof MODES_RECEPTION)[number]["id"];
 
 // Paiement à la livraison : plafond (cahier des charges §9.1).
 export const PLAFOND_PAIEMENT_LIVRAISON = 75000;

@@ -98,8 +98,8 @@ export default async function FicheProduit({ params }: PageProps<"/produit/[slug
           <ul className="mt-5 grid grid-cols-2 gap-2 text-sm">
             {[
               ["✦", "100 % authentique", "Importé des USA"],
-              ["⌂", "Retrait gratuit", "Mermoz, prêt en 2 h"],
-              ["➜", "Livraison rapide", "Dakar sous 24 h"],
+              ["⌂", "Retrait gratuit", "À la boutique de Mermoz"],
+              ["➜", "Livraison", "Prix convenu avec le livreur"],
               ["₣", "Wave & Orange Money", "ou à la livraison"],
             ].map(([icone, titre, texte]) => (
               <li key={titre} className="flex items-center gap-3 rounded-2xl bg-creme px-3 py-2.5">

@@ -2,7 +2,6 @@
 // inventés pour montrer à Sakaba ce que l'outil affichera. Les stocks et les
 // produits viennent du catalogue d'exemple. Rien ici n'est une vraie vente.
 import { PRODUITS, type Produit } from "./catalogue";
-import { ZONES_LIVRAISON } from "./config";
 
 // Générateur pseudo-aléatoire à graine fixe : les mêmes chiffres à chaque visite.
 function hasard(graine: number) {
@@ -34,6 +33,7 @@ export type Commande = {
 };
 
 const PRENOMS = ["Aïssatou D.", "Fatou N.", "Mariama S.", "Khady F.", "Awa G.", "Ndèye B.", "Coumba T.", "Astou M."];
+const ZONES = ["Retrait à Mermoz", "Livraison · Dakar", "Livraison · Pikine", "Livraison · Thiès"];
 const PAIEMENTS = ["Wave", "Orange Money", "Carte bancaire", "À la livraison"];
 const ORDRE: StatutCommande[] = ["nouvelle", "nouvelle", "preparation", "preparation", "livraison", "livree", "livree", "livree"];
 
@@ -46,16 +46,15 @@ export function commandesDuJour(): Commande[] {
       produit: disponibles[Math.floor(r() * disponibles.length)],
       quantite: 1 + Math.floor(r() * 2),
     }));
-    const zone = ZONES_LIVRAISON[Math.floor(r() * ZONES_LIVRAISON.length)];
-    const sousTotal = lignes.reduce((t, l) => t + l.quantite * l.produit.prix, 0);
+    const zone = ZONES[Math.floor(r() * ZONES.length)];
     return {
       numero: `SKB-${1048 - i}`,
       cliente: PRENOMS[i],
       heure: `${String(17 - i).padStart(2, "0")}:${String(Math.floor(r() * 60)).padStart(2, "0")}`,
-      zone: zone.nom,
-      paiement: zone.id === "regions" ? "Wave" : PAIEMENTS[Math.floor(r() * PAIEMENTS.length)],
+      zone,
+      paiement: PAIEMENTS[Math.floor(r() * PAIEMENTS.length)],
       lignes,
-      total: sousTotal + (sousTotal >= 30000 ? 0 : zone.tarif),
+      total: lignes.reduce((t, l) => t + l.quantite * l.produit.prix, 0),
       statut,
     };
   });
