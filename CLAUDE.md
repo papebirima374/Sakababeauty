@@ -39,7 +39,8 @@ une démo qui impressionne (style noir et or, comme /avis et /masterclass).
 Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc.
 
 - Page **/contact** : adresse, 2 numéros (tel:), itinéraire Google Maps vers le
-  repère (Case des Tout-Petits). Numéro WhatsApp et horaires : À CONFIRMER.
+  repère (Case des Tout-Petits). WhatsApp de la boutique : **78 588 54 54** (confirmé le
+  25/09/2026, dans `lib/config.ts`). Horaires : À CONFIRMER.
 - Démo **/gestion** (espace de gestion, non indexé, sans lien depuis la boutique) :
   chiffres, commandes et avis INVENTÉS (`lib/demo-gestion.ts`), stocks du catalogue
   d'exemple. Sert à montrer à la directrice ce que l'outil fera.
@@ -78,7 +79,7 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
 - **Provisoire** : 17 produits d'exemple (`lib/catalogue.ts`), zones et tarifs de
   livraison (`lib/config.ts`), règles du diagnostic (`lib/diagnostic.ts`), texte de
   la page Authenticité.
-- **À obtenir de Sakaba** : numéro WhatsApp, zones et tarifs de livraison, accès
+- **À obtenir de Sakaba** : zones et tarifs de livraison, accès
   WordPress/WooCommerce (export des 2 700 produits), règles du diagnostic.
 - **Étapes suivantes** : Firebase (catalogue, commandes, stocks), paiement Wave /
   Orange Money via agrégateur, plateforme de gestion.

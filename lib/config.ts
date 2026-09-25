@@ -14,8 +14,8 @@ export const BOUTIQUE = {
   itineraire: "https://www.google.com/maps/search/?api=1&query=Case+des+Tout-Petits+Mermoz+Ancienne+Piste+Dakar",
   instagram: "https://www.instagram.com/sakababeauty/",
   // Numéro WhatsApp de la boutique, format international sans « + » (ex. 221770000000).
-  // À CONFIRMER : laissé vide, le bouton ouvre WhatsApp sans destinataire.
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_BOUTIQUE ?? "",
+  // 78 588 54 54, confirmé par Birima le 25/09/2026.
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_BOUTIQUE || "221785885454",
 };
 
 // Le site n'est indexé par Google que si cette variable vaut « production ».
