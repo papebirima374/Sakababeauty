@@ -11,6 +11,14 @@ export default function PiedDePage() {
           <Image src="/logo-sakaba.png" alt="Sakaba Beauty" width={72} height={72} className="rounded-full bg-white" />
           <p className="titre text-xl mt-3 text-or-clair">{BOUTIQUE.slogan}</p>
           <p className="text-sm text-creme/70 mt-2">{BOUTIQUE.adresse}</p>
+          <p className="text-sm mt-2">
+            {BOUTIQUE.telephones.map((t, i) => (
+              <span key={t.lien}>
+                {i > 0 && <span className="text-creme/50"> ou </span>}
+                <a href={t.lien} className="prix font-semibold hover:text-or-clair">{t.affiche}</a>
+              </span>
+            ))}
+          </p>
         </div>
         <div>
           <h2 className="font-semibold text-or-clair mb-3">Boutique</h2>
@@ -30,6 +38,7 @@ export default function PiedDePage() {
             <li><Link href="/marques" className="hover:text-or-clair">Toutes les marques</Link></li>
             <li><Link href="/livraison" className="hover:text-or-clair">Livraison et retrait</Link></li>
             <li><Link href="/masterclass" className="hover:text-or-clair">Masterclass</Link></li>
+            <li><Link href="/contact" className="hover:text-or-clair">Nous trouver · Contact</Link></li>
             <li><Link href="/avis" className="hover:text-or-clair">Donner mon avis</Link></li>
           </ul>
         </div>

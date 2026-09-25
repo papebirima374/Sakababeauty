@@ -4,7 +4,14 @@
 export const BOUTIQUE = {
   nom: "Sakaba Beauty",
   slogan: "La beauté authentique, avec le bon conseil",
-  adresse: "Mermoz Ancienne Piste, Dakar, Sénégal",
+  adresse: "Mermoz Ancienne Piste, à côté de la Case des Tout-Petits, Dakar",
+  // Numéros donnés par Birima le 24/09/2026.
+  telephones: [
+    { affiche: "78 588 54 54", lien: "tel:+221785885454" },
+    { affiche: "78 303 24 24", lien: "tel:+221783032424" },
+  ],
+  // Itinéraire vers le repère donné par la boutique (Case des Tout-Petits de Mermoz).
+  itineraire: "https://www.google.com/maps/search/?api=1&query=Case+des+Tout-Petits+Mermoz+Ancienne+Piste+Dakar",
   instagram: "https://www.instagram.com/sakababeauty/",
   // Numéro WhatsApp de la boutique, format international sans « + » (ex. 221770000000).
   // À CONFIRMER : laissé vide, le bouton ouvre WhatsApp sans destinataire.
