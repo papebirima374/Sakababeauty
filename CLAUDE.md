@@ -44,6 +44,9 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
 - Démo **/gestion** (espace de gestion, non indexé, sans lien depuis la boutique) :
   chiffres, commandes et avis INVENTÉS (`lib/demo-gestion.ts`), stocks du catalogue
   d'exemple. Sert à montrer à la directrice ce que l'outil fera.
+- Démo **/gestion/caisse** : caisse pour les ventes EN BOUTIQUE (grosse boutique) :
+  recherche produit, ticket, paiement, reçu WhatsApp, stock qui baisse. Rien n'est
+  enregistré (état de la page seulement).
 
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :

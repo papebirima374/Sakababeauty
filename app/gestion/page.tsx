@@ -45,9 +45,14 @@ export default function Gestion() {
             <h1 className="titre text-3xl sm:text-4xl leading-tight">Bonjour, voici votre journée</h1>
             <p className="text-sm text-creme/70 first-letter:uppercase">{dateDuJour}</p>
           </div>
-          <Link href="/" className="rounded-full border border-creme/30 px-5 py-2 text-sm font-semibold hover:border-or-clair hover:text-or-clair">
-            Voir la boutique
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/gestion/caisse" className="rounded-full bg-gradient-to-r from-or to-[#B0852A] px-5 py-2 text-sm font-semibold text-white hover:brightness-110">
+              Caisse boutique
+            </Link>
+            <Link href="/" className="rounded-full border border-creme/30 px-5 py-2 text-sm font-semibold hover:border-or-clair hover:text-or-clair">
+              Voir la boutique
+            </Link>
+          </div>
         </div>
       </header>
 
