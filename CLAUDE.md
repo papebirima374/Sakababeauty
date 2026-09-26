@@ -44,9 +44,13 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
 - Démo **/gestion** (espace de gestion, non indexé, sans lien depuis la boutique) :
   chiffres, commandes et avis INVENTÉS (`lib/demo-gestion.ts`), stocks du catalogue
   d'exemple. Sert à montrer à la directrice ce que l'outil fera.
-- Démo **/gestion/caisse** : caisse pour les ventes EN BOUTIQUE (grosse boutique) :
-  recherche produit, ticket, paiement, reçu WhatsApp, stock qui baisse. Rien n'est
-  enregistré (état de la page seulement).
+- Démo **/gestion/caisse** : vraie caisse de comptoir (douchette = clavier, codes
+  EAN-13 internes « 2… » de démo, pavé numérique Qté/Remise/Reçu, rendu de monnaie,
+  ticket 80 mm imprimable, ticket WhatsApp, clôture par moyen de paiement). Rien
+  n'est enregistré.
+- Démo **/gestion/solution** : proposition « une seule solution » (caisse + site +
+  stock + gestion, synchronisés, hors connexion) pour REMPLACER le logiciel de
+  gestion commerciale actuel de Sakaba (nom du logiciel : À CONFIRMER).
 
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :

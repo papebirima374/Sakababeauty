@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function PageCaisse() {
   return (
-    <main className="flex-1 bg-creme min-h-screen">
-      <header className="bg-noir text-creme">
+    <main className="flex-1 bg-creme min-h-screen print:bg-white">
+      <header className="bg-noir text-creme print:hidden">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center gap-4">
           <Image src="/logo-sakaba.png" alt="Sakaba Beauty" width={44} height={44} className="rounded-full bg-white" />
           <div className="flex-1 min-w-0">
@@ -23,10 +23,11 @@ export default function PageCaisse() {
           </Link>
         </div>
       </header>
-      <div className="bg-or/15 border-b border-or/30">
+      <div className="bg-or/15 border-b border-or/30 print:hidden">
         <p className="mx-auto max-w-6xl px-4 py-2.5 text-sm">
-          <strong>Démonstration.</strong> Rien n&apos;est enregistré : essayez librement. Dans la version complète, chaque
-          vente en boutique retire le produit du stock du site en même temps.
+          <strong>Démonstration.</strong> Rien n&apos;est enregistré : essayez librement. Fonctionne avec une douchette
+          (lecteur de codes-barres) et une imprimante de tickets. Chaque vente retire le produit du stock unique, partagé
+          avec le site.
         </p>
       </div>
       <Caisse />
