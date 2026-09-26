@@ -48,9 +48,13 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
   EAN-13 internes « 2… » de démo, pavé numérique Qté/Remise/Reçu, rendu de monnaie,
   ticket 80 mm imprimable, ticket WhatsApp, clôture par moyen de paiement). Rien
   n'est enregistré.
-- Démo **/gestion/solution** : proposition « une seule solution » (caisse + site +
-  stock + gestion, synchronisés, hors connexion) pour REMPLACER le logiciel de
-  gestion commerciale actuel de Sakaba (nom du logiciel : À CONFIRMER).
+- Démo **/gestion/solution** : proposition « le site et Odoo, synchronisés ».
+  Sakaba utiliserait **Odoo** (dit par Birima le 26/09/2026, « je pense » : À
+  CONFIRMER, avec l'édition, l'hébergement odoo.com ou serveur, et l'accès à l'API
+  externe — sur Odoo Online, l'API n'est ouverte qu'avec l'offre « Custom »).
+  Recommandation : garder la caisse et le stock Odoo, brancher le site dessus
+  (lecture stock/prix, commandes du site créées dans Odoo). La démo /gestion/caisse
+  n'est plus mise en avant.
 
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :
