@@ -48,13 +48,14 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
   EAN-13 internes « 2… » de démo, pavé numérique Qté/Remise/Reçu, rendu de monnaie,
   ticket 80 mm imprimable, ticket WhatsApp, clôture par moyen de paiement). Rien
   n'est enregistré.
-- Démo **/gestion/solution** : proposition « le site et Odoo, synchronisés ».
-  Sakaba utiliserait **Odoo** (dit par Birima le 26/09/2026, « je pense » : À
-  CONFIRMER, avec l'édition, l'hébergement odoo.com ou serveur, et l'accès à l'API
-  externe — sur Odoo Online, l'API n'est ouverte qu'avec l'offre « Custom »).
-  Recommandation : garder la caisse et le stock Odoo, brancher le site dessus
-  (lecture stock/prix, commandes du site créées dans Odoo). La démo /gestion/caisse
-  n'est plus mise en avant.
+- **Décision du 26/09/2026 : on construit NOTRE solution complète** (caisse, stock,
+  site, gestion), sans dépendre d'Odoo (logiciel actuel de Sakaba). Sakaba est la
+  première cliente ; le produit sera proposé à d'autres boutiques. Le nom du
+  produit sera choisi à la fin. Page de présentation : **/gestion/solution**.
+  Les données d'Odoo (articles, codes-barres, stocks, clientes) seront récupérées
+  par export Excel/CSV.
+- Contrat avec Sakaba : prévoir que la plateforme reste la propriété de Birima
+  (Sakaba paie l'usage), sinon il ne pourra pas la revendre.
 
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :
