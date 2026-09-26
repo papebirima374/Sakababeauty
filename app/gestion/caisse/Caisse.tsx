@@ -1,41 +1,59 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { PRODUITS, nomMarque, type Produit } from "@/lib/catalogue";
 import { formatPrix } from "@/lib/config";
 
-// Caisse de comptoir de DÉMONSTRATION : lecture de codes-barres (une douchette
-// USB se comporte comme un clavier), pavé numérique, remise, rendu de monnaie,
-// ticket imprimable et clôture. Rien n'est enregistré : stocks et ventes ne
-// vivent que dans la page. Dans la version complète, chaque vente met à jour
-// le stock unique partagé avec le site.
+// Écran de caisse de comptoir : lecture de codes-barres (une douchette USB se
+// comporte comme un clavier), pavé numérique, remise, rendu de monnaie, ticket
+// imprimable et clôture. Il ne sait pas d'où viennent les produits : la
+// démonstration (CaisseDemo) ou la vraie base (CaisseFirebase) les lui donnent.
 
-// Codes-barres internes de démonstration (EAN-13 commençant par 2, plage
-// réservée aux codes propres à un magasin). Les vrais codes viendront du
-// logiciel de gestion actuel de Sakaba.
-function ean13(n: number) {
-  const base = `20000${String(n).padStart(7, "0")}`;
-  const somme = [...base].reduce((t, c, i) => t + Number(c) * (i % 2 ? 3 : 1), 0);
-  return base + ((10 - (somme % 10)) % 10);
-}
-const ARTICLES = PRODUITS.map((p, i) => ({ produit: p, code: ean13(i + 1) }));
-const PAR_CODE = new Map(ARTICLES.map((a) => [a.code, a]));
-
-const PAIEMENTS = ["Espèces", "Wave", "Orange Money", "Carte"] as const;
-type Paiement = (typeof PAIEMENTS)[number];
-type Ligne = { produit: Produit; code: string; quantite: number; remise: number };
-type Vente = { numero: number; lignes: Ligne[]; total: number; paiement: Paiement; recu: number; heure: string; vendeuse: string; telephone: string };
+export type Article = { id: string; nom: string; marqueNom: string; prix: number; stock: number; codeBarre: string };
+export const PAIEMENTS = ["Espèces", "Wave", "Orange Money", "Carte"] as const;
+export type Paiement = (typeof PAIEMENTS)[number];
+export type Ligne = { id: string; nom: string; marqueNom: string; codeBarre: string; prix: number; quantite: number; remise: number };
+export type Vente = {
+  numero: string;
+  lignes: Ligne[];
+  total: number;
+  paiement: Paiement;
+  recu: number;
+  heure: string;
+  vendeuse: string;
+  telephone: string;
+  enAttente?: boolean; // pas encore arrivée sur le serveur (hors connexion)
+};
 type Mode = "quantite" | "remise" | "recu";
 
-const sansAccents = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-const montantLigne = (l: Ligne) => Math.round((l.quantite * l.produit.prix * (100 - l.remise)) / 100);
+const sansAccents = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+export const montantLigne = (l: Ligne) => Math.round((l.quantite * l.prix * (100 - l.remise)) / 100);
 const numeroWhatsApp = (tel: string) => {
   const c = tel.replace(/\D/g, "");
   return c.length === 9 ? `221${c}` : c;
 };
+// Numéro de ticket unique même hors connexion : date + 4 caractères au hasard.
+function nouveauNumero() {
+  const d = new Intl.DateTimeFormat("fr-CA", { year: "2-digit", month: "2-digit", day: "2-digit", timeZone: "Africa/Dakar" }).format(new Date()).replace(/-/g, "");
+  return `${d}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+}
 
-export default function Caisse() {
-  const [stocks, setStocks] = useState<Record<string, number>>(() => Object.fromEntries(PRODUITS.map((p) => [p.slug, p.stock])));
+export default function EcranCaisse({
+  articles,
+  ventes,
+  enregistrer,
+  vendeuses,
+  vendeuseFixe,
+  erreur,
+}: {
+  articles: Article[];
+  ventes: Vente[];
+  enregistrer: (v: Vente) => void;
+  vendeuses?: string[];
+  vendeuseFixe?: string;
+  erreur?: string;
+}) {
+  const stocks = useMemo(() => Object.fromEntries(articles.map((a) => [a.id, a.stock])) as Record<string, number>, [articles]);
+  const parCode = useMemo(() => new Map(articles.map((a) => [a.codeBarre, a])), [articles]);
   const [saisie, setSaisie] = useState("");
   const [ticket, setTicket] = useState<Ligne[]>([]);
   const [selection, setSelection] = useState(0);
@@ -43,43 +61,43 @@ export default function Caisse() {
   const [recu, setRecu] = useState(0);
   const [paiement, setPaiement] = useState<Paiement>("Espèces");
   const [telephone, setTelephone] = useState("");
-  const [vendeuse, setVendeuse] = useState("Vendeuse 1");
+  const [vendeuseChoisie, setVendeuse] = useState(vendeuses?.[0] ?? "");
+  const vendeuse = vendeuseFixe ?? vendeuseChoisie;
   const [message, setMessage] = useState<{ texte: string; erreur?: boolean } | null>(null);
-  const [ventes, setVentes] = useState<Vente[]>([]);
   const [derniere, setDerniere] = useState<Vente | null>(null);
   const [cloture, setCloture] = useState(false);
   const champ = useRef<HTMLInputElement>(null);
 
   const total = ticket.reduce((t, l) => t + montantLigne(l), 0);
-  const articles = ticket.reduce((t, l) => t + l.quantite, 0);
+  const nbArticles = ticket.reduce((t, l) => t + l.quantite, 0);
   const rendu = paiement === "Espèces" ? recu - total : 0;
   const peutValider = ticket.length > 0 && (paiement !== "Espèces" || recu >= total);
 
   const suggestions = useMemo(() => {
     const q = sansAccents(saisie.trim());
     if (!q || /^\d+$/.test(q)) return [];
-    return ARTICLES.filter((a) => sansAccents(`${nomMarque(a.produit.marque)} ${a.produit.nom}`).includes(q)).slice(0, 6);
-  }, [saisie]);
+    return articles.filter((a) => sansAccents(`${a.marqueNom} ${a.nom}`).includes(q)).slice(0, 6);
+  }, [saisie, articles]);
 
   function annoncer(texte: string, erreur = false) {
     setMessage({ texte, erreur });
   }
 
-  function ajouter(a: (typeof ARTICLES)[number]) {
-    const deja = ticket.find((l) => l.produit.slug === a.produit.slug)?.quantite ?? 0;
-    if (deja + 1 > stocks[a.produit.slug]) {
-      annoncer(`${a.produit.nom} : plus de stock (${stocks[a.produit.slug]}).`, true);
+  function ajouter(a: Article) {
+    const deja = ticket.find((l) => l.id === a.id)?.quantite ?? 0;
+    if (deja + 1 > stocks[a.id]) {
+      annoncer(`${a.nom} : plus de stock (${stocks[a.id]}).`, true);
       return;
     }
-    const i = ticket.findIndex((l) => l.produit.slug === a.produit.slug);
+    const i = ticket.findIndex((l) => l.id === a.id);
     if (i >= 0) {
       setTicket(ticket.map((l, j) => (j === i ? { ...l, quantite: l.quantite + 1 } : l)));
       setSelection(i);
     } else {
-      setTicket([...ticket, { produit: a.produit, code: a.code, quantite: 1, remise: 0 }]);
+      setTicket([...ticket, { id: a.id, nom: a.nom, marqueNom: a.marqueNom, codeBarre: a.codeBarre, prix: a.prix, quantite: 1, remise: 0 }]);
       setSelection(ticket.length);
     }
-    annoncer(`${nomMarque(a.produit.marque)} ${a.produit.nom} · ${formatPrix(a.produit.prix)}`);
+    annoncer(`${a.marqueNom} ${a.nom} · ${formatPrix(a.prix)}`);
     setSaisie("");
     champ.current?.focus();
   }
@@ -88,14 +106,15 @@ export default function Caisse() {
     e.preventDefault();
     const s = saisie.trim();
     if (!s) return;
-    const a = PAR_CODE.get(s.replace(/\s/g, ""));
+    const a = parCode.get(s.replace(/\s/g, ""));
     if (a) return ajouter(a);
     if (suggestions.length === 1) return ajouter(suggestions[0]);
     annoncer(/^\d+$/.test(s) ? `Code ${s} inconnu.` : "Choisissez l'article dans la liste.", true);
   }
 
   function scannerDemo() {
-    const dispo = ARTICLES.filter((a) => stocks[a.produit.slug] > 0);
+    const dispo = articles.filter((a) => stocks[a.id] > 0);
+    if (!dispo.length) return;
     ajouter(dispo[Math.floor(Math.random() * dispo.length)]);
   }
 
@@ -118,8 +137,8 @@ export default function Caisse() {
       if (n === 0) {
         setTicket((t) => t.filter((_, i) => i !== selection));
         setSelection(0);
-      } else if (n > stocks[l.produit.slug]) {
-        annoncer(`Stock insuffisant : ${stocks[l.produit.slug]} disponible(s).`, true);
+      } else if (n > stocks[l.id]) {
+        annoncer(`Stock insuffisant : ${stocks[l.id]} disponible(s).`, true);
         return;
       } else setTicket((t) => t.map((x, i) => (i === selection ? { ...x, quantite: n } : x)));
     } else {
@@ -132,7 +151,7 @@ export default function Caisse() {
   function encaisser() {
     if (!peutValider) return;
     const v: Vente = {
-      numero: 1001 + ventes.length,
+      numero: nouveauNumero(),
       lignes: ticket,
       total,
       paiement,
@@ -141,12 +160,7 @@ export default function Caisse() {
       vendeuse,
       telephone: telephone.trim(),
     };
-    setStocks((s) => {
-      const n = { ...s };
-      for (const l of ticket) n[l.produit.slug] -= l.quantite;
-      return n;
-    });
-    setVentes((x) => [v, ...x]);
+    enregistrer(v);
     setDerniere(v);
     setTicket([]);
     setRecu(0);
@@ -160,7 +174,7 @@ export default function Caisse() {
   if (derniere) {
     const texte = [
       `SAKABA BEAUTY — Ticket n° ${derniere.numero} (${derniere.heure})`,
-      ...derniere.lignes.map((l) => `${l.quantite} × ${nomMarque(l.produit.marque)} ${l.produit.nom}${l.remise ? ` (-${l.remise} %)` : ""} : ${formatPrix(montantLigne(l))}`),
+      ...derniere.lignes.map((l) => `${l.quantite} × ${l.marqueNom} ${l.nom}${l.remise ? ` (-${l.remise} %)` : ""} : ${formatPrix(montantLigne(l))}`),
       `TOTAL : ${formatPrix(derniere.total)} — ${derniere.paiement}`,
       "Merci pour votre visite à Mermoz !",
     ].join("\n");
@@ -174,10 +188,10 @@ export default function Caisse() {
           <p>{derniere.heure} · {derniere.vendeuse}</p>
           <div className="mt-2 border-t border-dashed border-black pt-2 space-y-1.5">
             {derniere.lignes.map((l) => (
-              <div key={l.code}>
-                <p>{nomMarque(l.produit.marque)} {l.produit.nom}</p>
+              <div key={l.codeBarre}>
+                <p>{l.marqueNom} {l.nom}</p>
                 <p className="flex justify-between">
-                  <span>{l.quantite} × {formatPrix(l.produit.prix)}{l.remise ? ` −${l.remise} %` : ""}</span>
+                  <span>{l.quantite} × {formatPrix(l.prix)}{l.remise ? ` −${l.remise} %` : ""}</span>
                   <span>{formatPrix(montantLigne(l))}</span>
                 </p>
               </div>
@@ -199,8 +213,8 @@ export default function Caisse() {
             )}
             <ul className="mt-4 text-sm text-gris space-y-1">
               {derniere.lignes.map((l) => (
-                <li key={l.code}>
-                  {l.produit.nom} : stock {stocks[l.produit.slug] + l.quantite} → <strong className="text-noir">{stocks[l.produit.slug]}</strong>
+                <li key={l.codeBarre}>
+                  {l.nom} : stock {stocks[l.id] + l.quantite} → <strong className="text-noir">{stocks[l.id]}</strong>
                 </li>
               ))}
             </ul>
@@ -242,6 +256,11 @@ export default function Caisse() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or">Clôture de caisse</p>
           <p className="prix titre text-5xl font-semibold mt-1">{formatPrix(totalJour)}</p>
           <p className="text-gris">{ventes.length} ticket{ventes.length > 1 ? "s" : ""}{ventes.length ? ` · panier moyen ${formatPrix(Math.round(totalJour / ventes.length))}` : ""}</p>
+          {ventes.some((v) => v.enAttente) && (
+            <p className="mt-3 rounded-2xl bg-amber-50 ring-1 ring-amber-300 p-3 text-sm text-amber-900">
+              ! {ventes.filter((v) => v.enAttente).length} vente(s) pas encore envoyée(s) : pas de connexion. Elles partiront toutes seules au retour d&apos;internet.
+            </p>
+          )}
           <table className="mt-5 w-full text-sm">
             <tbody>
               {parMode.map((x) => (
@@ -271,10 +290,14 @@ export default function Caisse() {
     <div className="mx-auto max-w-7xl px-3 sm:px-4 py-4 grid lg:grid-cols-[1fr_400px] gap-4 items-start">
       <section className="min-w-0 space-y-3">
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <select value={vendeuse} onChange={(e) => setVendeuse(e.target.value)} className="rounded-xl border border-bordure bg-white px-3 py-2 font-semibold" aria-label="Vendeuse">
-            {["Vendeuse 1", "Vendeuse 2", "Vendeuse 3"].map((v) => <option key={v}>{v}</option>)}
-          </select>
-          <span className="text-gris">Caisse 1 · Ticket n° {1001 + ventes.length}</span>
+          {vendeuseFixe ? (
+            <span className="rounded-xl bg-white ring-1 ring-bordure px-3 py-2 font-semibold">{vendeuseFixe}</span>
+          ) : (
+            <select value={vendeuse} onChange={(e) => setVendeuse(e.target.value)} className="rounded-xl border border-bordure bg-white px-3 py-2 font-semibold" aria-label="Vendeuse">
+              {(vendeuses ?? []).map((v) => <option key={v}>{v}</option>)}
+            </select>
+          )}
+          <span className="text-gris">Caisse 1 · {ventes.length} ticket{ventes.length > 1 ? "s" : ""} aujourd&apos;hui</span>
           <span className="flex-1" />
           <button type="button" onClick={() => setCloture(true)} className="rounded-xl border border-bordure bg-white px-3 py-2 font-semibold hover:border-or">
             Clôture ({ventes.length})
@@ -299,10 +322,10 @@ export default function Caisse() {
           {suggestions.length > 0 && (
             <ul className="absolute z-20 left-0 right-0 mt-1 rounded-2xl bg-white shadow-xl ring-1 ring-bordure overflow-hidden">
               {suggestions.map((a) => (
-                <li key={a.code}>
+                <li key={a.codeBarre}>
                   <button type="button" onClick={() => ajouter(a)} className="w-full text-left px-4 py-2.5 hover:bg-creme flex justify-between gap-3">
-                    <span className="truncate"><span className="text-gris">{nomMarque(a.produit.marque)}</span> {a.produit.nom}</span>
-                    <span className="prix shrink-0 font-semibold">{formatPrix(a.produit.prix)}</span>
+                    <span className="truncate"><span className="text-gris">{a.marqueNom}</span> {a.nom}</span>
+                    <span className="prix shrink-0 font-semibold">{formatPrix(a.prix)}</span>
                   </button>
                 </li>
               ))}
@@ -312,6 +335,7 @@ export default function Caisse() {
         <p className={`min-h-6 text-sm ${message?.erreur ? "text-red-800 font-semibold" : "text-gris"}`} role="status">
           {message?.texte ?? "Prête. Scannez un article."}
         </p>
+        {erreur && <p className="rounded-xl bg-red-50 ring-1 ring-red-300 p-3 text-sm text-red-900">{erreur}</p>}
 
         <div className="rounded-2xl bg-white ring-1 ring-bordure/70 overflow-hidden">
           <div className="grid grid-cols-[1fr_3rem_5.5rem_6rem] sm:grid-cols-[8.5rem_1fr_3.5rem_6rem_7rem] gap-2 px-3 py-2 bg-noir text-creme text-xs font-semibold uppercase tracking-wider">
@@ -322,19 +346,19 @@ export default function Caisse() {
           ) : (
             <ul>
               {ticket.map((l, i) => (
-                <li key={l.code}>
+                <li key={l.codeBarre}>
                   <button
                     type="button"
                     onClick={() => setSelection(i)}
                     className={`w-full text-left grid grid-cols-[1fr_3rem_5.5rem_6rem] sm:grid-cols-[8.5rem_1fr_3.5rem_6rem_7rem] gap-2 px-3 py-2.5 border-b border-bordure/60 text-sm ${i === selection ? "bg-or/15" : "hover:bg-creme"}`}
                   >
-                    <span className="hidden sm:block prix text-xs text-gris pt-0.5">{l.code}</span>
+                    <span className="hidden sm:block prix text-xs text-gris pt-0.5">{l.codeBarre}</span>
                     <span className="min-w-0">
-                      <span className="block truncate font-semibold">{l.produit.nom}</span>
-                      <span className="block text-xs text-gris">{nomMarque(l.produit.marque)}{l.remise ? <strong className="text-or"> · remise {l.remise} %</strong> : ""}</span>
+                      <span className="block truncate font-semibold">{l.nom}</span>
+                      <span className="block text-xs text-gris">{l.marqueNom}{l.remise ? <strong className="text-or"> · remise {l.remise} %</strong> : ""}</span>
                     </span>
                     <span className="prix text-right font-semibold">{l.quantite}</span>
-                    <span className="prix text-right">{formatPrix(l.produit.prix)}</span>
+                    <span className="prix text-right">{formatPrix(l.prix)}</span>
                     <span className="prix text-right font-semibold">{formatPrix(montantLigne(l))}</span>
                   </button>
                 </li>
@@ -347,10 +371,10 @@ export default function Caisse() {
           <summary className="cursor-pointer font-semibold">Codes-barres de démonstration</summary>
           <p className="text-xs text-gris mt-1">À taper dans le champ ci-dessus (ou à scanner une fois imprimés).</p>
           <ul className="mt-2 grid sm:grid-cols-2 gap-x-4 gap-y-1">
-            {ARTICLES.map((a) => (
-              <li key={a.code} className="flex justify-between gap-2">
-                <span className="truncate">{a.produit.nom}</span>
-                <span className="prix text-gris shrink-0">{a.code} · <span className={stocks[a.produit.slug] ? "" : "text-red-800"}>st. {stocks[a.produit.slug]}</span></span>
+            {articles.map((a) => (
+              <li key={a.codeBarre} className="flex justify-between gap-2">
+                <span className="truncate">{a.nom}</span>
+                <span className="prix text-gris shrink-0">{a.codeBarre} · <span className={stocks[a.id] ? "" : "text-red-800"}>st. {stocks[a.id]}</span></span>
               </li>
             ))}
           </ul>
@@ -360,7 +384,7 @@ export default function Caisse() {
       <aside className="space-y-3 lg:sticky lg:top-3">
         <div className="rounded-2xl bg-noir text-creme p-4 ring-1 ring-or/40">
           <div className="flex justify-between text-xs uppercase tracking-[0.2em] text-creme/60">
-            <span>{articles} article{articles > 1 ? "s" : ""}</span><span>Total</span>
+            <span>{nbArticles} article{nbArticles > 1 ? "s" : ""}</span><span>Total</span>
           </div>
           <p className="prix text-right text-5xl font-semibold text-or-clair mt-1">{formatPrix(total)}</p>
           {paiement === "Espèces" && recu > 0 && (

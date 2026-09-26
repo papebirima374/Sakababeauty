@@ -57,6 +57,25 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
 - Contrat avec Sakaba : prévoir que la plateforme reste la propriété de Birima
   (Sakaba paie l'usage), sinon il ne pourra pas la revendre.
 
+### Base de données (Firebase) — commencée le 26/09/2026
+- Testée **en local uniquement** (émulateurs, projet `demo-sakaba`). Aucun vrai projet
+  Firebase n'existe encore : à créer avec papebirima10894@gmail.com, JAMAIS le
+  projet `ksn-site` du Dahira.
+- Collections : `equipe/{uid}` (role directrice | vendeuse, actif), `produits/{slug}`
+  (prix, stock, codeBarre), `ventes` (canal, jour, lignes, total, paiement, vendeuse),
+  `mouvements` (chaque sortie de stock). Règles : `firestore.rules` (toujours publier
+  le fichier ENTIER). Test : `npm run test:regles` (17 vérifications ✓).
+- Caisse : si Firebase est configuré → connexion obligatoire (`/gestion/connexion`)
+  et vraies ventes ; sinon démonstration. Une vente = un lot groupé (vente + stock
+  `increment` + mouvement) qui marche SANS internet et part au retour du réseau.
+- Lancer en local (dossier sakababeauty), dans 3 terminaux :
+  `npm run emulateurs`, puis `npm run seed`, puis
+  `NEXT_PUBLIC_FIREBASE_EMULATEUR=1 npm run dev`. Comptes de test :
+  directrice@test.sakaba / vendeuse@test.sakaba, mot de passe `sakaba-test`.
+- Variables pour le vrai projet (Vercel) : `NEXT_PUBLIC_FIREBASE_API_KEY`,
+  `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`,
+  `NEXT_PUBLIC_FIREBASE_APP_ID`.
+
 ### Formulaire d'avis clients : `/avis`
 - Page autonome (sans menu ni prix), lien à envoyer aux clientes :
   https://sakababeauty-nu.vercel.app/avis

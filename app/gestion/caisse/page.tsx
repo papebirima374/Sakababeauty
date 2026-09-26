@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Caisse from "./Caisse";
+import { FIREBASE_CONFIGURE } from "@/lib/firebase-config";
+import CaisseChoix from "./CaisseChoix";
 
 export const metadata: Metadata = {
   title: "Caisse boutique (démonstration)",
@@ -23,6 +24,7 @@ export default function PageCaisse() {
           </Link>
         </div>
       </header>
+      {!FIREBASE_CONFIGURE && (
       <div className="bg-or/15 border-b border-or/30 print:hidden">
         <p className="mx-auto max-w-6xl px-4 py-2.5 text-sm">
           <strong>Démonstration.</strong> Rien n&apos;est enregistré : essayez librement. Fonctionne avec une douchette
@@ -30,7 +32,8 @@ export default function PageCaisse() {
           avec le site.
         </p>
       </div>
-      <Caisse />
+      )}
+      <CaisseChoix />
     </main>
   );
 }
