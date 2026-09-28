@@ -1,7 +1,8 @@
 // Données de DÉMONSTRATION de l'espace gestion : commandes, ventes et avis
-// inventés pour montrer à Sakaba ce que l'outil affichera. Les stocks et les
-// produits viennent du catalogue d'exemple. Rien ici n'est une vraie vente.
-import { PRODUITS, type Produit } from "./catalogue";
+// inventés pour montrer à la boutique ce que l'outil affichera. Les produits
+// viennent de ARTICLES_GESTION (exemples). Rien ici n'est une vraie vente.
+import { ARTICLES_GESTION as PRODUITS, type ArticleGestion as Produit } from "./articles-gestion";
+import { BOUTIQUE_ACTIVE } from "./boutique";
 
 // Générateur pseudo-aléatoire à graine fixe : les mêmes chiffres à chaque visite.
 function hasard(graine: number) {
@@ -33,7 +34,7 @@ export type Commande = {
 };
 
 const PRENOMS = ["Aïssatou D.", "Fatou N.", "Mariama S.", "Khady F.", "Awa G.", "Ndèye B.", "Coumba T.", "Astou M."];
-const ZONES = ["Retrait à Mermoz", "Livraison · Dakar", "Livraison · Pikine", "Livraison · Thiès"];
+const ZONES = [`Retrait à ${BOUTIQUE_ACTIVE.quartier}`, "Livraison · Dakar", "Livraison · Pikine", "Livraison · Thiès"];
 const PAIEMENTS = ["Wave", "Orange Money", "Carte bancaire", "À la livraison"];
 const ORDRE: StatutCommande[] = ["nouvelle", "nouvelle", "preparation", "preparation", "livraison", "livree", "livree", "livree"];
 
@@ -48,7 +49,7 @@ export function commandesDuJour(): Commande[] {
     }));
     const zone = ZONES[Math.floor(r() * ZONES.length)];
     return {
-      numero: `SKB-${1048 - i}`,
+      numero: `${BOUTIQUE_ACTIVE.prefixeCommande}-${1048 - i}`,
       cliente: PRENOMS[i],
       heure: `${String(17 - i).padStart(2, "0")}:${String(Math.floor(r() * 60)).padStart(2, "0")}`,
       zone,
@@ -86,8 +87,4 @@ export function meilleuresVentes() {
   return [...PRODUITS].sort((a, b) => b.ventes - a.ventes).slice(0, 5);
 }
 
-export const AVIS_DEMO = [
-  { objet: "Suggestion", message: "Ce serait bien d'avoir la gamme Mielle complète en boutique.", quand: "Il y a 2 h", recontact: false },
-  { objet: "Problème rencontré", message: "Le flacon reçu avait le bouchon un peu abîmé.", quand: "Hier", recontact: true },
-  { objet: "Réclamation", message: "Livraison arrivée avec un jour de retard à Pikine.", quand: "Il y a 3 jours", recontact: true },
-];
+export const AVIS_DEMO = BOUTIQUE_ACTIVE.avisExemples;

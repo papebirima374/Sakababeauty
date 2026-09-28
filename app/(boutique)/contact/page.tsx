@@ -27,7 +27,7 @@ export default function Contact() {
           <div className="mt-6 flex-1 min-h-40 rounded-2xl bg-noir text-creme relative overflow-hidden grid place-items-center p-6 text-center">
             <div
               className="absolute inset-0"
-              style={{ background: "radial-gradient(60% 70% at 50% 30%, rgba(197,151,53,0.35), transparent 70%)" }}
+              style={{ background: "radial-gradient(60% 70% at 50% 30%, rgba(var(--or-rgb),0.35), transparent 70%)" }}
               aria-hidden
             />
             <div className="relative">
@@ -39,7 +39,7 @@ export default function Contact() {
             href={BOUTIQUE.itineraire}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-5 block text-center rounded-full bg-gradient-to-r from-or to-[#B0852A] text-white py-3.5 font-semibold shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] hover:brightness-110"
+            className="mt-5 block text-center rounded-full bg-gradient-to-r from-or to-(--or-fonce) text-white py-3.5 font-semibold shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] hover:brightness-110"
           >
             Itinéraire sur Google Maps
           </a>

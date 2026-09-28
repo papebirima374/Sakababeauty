@@ -9,7 +9,7 @@ import { QUESTIONS, aUneAlerte, construireRoutine, type Domaine, type Reponses }
 import { usePanier } from "@/lib/panier";
 import VisuelProduit from "@/components/VisuelProduit";
 
-const HALO = "radial-gradient(50% 90% at 85% 0%, rgba(197,151,53,0.32), transparent 70%), radial-gradient(35% 60% at 0% 100%, rgba(227,199,126,0.10), transparent 70%)";
+const HALO = "radial-gradient(50% 90% at 85% 0%, rgba(var(--or-rgb),0.32), transparent 70%), radial-gradient(35% 60% at 0% 100%, rgba(var(--or-rgb),0.10), transparent 70%)";
 
 function Bandeau({ children }: { children: React.ReactNode }) {
   return (
@@ -151,7 +151,7 @@ export default function Diagnostic() {
               type="button"
               disabled={choisies.length === 0}
               onClick={() => setEtape(etape + 1)}
-              className="mt-7 w-full rounded-full bg-gradient-to-r from-or to-[#B0852A] py-4 font-semibold text-white shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] transition hover:brightness-110 disabled:opacity-40 disabled:shadow-none"
+              className="mt-7 w-full rounded-full bg-gradient-to-r from-or to-(--or-fonce) py-4 font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] transition hover:brightness-110 disabled:opacity-40 disabled:shadow-none"
             >
               Continuer
             </button>
@@ -212,7 +212,7 @@ export default function Diagnostic() {
 
         {routine.length > 0 && (
           <div className="mt-5 relative overflow-hidden rounded-3xl bg-noir text-creme p-6 flex flex-wrap items-center justify-between gap-4">
-            <div className="absolute inset-0 opacity-70" style={{ background: "radial-gradient(60% 100% at 100% 0%, rgba(197,151,53,0.35), transparent 70%)" }} aria-hidden />
+            <div className="absolute inset-0 opacity-70" style={{ background: "radial-gradient(60% 100% at 100% 0%, rgba(var(--or-rgb),0.35), transparent 70%)" }} aria-hidden />
             <p className="relative">
               <span className="block text-xs uppercase tracking-[0.25em] text-or-clair">Routine complète</span>
               <span className="prix titre text-4xl">{formatPrix(total)}</span>
@@ -224,7 +224,7 @@ export default function Diagnostic() {
                   routine.forEach((e) => ajouter(e.produit.slug));
                   setAjoute(true);
                 }}
-                className={`rounded-full px-6 py-3.5 font-semibold text-white transition ${ajoute ? "bg-green-800" : "bg-gradient-to-r from-or to-[#B0852A] shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] hover:brightness-110"}`}
+                className={`rounded-full px-6 py-3.5 font-semibold text-white transition ${ajoute ? "bg-green-800" : "bg-gradient-to-r from-or to-(--or-fonce) shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] hover:brightness-110"}`}
               >
                 {ajoute ? "✓ Routine ajoutée au panier" : "Ajouter toute la routine"}
               </button>

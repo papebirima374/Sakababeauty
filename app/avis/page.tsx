@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { BOUTIQUE_ACTIVE } from "@/lib/boutique";
 import type { Metadata } from "next";
 import Image from "next/image";
 import FormulaireAvis from "@/components/FormulaireAvis";
@@ -15,16 +17,18 @@ export const metadata: Metadata = {
 
 // Page autonome (sans le menu de la boutique) : c'est le lien envoyé aux clientes.
 export default function PageAvis() {
+  // Page propre à Sakaba : absente des autres boutiques.
+  if (BOUTIQUE_ACTIVE.id !== "sakaba") redirect("/gestion/solution");
   return (
     <main className="flex-1 bg-creme">
       <section className="relative overflow-hidden bg-noir text-creme">
         <div
           className="absolute inset-0 opacity-70"
-          style={{ background: "radial-gradient(60% 55% at 50% 0%, rgba(197,151,53,0.35), transparent 70%)" }}
+          style={{ background: "radial-gradient(60% 55% at 50% 0%, rgba(var(--or-rgb),0.35), transparent 70%)" }}
           aria-hidden
         />
         <div className="relative mx-auto max-w-2xl px-4 pt-10 pb-24 sm:pt-14 text-center">
-          <div className="mx-auto w-24 h-24 rounded-full p-[3px] bg-gradient-to-b from-or-clair to-or shadow-[0_0_40px_rgba(197,151,53,0.35)]">
+          <div className="mx-auto w-24 h-24 rounded-full p-[3px] bg-gradient-to-b from-or-clair to-or shadow-[0_0_40px_rgba(var(--or-rgb),0.35)]">
             <Image src="/logo-sakaba.png" alt="Sakaba Beauty" width={96} height={96} className="w-full h-full rounded-full bg-white" priority />
           </div>
           <p className="mt-6 text-xs sm:text-sm font-semibold uppercase tracking-[0.35em] text-or-clair">Sakaba Beauty</p>

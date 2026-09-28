@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Logo from "@/components/Logo";
 import Link from "next/link";
-import VisuelProduit from "@/components/VisuelProduit";
-import { nomMarque } from "@/lib/catalogue";
-import { formatPrix } from "@/lib/config";
+import VignetteArticle from "@/components/VignetteArticle";
+import { BOUTIQUE_ACTIVE } from "@/lib/boutique";
+import { formatPrix } from "@/lib/format";
 import { AVIS_DEMO, STATUTS, commandesDuJour, meilleuresVentes, stocksASurveiller, ventesSemaine } from "@/lib/demo-gestion";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // La date du jour change : la page est calculée à chaque visite.
 export const dynamic = "force-dynamic";
 
-const OR_BARRE = "#A67C1F"; // or foncé : contraste suffisant sur fond clair
+const OR_BARRE = "var(--or-barre)"; // or foncé : contraste suffisant sur fond clair
 
 export default function Gestion() {
   const maintenant = new Date();
@@ -37,9 +37,9 @@ export default function Gestion() {
   return (
     <main className="flex-1 bg-creme min-h-screen">
       <header className="relative overflow-hidden bg-noir text-creme">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(45% 100% at 90% 0%, rgba(197,151,53,0.32), transparent 70%)" }} aria-hidden />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(45% 100% at 90% 0%, rgba(var(--or-rgb),0.32), transparent 70%)" }} aria-hidden />
         <div className="relative mx-auto max-w-6xl px-4 py-6 flex items-center gap-4 flex-wrap">
-          <Image src="/logo-sakaba.png" alt="Sakaba Beauty" width={52} height={52} className="rounded-full bg-white" />
+          <Logo taille={52} />
           <div className="flex-1 min-w-48">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-or-clair">Espace gestion</p>
             <h1 className="titre text-3xl sm:text-4xl leading-tight">Bonjour, voici votre journée</h1>
@@ -49,19 +49,21 @@ export default function Gestion() {
             <Link href="/gestion/solution" className="rounded-full border border-creme/30 px-5 py-2 text-sm font-semibold hover:border-or-clair hover:text-or-clair">
               La solution
             </Link>
-            <Link href="/gestion/caisse" className="rounded-full bg-gradient-to-r from-or to-[#B0852A] px-5 py-2 text-sm font-semibold text-white hover:brightness-110">
+            <Link href="/gestion/caisse" className="rounded-full bg-gradient-to-r from-or to-(--or-fonce) px-5 py-2 text-sm font-semibold text-white hover:brightness-110">
               Caisse boutique
             </Link>
-            <Link href="/" className="rounded-full border border-creme/30 px-5 py-2 text-sm font-semibold hover:border-or-clair hover:text-or-clair">
-              Voir la boutique
-            </Link>
+            {BOUTIQUE_ACTIVE.siteEnLigne && (
+              <Link href="/" className="rounded-full border border-creme/30 px-5 py-2 text-sm font-semibold hover:border-or-clair hover:text-or-clair">
+                Voir la boutique
+              </Link>
+            )}
           </div>
         </div>
       </header>
 
       <div className="bg-or/15 border-b border-or/30">
         <p className="mx-auto max-w-6xl px-4 py-2.5 text-sm">
-          <strong>Démonstration.</strong> Les commandes, ventes et avis ci-dessous sont des exemples : ils montrent ce que
+          <strong>Démonstration.</strong> Les produits, prix, commandes, ventes et avis ci-dessous sont des exemples : ils montrent ce que
           l&apos;espace affichera avec les vraies données de la boutique.
         </p>
       </div>
@@ -138,11 +140,11 @@ export default function Gestion() {
               {stocks.map((p) => {
                 const epuise = p.stock === 0;
                 return (
-                  <li key={p.slug} className="flex items-center gap-3">
-                    <div className="w-11 shrink-0"><VisuelProduit produit={p} taille="vignette" /></div>
+                  <li key={p.id} className="flex items-center gap-3">
+                    <div className="w-11 shrink-0"><VignetteArticle article={p} /></div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate">{p.nom}</p>
-                      <p className="text-xs text-gris">{nomMarque(p.marque)}</p>
+                      <p className="text-xs text-gris">{p.marqueNom}</p>
                     </div>
                     <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${epuise ? "bg-red-50 text-red-900 ring-red-300" : "bg-amber-50 text-amber-900 ring-amber-300"}`}>
                       {epuise ? "✕ Épuisé" : `! ${p.stock} restants`}
@@ -202,9 +204,9 @@ export default function Gestion() {
             <p className="text-sm text-gris">Nombre de ventes depuis le début</p>
             <ol className="mt-4 space-y-3">
               {top.map((p, i) => (
-                <li key={p.slug}>
+                <li key={p.id}>
                   <div className="flex justify-between gap-3 text-sm">
-                    <span className="truncate"><span className="text-gris mr-1.5">{i + 1}.</span>{nomMarque(p.marque)} · {p.nom}</span>
+                    <span className="truncate"><span className="text-gris mr-1.5">{i + 1}.</span>{p.marqueNom} · {p.nom}</span>
                     <span className="prix font-semibold shrink-0">{p.ventes}</span>
                   </div>
                   <div className="mt-1 h-2 rounded-full bg-creme overflow-hidden">
@@ -219,7 +221,7 @@ export default function Gestion() {
           <section className={carte}>
             <div className="flex items-baseline justify-between gap-3">
               <h2 className={titreCarte}>Derniers avis clients</h2>
-              <Link href="/avis" className="text-sm text-or font-semibold hover:underline">Formulaire</Link>
+              {BOUTIQUE_ACTIVE.id === "sakaba" && <Link href="/avis" className="text-sm text-or font-semibold hover:underline">Formulaire</Link>}
             </div>
             <p className="text-sm text-gris">Reçus par le formulaire « Votre avis compte »</p>
             <ul className="mt-4 space-y-3">
@@ -239,7 +241,7 @@ export default function Gestion() {
 
         {/* Ce que l'espace permettra */}
         <section className="rounded-3xl bg-noir text-creme p-6 sm:p-8 relative overflow-hidden">
-          <div className="absolute inset-0" style={{ background: "radial-gradient(50% 90% at 100% 100%, rgba(197,151,53,0.28), transparent 70%)" }} aria-hidden />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(50% 90% at 100% 100%, rgba(var(--or-rgb),0.28), transparent 70%)" }} aria-hidden />
           <div className="relative">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-or-clair">Dans la version complète</p>
             <h2 className="titre text-3xl mt-2">Tout gérer depuis votre téléphone</h2>
@@ -250,7 +252,7 @@ export default function Gestion() {
                 "Être alertée quand un produit va manquer",
                 "Suivre les paiements Wave et Orange Money",
                 "Lire et répondre aux avis clients",
-                "Voir les inscrites de la masterclass",
+                BOUTIQUE_ACTIVE.id === "sakaba" ? "Voir les inscrites de la masterclass" : "Noter les commandes des lives TikTok",
               ].map((t) => (
                 <li key={t} className="flex gap-2.5 rounded-2xl bg-white/5 ring-1 ring-white/10 p-3.5">
                   <span className="text-or-clair" aria-hidden>✦</span>{t}

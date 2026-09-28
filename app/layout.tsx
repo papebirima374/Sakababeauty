@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
-import { BOUTIQUE, EST_PRODUCTION, URL_SITE } from "@/lib/config";
+import { EST_PRODUCTION, URL_SITE } from "@/lib/config";
+import { BOUTIQUE_ACTIVE as B, variablesCouleurs } from "@/lib/boutique";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -18,21 +19,26 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL(URL_SITE),
   title: {
-    default: `${BOUTIQUE.nom} — Cosmétiques authentiques importés des USA, Dakar`,
-    template: `%s | ${BOUTIQUE.nom}`,
+    default: B.siteEnLigne ? `${B.nom} — Cosmétiques authentiques importés des USA, Dakar` : `${B.nom} ${B.slogan}`,
+    template: `%s | ${B.nom}`,
   },
-  description:
-    "Soins du visage, cheveux, maquillage et parfums 100 % authentiques, importés des États-Unis. Boutique à Mermoz, livraison à Dakar et dans les régions. Paiement Wave et Orange Money.",
-  openGraph: { siteName: BOUTIQUE.nom, locale: "fr_SN", type: "website" },
+  description: B.description,
+  icons: { icon: B.icone },
+  openGraph: {
+    siteName: B.nom,
+    locale: "fr_SN",
+    type: "website",
+    images: [{ url: B.apercu, width: 1200, height: 630, alt: `Logo ${B.nom}` }],
+  },
   // Tant que le site n'est pas officiellement en ligne : invisible des moteurs.
   robots: EST_PRODUCTION ? undefined : { index: false, follow: false },
 };
 
-export const viewport: Viewport = { themeColor: "#14100B" };
+export const viewport: Viewport = { themeColor: B.couleurs.sombre };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fr" className={`${cormorant.variable} ${manrope.variable} h-full antialiased`}>
+    <html lang="fr" className={`${cormorant.variable} ${manrope.variable} h-full antialiased`} style={variablesCouleurs(B.couleurs)}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

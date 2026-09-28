@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { PRODUITS, nomMarque } from "@/lib/catalogue";
+import { ARTICLES_GESTION } from "@/lib/articles-gestion";
 import { ean13Interne } from "@/lib/codes-barres";
 import EcranCaisse, { type Article, type Vente } from "./Caisse";
 
 // Caisse de DÉMONSTRATION : produits du catalogue d'exemple, rien n'est enregistré.
-const ARTICLES: Article[] = PRODUITS.map((p, i) => ({
-  id: p.slug,
+const ARTICLES: Article[] = ARTICLES_GESTION.map((p, i) => ({
+  id: p.id,
   nom: p.nom,
-  marqueNom: nomMarque(p.marque),
+  marqueNom: p.marqueNom,
   prix: p.prix,
   stock: p.stock,
   codeBarre: ean13Interne(i + 1),

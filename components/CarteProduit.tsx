@@ -16,7 +16,7 @@ export default function CarteProduit({ produit }: { produit: Produit }) {
             <span className="rounded-full bg-noir text-creme text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1">Nouveau</span>
           )}
           {produit.prixBarre && (
-            <span className="rounded-full bg-gradient-to-r from-or to-[#B0852A] text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1">Bon plan</span>
+            <span className="rounded-full bg-gradient-to-r from-or to-(--or-fonce) text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1">Bon plan</span>
           )}
         </div>
         <span className="absolute top-3 right-3 rounded-full bg-creme/90 text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 text-or">

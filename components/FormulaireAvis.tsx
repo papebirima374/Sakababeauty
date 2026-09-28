@@ -95,7 +95,7 @@ export default function FormulaireAvis() {
   if (etat === "merci") {
     return (
       <div className="rounded-3xl bg-white p-8 sm:p-10 text-center shadow-[0_25px_70px_-30px_rgba(20,16,11,0.45)]">
-        <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(197,151,53,0.7)]">✓</div>
+        <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(var(--or-rgb),0.7)]">✓</div>
         <h2 className="titre text-4xl mt-4">Merci pour votre message !</h2>
         <p className="text-gris mt-3">
           Il a bien été transmis à l&apos;équipe Sakaba Beauty.
@@ -154,7 +154,7 @@ export default function FormulaireAvis() {
       <button
         type="submit"
         disabled={etat === "envoi"}
-        className="w-full rounded-full bg-gradient-to-r from-or to-[#B0852A] py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
+        className="w-full rounded-full bg-gradient-to-r from-or to-(--or-fonce) py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
       >
         {etat === "envoi" ? "Envoi en cours…" : "Envoyer"}
       </button>

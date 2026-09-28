@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Logo from "@/components/Logo";
 import Link from "next/link";
 import { FIREBASE_CONFIGURE } from "@/lib/firebase-config";
+import { BOUTIQUE_ACTIVE } from "@/lib/boutique";
 import CaisseChoix from "./CaisseChoix";
 
 export const metadata: Metadata = {
@@ -14,9 +15,9 @@ export default function PageCaisse() {
     <main className="flex-1 bg-creme min-h-screen print:bg-white">
       <header className="bg-noir text-creme print:hidden">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center gap-4">
-          <Image src="/logo-sakaba.png" alt="Sakaba Beauty" width={44} height={44} className="rounded-full bg-white" />
+          <Logo taille={44} />
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-or-clair">Caisse · Mermoz</p>
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-or-clair">Caisse · {BOUTIQUE_ACTIVE.quartier}</p>
             <h1 className="titre text-2xl sm:text-3xl leading-tight">Vente sur place</h1>
           </div>
           <Link href="/gestion" className="rounded-full border border-creme/30 px-4 py-2 text-sm font-semibold hover:border-or-clair hover:text-or-clair">

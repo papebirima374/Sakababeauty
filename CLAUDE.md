@@ -15,6 +15,28 @@ Mermoz (Dakar). Référence : cahier des charges CDC-SKB-2026-01 (septembre 2026
 - Vercel : **un seul projet**. Lien de test : **https://sakababeauty-nu.vercel.app/**
   Chaque envoi sur `main` met ce lien à jour automatiquement.
 
+## Plusieurs boutiques, un seul code (depuis le 28/09/2026)
+- Le code est **notre plateforme** ; chaque cliente = un projet Vercel branché sur ce
+  même dépôt, avec la variable **`NEXT_PUBLIC_BOUTIQUE`** (`sakaba` par défaut, `pacha`).
+- Tout ce qui est propre à une boutique est dans **`lib/boutique.ts`** (nom, adresse,
+  numéros, réseaux, logo ou initiales, couleurs, préfixe, avis d'exemple,
+  `siteEnLigne`) et `public/boutiques/<id>/` (aperçu WhatsApp, icône). Couleurs :
+  variables CSS (`--or`, `--or-rgb`, `--or-fonce`, `--noir`, `--creme`…), jamais de
+  code couleur en dur dans les pages.
+- `BOUTIQUE_ACTIVE` s'écrit en condition simple sur la variable : la construction ne
+  garde que la boutique choisie (aucune trace des autres clientes).
+- `siteEnLigne: false` → seules `/gestion/*` existent, le reste redirige vers
+  `/gestion/solution`. Articles de gestion : `lib/articles-gestion.ts`.
+- Vérifier une boutique en local : `NEXT_PUBLIC_BOUTIQUE=pacha npm run build`.
+
+### Prospect : Américain Store by Marie Pacha (Yoff Tonghor)
+- TikTok @boutiquepacha : cosmétiques (Garnier, Mixa, Evoluderm, Cetaphil, Vaseline,
+  compléments Mivolis…) + vêtements, chaussures, sacs ; vend en **live TikTok**.
+  Veut une machine + un logiciel de gestion. Pas encore répondu (28/09/2026).
+- Démo `pacha` : monogramme « AS » (pas de logo), bleu nuit + framboise, produits et
+  prix d'EXEMPLE (seuls Cetaphil 8 000 F et crème mains 7 000 F vus en vidéo).
+- Ne JAMAIS lui montrer la démo Sakaba (confidentialité).
+
 ## Ne pas confondre avec le Dahira
 Ce dépôt n'a **rien à voir** avec `ksn-site` (site du Dahira). Ne jamais mélanger
 le code, les bases Firebase ni les comptes des deux projets.

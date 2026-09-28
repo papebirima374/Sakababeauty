@@ -28,7 +28,9 @@ export const URL_SITE =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://sakababeauty-nu.vercel.app");
+    : process.env.NEXT_PUBLIC_BOUTIQUE === "pacha"
+      ? "http://localhost:3000"
+      : "https://sakababeauty-nu.vercel.app");
 
 // Réception de la commande. Décision de Sakaba (25/09/2026) : pas de tarif de
 // livraison fixé par le site, la cliente convient du prix directement avec le livreur.
@@ -64,6 +66,4 @@ export function lienWhatsApp(message: string) {
     : `https://wa.me/?text=${texte}`;
 }
 
-export function formatPrix(montant: number) {
-  return `${new Intl.NumberFormat("fr-FR").format(montant).replace(/ | /g, " ")} F`;
-}
+export { formatPrix } from "./format";

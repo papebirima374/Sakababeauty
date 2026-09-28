@@ -64,7 +64,7 @@ export default function Accueil() {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(55% 60% at 75% 40%, rgba(197,151,53,0.28), transparent 70%), radial-gradient(40% 50% at 10% 0%, rgba(227,199,126,0.12), transparent 70%)",
+              "radial-gradient(55% 60% at 75% 40%, rgba(var(--or-rgb),0.28), transparent 70%), radial-gradient(40% 50% at 10% 0%, rgba(var(--or-rgb),0.12), transparent 70%)",
           }}
           aria-hidden
         />
@@ -82,7 +82,7 @@ export default function Accueil() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/diagnostic"
-                className="rounded-full bg-gradient-to-r from-or to-[#B0852A] px-7 py-3.5 font-semibold text-white shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] transition hover:brightness-110 hover:-translate-y-0.5"
+                className="rounded-full bg-gradient-to-r from-or to-(--or-fonce) px-7 py-3.5 font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] transition hover:brightness-110 hover:-translate-y-0.5"
               >
                 Trouver ma routine en 2 minutes
               </Link>
@@ -148,7 +148,7 @@ export default function Accueil() {
             </Link>
           ))}
           <Link href="/diagnostic" className="relative overflow-hidden rounded-3xl bg-noir text-creme p-6 flex flex-col justify-end min-h-56 transition hover:-translate-y-0.5">
-            <span className="absolute inset-0 opacity-80" style={{ background: "radial-gradient(70% 60% at 80% 10%, rgba(197,151,53,0.45), transparent 70%)" }} aria-hidden />
+            <span className="absolute inset-0 opacity-80" style={{ background: "radial-gradient(70% 60% at 80% 10%, rgba(var(--or-rgb),0.45), transparent 70%)" }} aria-hidden />
             <span className="relative text-or-clair text-2xl">✦</span>
             <span className="relative titre text-3xl mt-2">Je ne sais pas quoi choisir</span>
             <span className="relative text-sm text-creme/75 mt-1">Faites le diagnostic beauté →</span>
@@ -204,7 +204,7 @@ export default function Accueil() {
 
       {/* Authenticité */}
       <section className="relative overflow-hidden bg-noir text-creme">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(50% 80% at 0% 50%, rgba(197,151,53,0.25), transparent 70%)" }} aria-hidden />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(50% 80% at 0% 50%, rgba(var(--or-rgb),0.25), transparent 70%)" }} aria-hidden />
         <div className="relative mx-auto max-w-6xl px-4 py-16 grid md:grid-cols-[1fr_auto] gap-8 items-center">
           <div>
             <Surtitre clair>Notre engagement</Surtitre>
@@ -234,14 +234,14 @@ export default function Accueil() {
       {/* Masterclass */}
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <Link href="/masterclass" className="group relative block overflow-hidden rounded-[2rem] bg-noir text-creme p-8 md:p-12">
-          <span className="absolute inset-0" style={{ background: "radial-gradient(60% 90% at 100% 0%, rgba(197,151,53,0.4), transparent 70%)" }} aria-hidden />
+          <span className="absolute inset-0" style={{ background: "radial-gradient(60% 90% at 100% 0%, rgba(var(--or-rgb),0.4), transparent 70%)" }} aria-hidden />
           <span className="relative grid md:grid-cols-[1fr_auto] gap-6 items-center">
             <span>
               <Surtitre clair>Événement</Surtitre>
               <span className="block titre text-4xl md:text-5xl mt-2">Masterclass Sakaba Beauty</span>
               <span className="block mt-2 text-creme/75">Apprenez avec nos expertes. Inscription gratuite, places limitées.</span>
             </span>
-            <span className="rounded-full bg-gradient-to-r from-or to-[#B0852A] px-7 py-3.5 font-semibold text-white text-center transition group-hover:brightness-110">
+            <span className="rounded-full bg-gradient-to-r from-or to-(--or-fonce) px-7 py-3.5 font-semibold text-white text-center transition group-hover:brightness-110">
               Réserver ma place →
             </span>
           </span>

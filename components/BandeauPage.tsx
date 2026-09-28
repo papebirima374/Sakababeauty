@@ -20,7 +20,7 @@ export default function BandeauPage({
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(50% 90% at 85% 0%, rgba(197,151,53,0.32), transparent 70%), radial-gradient(35% 60% at 0% 100%, rgba(227,199,126,0.10), transparent 70%)",
+            "radial-gradient(50% 90% at 85% 0%, rgba(var(--or-rgb),0.32), transparent 70%), radial-gradient(35% 60% at 0% 100%, rgba(var(--or-rgb),0.10), transparent 70%)",
         }}
         aria-hidden
       />

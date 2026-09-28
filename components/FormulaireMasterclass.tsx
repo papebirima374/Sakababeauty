@@ -50,13 +50,13 @@ export default function FormulaireMasterclass({ evenement }: { evenement: Resume
   if (etat === "inscrit") {
     return (
       <div className="text-center">
-        <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(197,151,53,0.7)]">✓</div>
+        <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(var(--or-rgb),0.7)]">✓</div>
         <h2 className="titre text-4xl mt-4">Votre place est réservée</h2>
         <p className="text-gris mt-2">Merci {prenom} ! Nous avons hâte de vous accueillir.</p>
 
         {/* Billet */}
         <div className="relative mt-8 text-left rounded-3xl bg-noir text-creme overflow-hidden shadow-[0_25px_60px_-25px_rgba(20,16,11,0.6)]">
-          <div className="absolute inset-0 opacity-60" style={{ background: "radial-gradient(70% 60% at 100% 0%, rgba(197,151,53,0.35), transparent 70%)" }} aria-hidden />
+          <div className="absolute inset-0 opacity-60" style={{ background: "radial-gradient(70% 60% at 100% 0%, rgba(var(--or-rgb),0.35), transparent 70%)" }} aria-hidden />
           <div className="relative p-6 sm:p-8">
             <p className="text-[11px] uppercase tracking-[0.35em] text-or-clair">Invitation · Sakaba Beauty</p>
             <p className="titre text-3xl sm:text-4xl mt-2">{evenement.titre}</p>
@@ -148,7 +148,7 @@ export default function FormulaireMasterclass({ evenement }: { evenement: Resume
 
       <input value={site} onChange={(e) => setSite(e.target.value)} name="site" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
 
-      <button type="submit" disabled={etat === "envoi"} className="w-full rounded-full bg-gradient-to-r from-or to-[#B0852A] py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0">
+      <button type="submit" disabled={etat === "envoi"} className="w-full rounded-full bg-gradient-to-r from-or to-(--or-fonce) py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0">
         {etat === "envoi" ? "Inscription en cours…" : "Je m'inscris"}
       </button>
       <p className="text-xs text-gris text-center">

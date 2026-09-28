@@ -54,10 +54,10 @@ export default function Authenticite() {
       </div>
 
       <div className="my-12 relative overflow-hidden rounded-3xl bg-noir text-creme p-8">
-        <div className="absolute inset-0 opacity-70" style={{ background: "radial-gradient(60% 100% at 100% 0%, rgba(197,151,53,0.35), transparent 70%)" }} aria-hidden />
+        <div className="absolute inset-0 opacity-70" style={{ background: "radial-gradient(60% 100% at 100% 0%, rgba(var(--or-rgb),0.35), transparent 70%)" }} aria-hidden />
         <p className="relative titre text-3xl text-or-clair">Un doute sur un produit ?</p>
         <p className="relative text-creme/80 mt-2">Passez à la boutique de Mermoz : nous vous montrons le produit, son lot et sa date.</p>
-        <Link href="/boutique" className="relative mt-5 inline-block rounded-full bg-gradient-to-r from-or to-[#B0852A] px-6 py-3 font-semibold text-white">Voir la boutique</Link>
+        <Link href="/boutique" className="relative mt-5 inline-block rounded-full bg-gradient-to-r from-or to-(--or-fonce) px-6 py-3 font-semibold text-white">Voir la boutique</Link>
       </div>
     </div>
     </>

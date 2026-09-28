@@ -37,7 +37,7 @@ export default function BoutonAjouter({ produit, compact = false }: { produit: P
           ? "bg-green-800"
           : compact
             ? "bg-noir hover:bg-or"
-            : "bg-gradient-to-r from-or to-[#B0852A] shadow-[0_12px_30px_-12px_rgba(197,151,53,0.8)] hover:brightness-110"
+            : "bg-gradient-to-r from-or to-(--or-fonce) shadow-[0_12px_30px_-12px_rgba(var(--or-rgb),0.8)] hover:brightness-110"
       } ${taille}`}
     >
       {ajoute ? "✓ Ajouté au panier" : "Ajouter au panier"}

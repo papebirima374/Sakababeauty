@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { formatPrix } from "@/lib/config";
+import { formatPrix } from "@/lib/format";
+import { BOUTIQUE_ACTIVE as B } from "@/lib/boutique";
 
 // Écran de caisse de comptoir : lecture de codes-barres (une douchette USB se
 // comporte comme un clavier), pavé numérique, remise, rendu de monnaie, ticket
@@ -173,17 +174,17 @@ export default function EcranCaisse({
   // ——— Ticket de caisse (80 mm, imprimable) ———
   if (derniere) {
     const texte = [
-      `SAKABA BEAUTY — Ticket n° ${derniere.numero} (${derniere.heure})`,
+      `${B.surnom} — Ticket n° ${derniere.numero} (${derniere.heure})`,
       ...derniere.lignes.map((l) => `${l.quantite} × ${l.marqueNom} ${l.nom}${l.remise ? ` (-${l.remise} %)` : ""} : ${formatPrix(montantLigne(l))}`),
       `TOTAL : ${formatPrix(derniere.total)} — ${derniere.paiement}`,
-      "Merci pour votre visite à Mermoz !",
+      `Merci pour votre visite à ${B.quartier} !`,
     ].join("\n");
     return (
       <div className="mx-auto max-w-3xl px-4 py-8 grid md:grid-cols-[320px_1fr] gap-6 items-start print:block print:p-0">
         <div id="ticket-caisse" className="bg-white text-black font-mono text-[12px] leading-snug p-5 shadow-[0_25px_60px_-30px_rgba(20,16,11,0.5)] print:shadow-none print:p-0 print:w-[72mm]">
-          <p className="text-center font-bold text-sm">SAKABA BEAUTY</p>
-          <p className="text-center">Mermoz Ancienne Piste, Dakar</p>
-          <p className="text-center">78 588 54 54 · 78 303 24 24</p>
+          <p className="text-center font-bold text-sm">{B.surnom}</p>
+          <p className="text-center">{B.adresse}</p>
+          <p className="text-center">{B.telephones.map((t) => t.affiche).join(" · ")}</p>
           <p className="mt-2 border-t border-dashed border-black pt-2">Ticket n° {derniere.numero}</p>
           <p>{derniere.heure} · {derniere.vendeuse}</p>
           <div className="mt-2 border-t border-dashed border-black pt-2 space-y-1.5">
@@ -200,7 +201,7 @@ export default function EcranCaisse({
           <p className="mt-2 border-t border-dashed border-black pt-2 flex justify-between font-bold text-sm"><span>TOTAL</span><span>{formatPrix(derniere.total)}</span></p>
           <p className="flex justify-between"><span>{derniere.paiement}</span><span>{formatPrix(derniere.recu)}</span></p>
           {derniere.paiement === "Espèces" && <p className="flex justify-between"><span>Rendu</span><span>{formatPrix(derniere.recu - derniere.total)}</span></p>}
-          <p className="mt-3 text-center">Produits 100 % authentiques</p>
+          <p className="mt-3 text-center">{B.slogan}</p>
           <p className="text-center">Merci et à bientôt !</p>
           <p className="mt-2 text-center text-[10px]">TICKET DE DÉMONSTRATION</p>
         </div>
@@ -237,7 +238,7 @@ export default function EcranCaisse({
             type="button"
             autoFocus
             onClick={() => { setDerniere(null); setTimeout(() => champ.current?.focus(), 0); }}
-            className="w-full rounded-full bg-gradient-to-r from-or to-[#B0852A] text-white py-4 text-lg font-semibold hover:brightness-110"
+            className="w-full rounded-full bg-gradient-to-r from-or to-(--or-fonce) text-white py-4 text-lg font-semibold hover:brightness-110"
           >
             Nouvelle vente
           </button>
@@ -442,7 +443,7 @@ export default function EcranCaisse({
               type="button"
               disabled={!peutValider}
               onClick={encaisser}
-              className={`${bouton} py-4 text-lg text-white bg-gradient-to-r from-or to-[#B0852A] shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] disabled:opacity-40 disabled:shadow-none`}
+              className={`${bouton} py-4 text-lg text-white bg-gradient-to-r from-or to-(--or-fonce) shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] disabled:opacity-40 disabled:shadow-none`}
             >
               {paiement === "Espèces" && ticket.length > 0 && recu < total ? "Saisir le montant reçu" : "Encaisser"}
             </button>

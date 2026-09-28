@@ -41,7 +41,7 @@ export default function Panier() {
         <BandeauPage surtitre="Votre panier" titre="Votre panier est vide" texte="Trouvez vos produits en quelques secondes, ou laissez-nous composer votre routine.">
           <div className="flex flex-wrap gap-3">
             <Link href="/boutique" className="rounded-full border border-creme/30 px-6 py-3 font-semibold transition hover:border-or-clair hover:text-or-clair">Voir la boutique</Link>
-            <Link href="/diagnostic" className="rounded-full bg-gradient-to-r from-or to-[#B0852A] text-white px-6 py-3 font-semibold">Faire le diagnostic</Link>
+            <Link href="/diagnostic" className="rounded-full bg-gradient-to-r from-or to-(--or-fonce) text-white px-6 py-3 font-semibold">Faire le diagnostic</Link>
           </div>
         </BandeauPage>
         <div className="h-24" />
@@ -108,7 +108,7 @@ export default function Panier() {
             <div className="space-y-2">
               {MODES_RECEPTION.map((z) => (
                 <label key={z.id} className={`flex items-start gap-3 rounded-2xl border p-3 cursor-pointer transition ${zone === z.id ? "border-or bg-creme" : "border-bordure hover:border-or/50"}`}>
-                  <input type="radio" name="zone" checked={zone === z.id} onChange={() => setZone(z.id)} className="mt-1 accent-[#C59735]" />
+                  <input type="radio" name="zone" checked={zone === z.id} onChange={() => setZone(z.id)} className="mt-1 accent-(--or)" />
                   <span className="flex-1 text-sm">
                     <span className="font-semibold block">{z.nom}</span>
                     <span className="text-gris">{z.detail}</span>
@@ -134,7 +134,7 @@ export default function Panier() {
                 const indisponible = m.id === "livraison" && !paiementLivraisonPossible;
                 return (
                   <label key={m.id} className={`flex items-start gap-3 rounded-2xl border p-3 transition ${indisponible ? "opacity-50" : "cursor-pointer"} ${moyenEffectif === m.id ? "border-or bg-creme" : "border-bordure hover:border-or/50"}`}>
-                    <input type="radio" name="moyen" disabled={indisponible} checked={moyenEffectif === m.id} onChange={() => setMoyen(m.id)} className="mt-1 accent-[#C59735]" />
+                    <input type="radio" name="moyen" disabled={indisponible} checked={moyenEffectif === m.id} onChange={() => setMoyen(m.id)} className="mt-1 accent-(--or)" />
                     <span className="text-sm">
                       <span className="font-semibold block">{m.nom}</span>
                       <span className="text-gris">
@@ -157,7 +157,7 @@ export default function Panier() {
             target="_blank"
             rel="noopener noreferrer"
             aria-disabled={!complet}
-            className={`block text-center rounded-full py-4 font-semibold text-white transition ${complet ? "bg-gradient-to-r from-or to-[#B0852A] shadow-[0_12px_30px_-10px_rgba(197,151,53,0.8)] hover:brightness-110" : "bg-gris/40 pointer-events-none"}`}
+            className={`block text-center rounded-full py-4 font-semibold text-white transition ${complet ? "bg-gradient-to-r from-or to-(--or-fonce) shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] hover:brightness-110" : "bg-gris/40 pointer-events-none"}`}
           >
             Valider ma commande
           </a>
