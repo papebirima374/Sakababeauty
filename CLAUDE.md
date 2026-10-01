@@ -114,7 +114,13 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
   Tout-Petits » et numéros 78 588 54 54 / 78 303 24 24 (donnés par Birima le 24/09/2026).
 
 ### Inscriptions masterclass : `/masterclass`
-- Gratuite, places limitées, confirmation à l'écran (choix de Birima, 23/09/2026).
+- **Masterclass Acné & hyperpigmentation : samedi 24 octobre 2026, 16 h, chez Sakaba
+  (Mermoz). PAYANTE : 20 000 F par Wave** (infos du 01/10/2026). Prix, lien Wave et
+  programme : `lib/masterclass-infos.ts`. Date, heure, lieu, places : onglet Réglages.
+- Parcours : réservation → bouton « Payer avec Wave » → envoi de la capture sur
+  WhatsApp (78 588 54 54). La place est confirmée à réception du paiement : la
+  directrice écrit « Payé » dans la colonne Statut (« Annulé » libère la place).
+  Le paiement n'est PAS vérifié automatiquement (lien Wave marchand simple).
 - Liste des inscrits dans un **Google Sheet** + programme Apps Script
   (`scripts/masterclass-google-sheet.gs`). Onglet « Réglages » : titre, date,
   lieu, places, ouvert OUI/NON — modifiable par la directrice sans code.

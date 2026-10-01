@@ -81,3 +81,15 @@ Tout changement ici apparaît sur la page du site au prochain chargement.
 ## En cas de problème
 Ouvrir la page de vérification ci-dessus : elle dit ce qui bloque, sans jamais
 afficher le mot secret. On peut la copier-coller à Claude sans risque.
+
+## Masterclass payante (depuis le 01/10/2026)
+
+- Le prix (20 000 F), le lien de paiement Wave et le programme sont dans
+  `lib/masterclass-infos.ts` (à changer pour une prochaine masterclass).
+- Après l'inscription, la cliente voit « Payer avec Wave » puis « Envoyer sur
+  WhatsApp » (capture du paiement).
+- Dans l'onglet **Inscrits**, colonne **Statut** : écrire **Payé** quand le paiement
+  est reçu. Écrire **Annulé** pour libérer une place (par exemple une réservation
+  jamais payée).
+- Laisser la case **Description** de l'onglet Réglages vide : le programme est déjà
+  affiché sur la page.

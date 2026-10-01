@@ -1,16 +1,49 @@
 "use client";
 
 import { useState } from "react";
+import { formatPrix } from "@/lib/format";
+import { lienWhatsApp } from "@/lib/config";
 
 type Resume = { titre: string; date: string; heure: string; lieu: string; restantes: number };
 type Etat = "saisie" | "envoi" | "inscrit" | "complet" | "ferme" | "deja" | "erreur";
 
 const MESSAGES: Partial<Record<Etat, string>> = {
-  deja: "Ce numéro est déjà inscrit. Votre place est bien réservée : inutile de vous réinscrire.",
   erreur: "L'inscription n'a pas abouti. Vérifiez votre connexion internet puis réessayez.",
 };
 
-export default function FormulaireMasterclass({ evenement }: { evenement: Resume }) {
+// Les deux gestes après l'inscription : payer par Wave, puis envoyer la preuve.
+function Paiement({ prix, lienPaiement, nomComplet, telephone, titre }: { prix: number; lienPaiement: string; nomComplet: string; telephone: string; titre: string }) {
+  const message = `Bonjour Sakaba Beauty, je viens de payer ma place pour la ${titre}.\nNom : ${nomComplet}\nTéléphone : ${telephone}\n(capture du paiement Wave ci-jointe)`;
+  return (
+    <div className="mt-6 rounded-3xl bg-white p-6 text-left shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)] ring-2 ring-or/40">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or">Pour confirmer votre place</p>
+      <ol className="mt-4 space-y-4">
+        <li className="flex gap-3">
+          <span className="prix grid place-items-center w-7 h-7 shrink-0 rounded-full bg-noir text-white text-sm">1</span>
+          <div className="flex-1">
+            <p className="font-semibold">Payez <span className="prix">{formatPrix(prix)}</span> avec Wave</p>
+            <a href={lienPaiement} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#1DC8FF] py-3.5 font-semibold text-[#0B1B33] hover:brightness-105">
+              Payer avec Wave
+            </a>
+            <p className="text-xs text-gris mt-1.5">Indiquez le montant : {formatPrix(prix)}.</p>
+          </div>
+        </li>
+        <li className="flex gap-3">
+          <span className="prix grid place-items-center w-7 h-7 shrink-0 rounded-full bg-noir text-white text-sm">2</span>
+          <div className="flex-1">
+            <p className="font-semibold">Envoyez la capture du paiement sur WhatsApp</p>
+            <a href={lienWhatsApp(message)} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center rounded-full border border-bordure py-3.5 font-semibold hover:border-or">
+              Envoyer sur WhatsApp
+            </a>
+          </div>
+        </li>
+      </ol>
+      <p className="text-xs text-gris mt-4">Votre place est confirmée dès réception du paiement.</p>
+    </div>
+  );
+}
+
+export default function FormulaireMasterclass({ evenement, prix, lienPaiement }: { evenement: Resume; prix: number; lienPaiement: string }) {
   const [etat, setEtat] = useState<Etat>("saisie");
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
@@ -47,12 +80,28 @@ export default function FormulaireMasterclass({ evenement }: { evenement: Resume
     requestAnimationFrame(() => document.getElementById("inscription")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 
+  const paiement = (
+    <Paiement prix={prix} lienPaiement={lienPaiement} nomComplet={`${prenom} ${nom}`.trim()} telephone={telephone} titre={evenement.titre} />
+  );
+
+  if (etat === "deja") {
+    return (
+      <div className="text-center">
+        <p className="text-or text-3xl">✦</p>
+        <h2 className="titre text-3xl mt-2">Vous êtes déjà inscrit(e)</h2>
+        <p className="text-gris mt-2">Ce numéro a déjà réservé une place : inutile de vous réinscrire. Si vous n&apos;avez pas encore payé, c&apos;est ici :</p>
+        {paiement}
+      </div>
+    );
+  }
+
   if (etat === "inscrit") {
     return (
       <div className="text-center">
         <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(var(--or-rgb),0.7)]">✓</div>
         <h2 className="titre text-4xl mt-4">Votre place est réservée</h2>
-        <p className="text-gris mt-2">Merci {prenom} ! Nous avons hâte de vous accueillir.</p>
+        <p className="text-gris mt-2">Merci {prenom} ! Plus qu&apos;une étape : le paiement.</p>
+        {paiement}
 
         {/* Billet */}
         <div className="relative mt-8 text-left rounded-3xl bg-noir text-creme overflow-hidden shadow-[0_25px_60px_-25px_rgba(20,16,11,0.6)]">
@@ -72,6 +121,7 @@ export default function FormulaireMasterclass({ evenement }: { evenement: Resume
             {evenement.date && (<div className="col-span-2 sm:col-span-1"><dt className="text-creme/60">Date</dt><dd className="font-semibold first-letter:uppercase">{evenement.date}</dd></div>)}
             {evenement.heure && (<div><dt className="text-creme/60">Heure</dt><dd className="font-semibold">{evenement.heure}</dd></div>)}
             {evenement.lieu && (<div className="col-span-2"><dt className="text-creme/60">Lieu</dt><dd className="font-semibold">{evenement.lieu}</dd></div>)}
+            <div className="col-span-2"><dt className="text-creme/60">Participation</dt><dd className="font-semibold"><span className="prix">{formatPrix(prix)}</span> · confirmée à réception du paiement Wave</dd></div>
           </dl>
         </div>
         <p className="text-sm text-gris mt-5">📸 Faites une capture d&apos;écran de votre invitation pour la garder.</p>
@@ -101,10 +151,10 @@ export default function FormulaireMasterclass({ evenement }: { evenement: Resume
       <span className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-or-clair via-or to-or-clair" aria-hidden />
       <div className="text-center">
         <h2 className="titre text-4xl">Je réserve ma place</h2>
-        <p className="text-sm text-gris mt-1">1 minute · gratuit</p>
+        <p className="text-sm text-gris mt-1">1 minute · participation <span className="prix">{formatPrix(prix)}</span> par Wave</p>
       </div>
       {MESSAGES[etat] && (
-        <p className={`rounded-xl p-4 text-sm ${etat === "deja" ? "bg-creme" : "border-2 border-red-700 bg-red-50"}`}>{MESSAGES[etat]}</p>
+        <p className="rounded-xl p-4 text-sm border-2 border-red-700 bg-red-50">{MESSAGES[etat]}</p>
       )}
 
       <div className="grid sm:grid-cols-2 gap-3">
@@ -149,10 +199,10 @@ export default function FormulaireMasterclass({ evenement }: { evenement: Resume
       <input value={site} onChange={(e) => setSite(e.target.value)} name="site" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
 
       <button type="submit" disabled={etat === "envoi"} className="w-full rounded-full bg-gradient-to-r from-or to-(--or-fonce) py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0">
-        {etat === "envoi" ? "Inscription en cours…" : "Je m'inscris"}
+        {etat === "envoi" ? "Réservation en cours…" : "Je réserve ma place"}
       </button>
       <p className="text-xs text-gris text-center">
-        Inscription gratuite. Vos coordonnées servent uniquement à l&apos;organisation de l&apos;événement.
+        Le paiement Wave vous est proposé juste après. Vos coordonnées servent uniquement à l&apos;organisation de l&apos;événement.
       </p>
     </form>
   );

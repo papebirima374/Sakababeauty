@@ -5,17 +5,19 @@ import Image from "next/image";
 import { headers } from "next/headers";
 import { lireEvenement, MASTERCLASS_CONFIGUREE } from "@/lib/masterclass";
 import FormulaireMasterclass from "@/components/FormulaireMasterclass";
+import { MASTERCLASS } from "@/lib/masterclass-infos";
+import { formatPrix } from "@/lib/format";
 
 // Places restantes lues en direct dans le Google Sheet à chaque visite.
 export const dynamic = "force-dynamic";
 
 // Aperçu de lien fixe : WhatsApp et les autres n'attendent pas la réponse de Google.
 export const metadata: Metadata = {
-  title: "Masterclass Sakaba Beauty",
-  description: "Inscription gratuite · places limitées. Réservez votre place en 1 minute.",
+  title: "Masterclass Acné & hyperpigmentation",
+  description: "Samedi 24 octobre à 16 h chez Sakaba Beauty, Mermoz. Places limitées : réservez la vôtre en 1 minute.",
   openGraph: {
-    title: "Masterclass Sakaba Beauty",
-    description: "Inscription gratuite · places limitées. Réservez votre place en 1 minute.",
+    title: "Masterclass Acné & hyperpigmentation · Sakaba Beauty",
+    description: "Samedi 24 octobre à 16 h chez Sakaba Beauty, Mermoz. Places limitées : réservez la vôtre en 1 minute.",
   },
 };
 
@@ -84,8 +86,8 @@ export default async function PageMasterclass() {
           <p className="mt-6 text-xs sm:text-sm font-semibold uppercase tracking-[0.35em] text-or-clair">
             Masterclass · Sakaba Beauty
           </p>
-          <h1 className="titre text-5xl sm:text-6xl leading-[1.05] mt-4">
-            {ev?.titre || "Masterclass Sakaba Beauty"}
+          <h1 className="titre text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 text-balance break-words">
+            {ev?.titre || `Masterclass ${MASTERCLASS.theme}`}
           </h1>
           {ev?.sousTitre && <p className="titre text-2xl sm:text-3xl italic text-or-clair mt-3">{ev.sousTitre}</p>}
           <div className="mx-auto mt-6 flex items-center justify-center gap-3 text-or" aria-hidden>
@@ -93,7 +95,9 @@ export default async function PageMasterclass() {
             <span className="text-sm">✦</span>
             <span className="h-px w-12 bg-gradient-to-l from-transparent to-or" />
           </div>
-          <p className="mt-4 text-creme/80">Inscription gratuite · Places limitées</p>
+          <p className="mt-4 text-creme/80">
+            Participation : <strong className="prix text-or-clair">{formatPrix(MASTERCLASS.prix)}</strong> · Places limitées
+          </p>
         </div>
       </section>
 
@@ -116,14 +120,21 @@ export default async function PageMasterclass() {
         )}
 
         {/* Programme */}
-        {ev?.description && (
-          <section className="mt-10">
-            <h2 className="titre text-3xl text-center">Au programme</h2>
-            <p className="mt-4 rounded-2xl bg-white p-6 border-l-4 border-or leading-relaxed whitespace-pre-line">
-              {ev.description}
-            </p>
-          </section>
-        )}
+        <section className="mt-10">
+          <h2 className="titre text-3xl text-center">Au programme</h2>
+          {ev?.description && <p className="mt-4 text-center text-gris whitespace-pre-line">{ev.description}</p>}
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+            {MASTERCLASS.programme.map((p, i) => (
+              <li
+                key={p}
+                className={`flex items-start gap-3 rounded-2xl bg-white p-4 shadow-[0_12px_35px_-22px_rgba(20,16,11,0.45)] ${i === MASTERCLASS.programme.length - 1 && MASTERCLASS.programme.length % 2 ? "sm:col-span-2" : ""}`}
+              >
+                <span className="grid place-items-center w-7 h-7 shrink-0 rounded-full bg-gradient-to-b from-or-clair to-or text-white text-sm" aria-hidden>✓</span>
+                <span className="pt-0.5">{p}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         {/* Inscription */}
         <div id="inscription" className={ev ? "mt-10" : "mt-0"}>
@@ -146,7 +157,7 @@ export default async function PageMasterclass() {
                   <div className="h-full rounded-full bg-gradient-to-r from-or-clair to-or" style={{ width: `${Math.max(remplissage, 3)}%` }} />
                 </div>
               </div>
-              <FormulaireMasterclass evenement={{ titre: ev.titre, date: ev.date, heure: ev.heure, lieu: ev.lieu, restantes: ev.restantes }} />
+              <FormulaireMasterclass evenement={{ titre: ev.titre, date: ev.date, heure: ev.heure, lieu: ev.lieu, restantes: ev.restantes }} prix={MASTERCLASS.prix} lienPaiement={MASTERCLASS.lienPaiement} />
             </>
           )}
         </div>
