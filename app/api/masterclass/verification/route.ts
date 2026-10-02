@@ -30,6 +30,14 @@ export async function GET() {
         r.conclusion = "Tout fonctionne : le site lit le Google Sheet.";
         r.titre_lu = json.evenement?.titre ?? "";
         r.places_restantes = json.evenement?.restantes ?? "";
+        // Réglages qui ferment les inscriptions sans qu'on s'en rende compte.
+        const ev = json.evenement ?? {};
+        if (!(Number(ev.places) > 0))
+          r.conclusion = "Liaison OK, MAIS la case « Nombre de places » (onglet Réglages) est vide ou à 0 : la page affiche « C'est complet ». Mettez un nombre, par exemple 30.";
+        else if (ev.ouvert === false)
+          r.conclusion = "Liaison OK, MAIS « Inscriptions ouvertes » n'est pas OUI (onglet Réglages) : les inscriptions sont fermées.";
+        else if (Number(ev.restantes) <= 0)
+          r.conclusion = "Liaison OK, MAIS toutes les places sont prises : augmentez « Nombre de places » ou passez des inscrites en « Annulé ».";
       } else if (json.erreur === "acces") {
         r.conclusion = "Le mot secret ne correspond pas : SECRET dans Apps Script et MASTERCLASS_SECRET dans Vercel doivent être identiques.";
       } else {
