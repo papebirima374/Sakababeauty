@@ -17,3 +17,16 @@ export const MASTERCLASS = {
     "Des cadeaux pour chaque participante, et beaucoup d'autres surprises",
   ],
 };
+
+const MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+
+// Instant du début, à partir des textes du Google Sheet (« samedi 24 octobre
+// 2026 », « 16h00 »). Dakar est à l'heure UTC toute l'année. null si illisible.
+export function debutEvenement(date: string, heure: string): number | null {
+  const d = date.toLowerCase().match(/(\d{1,2})\s+([a-zéû]+)\s+(\d{4})/);
+  if (!d) return null;
+  const mois = MOIS.indexOf(d[2]);
+  if (mois < 0) return null;
+  const h = heure.match(/(\d{1,2})\s*[h:]\s*(\d{2})?/);
+  return Date.UTC(Number(d[3]), mois, Number(d[1]), h ? Number(h[1]) : 0, h?.[2] ? Number(h[2]) : 0);
+}

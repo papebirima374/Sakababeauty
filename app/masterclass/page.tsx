@@ -5,7 +5,8 @@ import Image from "next/image";
 import { headers } from "next/headers";
 import { lireEvenement, MASTERCLASS_CONFIGUREE } from "@/lib/masterclass";
 import FormulaireMasterclass from "@/components/FormulaireMasterclass";
-import { MASTERCLASS } from "@/lib/masterclass-infos";
+import { MASTERCLASS, debutEvenement } from "@/lib/masterclass-infos";
+import CompteARebours from "@/components/CompteARebours";
 import { formatPrix } from "@/lib/format";
 
 // Informations lues en direct dans le Google Sheet à chaque visite (le nombre de
@@ -65,6 +66,7 @@ export default async function PageMasterclass() {
         ["lieu", "Lieu", ev.lieu],
       ] as const).filter(([, , v]) => v)
     : [];
+  const debut = ev ? debutEvenement(ev.date, ev.heure) : null;
 
   return (
     <main className="flex-1 bg-creme">
@@ -100,6 +102,11 @@ export default async function PageMasterclass() {
           <p className="mt-1 text-xs text-creme/55">
             + {formatPrix(MASTERCLASS.montantWave - MASTERCLASS.prix)} de frais Wave
           </p>
+          {debut && (
+            <div className="mt-7">
+              <CompteARebours debut={debut} />
+            </div>
+          )}
         </div>
       </section>
 
