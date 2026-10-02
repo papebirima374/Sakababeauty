@@ -6,7 +6,9 @@ export const MASTERCLASS = {
   theme: "Acné & hyperpigmentation",
   prix: 20000,
   // Lien de paiement Wave de Sakaba (public par nature : on le donne aux clientes).
-  lienPaiement: "https://pay.wave.com/m/M_pOEPO7UxwCJr/c/sn/",
+  // Le montant est déjà rempli dans le lien (donné par Birima le 02/10/2026).
+  montantWave: 20200,
+  lienPaiement: "https://pay.wave.com/m/M_pOEPO7UxwCJr/c/sn/?amount=20200",
   programme: [
     "Comprendre l'acné et les taches",
     "Découvrir une routine adaptée",

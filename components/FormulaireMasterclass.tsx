@@ -12,7 +12,7 @@ const MESSAGES: Partial<Record<Etat, string>> = {
 };
 
 // Les deux gestes après l'inscription : payer par Wave, puis envoyer la preuve.
-function Paiement({ prix, lienPaiement, nomComplet, telephone, titre }: { prix: number; lienPaiement: string; nomComplet: string; telephone: string; titre: string }) {
+function Paiement({ montant, lienPaiement, nomComplet, telephone, titre }: { montant: number; lienPaiement: string; nomComplet: string; telephone: string; titre: string }) {
   const message = `Bonjour Sakaba Beauty, je viens de payer ma place pour la ${titre}.\nNom : ${nomComplet}\nTéléphone : ${telephone}\n(capture du paiement Wave ci-jointe)`;
   return (
     <div className="mt-6 rounded-3xl bg-white p-6 text-left shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)] ring-2 ring-or/40">
@@ -21,11 +21,11 @@ function Paiement({ prix, lienPaiement, nomComplet, telephone, titre }: { prix: 
         <li className="flex gap-3">
           <span className="prix grid place-items-center w-7 h-7 shrink-0 rounded-full bg-noir text-white text-sm">1</span>
           <div className="flex-1">
-            <p className="font-semibold">Payez <span className="prix">{formatPrix(prix)}</span> avec Wave</p>
+            <p className="font-semibold">Payez <span className="prix">{formatPrix(montant)}</span> avec Wave</p>
             <a href={lienPaiement} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#1DC8FF] py-3.5 font-semibold text-[#0B1B33] hover:brightness-105">
               Payer avec Wave
             </a>
-            <p className="text-xs text-gris mt-1.5">Indiquez le montant : {formatPrix(prix)}.</p>
+            <p className="text-xs text-gris mt-1.5">Le montant est déjà rempli : il suffit de valider dans Wave.</p>
           </div>
         </li>
         <li className="flex gap-3">
@@ -43,7 +43,7 @@ function Paiement({ prix, lienPaiement, nomComplet, telephone, titre }: { prix: 
   );
 }
 
-export default function FormulaireMasterclass({ evenement, prix, lienPaiement }: { evenement: Resume; prix: number; lienPaiement: string }) {
+export default function FormulaireMasterclass({ evenement, prix, montantWave, lienPaiement }: { evenement: Resume; prix: number; montantWave: number; lienPaiement: string }) {
   const [etat, setEtat] = useState<Etat>("saisie");
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
@@ -81,7 +81,7 @@ export default function FormulaireMasterclass({ evenement, prix, lienPaiement }:
   }
 
   const paiement = (
-    <Paiement prix={prix} lienPaiement={lienPaiement} nomComplet={`${prenom} ${nom}`.trim()} telephone={telephone} titre={evenement.titre} />
+    <Paiement montant={montantWave} lienPaiement={lienPaiement} nomComplet={`${prenom} ${nom}`.trim()} telephone={telephone} titre={evenement.titre} />
   );
 
   if (etat === "deja") {

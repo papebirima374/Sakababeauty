@@ -84,7 +84,7 @@ afficher le mot secret. On peut la copier-coller à Claude sans risque.
 
 ## Masterclass payante (depuis le 01/10/2026)
 
-- Le prix (20 000 F), le lien de paiement Wave et le programme sont dans
+- Le prix (20 000 F), le montant Wave (20 200 F, déjà rempli dans le lien), le lien de paiement Wave et le programme sont dans
   `lib/masterclass-infos.ts` (à changer pour une prochaine masterclass).
 - Après l'inscription, la cliente voit « Payer avec Wave » puis « Envoyer sur
   WhatsApp » (capture du paiement).

@@ -26,3 +26,8 @@ export async function POST(request: Request) {
   }
   return Response.json(await inscrire(inscription));
 }
+
+// Ouverte dans un navigateur, cette adresse mène à la page de vérification.
+export function GET(request: Request) {
+  return Response.redirect(new URL("/api/masterclass/verification", request.url), 307);
+}

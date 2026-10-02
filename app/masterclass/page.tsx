@@ -157,7 +157,7 @@ export default async function PageMasterclass() {
                   <div className="h-full rounded-full bg-gradient-to-r from-or-clair to-or" style={{ width: `${Math.max(remplissage, 3)}%` }} />
                 </div>
               </div>
-              <FormulaireMasterclass evenement={{ titre: ev.titre, date: ev.date, heure: ev.heure, lieu: ev.lieu, restantes: ev.restantes }} prix={MASTERCLASS.prix} lienPaiement={MASTERCLASS.lienPaiement} />
+              <FormulaireMasterclass evenement={{ titre: ev.titre, date: ev.date, heure: ev.heure, lieu: ev.lieu, restantes: ev.restantes }} prix={MASTERCLASS.prix} montantWave={MASTERCLASS.montantWave} lienPaiement={MASTERCLASS.lienPaiement} />
             </>
           )}
         </div>
