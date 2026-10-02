@@ -12,7 +12,7 @@ const MESSAGES: Partial<Record<Etat, string>> = {
 };
 
 // Les deux gestes après l'inscription : payer par Wave, puis envoyer la preuve.
-function Paiement({ montant, lienPaiement, nomComplet, telephone, titre }: { montant: number; lienPaiement: string; nomComplet: string; telephone: string; titre: string }) {
+function Paiement({ prix, montant, lienPaiement, nomComplet, telephone, titre }: { prix: number; montant: number; lienPaiement: string; nomComplet: string; telephone: string; titre: string }) {
   const message = `Bonjour Sakaba Beauty, je viens de payer ma place pour la ${titre}.\nNom : ${nomComplet}\nTéléphone : ${telephone}\n(capture du paiement Wave ci-jointe)`;
   return (
     <div className="mt-6 rounded-3xl bg-white p-6 text-left shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)] ring-2 ring-or/40">
@@ -21,11 +21,13 @@ function Paiement({ montant, lienPaiement, nomComplet, telephone, titre }: { mon
         <li className="flex gap-3">
           <span className="prix grid place-items-center w-7 h-7 shrink-0 rounded-full bg-noir text-white text-sm">1</span>
           <div className="flex-1">
-            <p className="font-semibold">Payez <span className="prix">{formatPrix(montant)}</span> avec Wave</p>
+            <p className="font-semibold">Payez <span className="prix">{formatPrix(prix)}</span> avec Wave</p>
             <a href={lienPaiement} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#1DC8FF] py-3.5 font-semibold text-[#0B1B33] hover:brightness-105">
               Payer avec Wave
             </a>
-            <p className="text-xs text-gris mt-1.5">Le montant est déjà rempli : il suffit de valider dans Wave.</p>
+            <p className="text-xs text-gris mt-1.5">
+              + {formatPrix(montant - prix)} de frais Wave, soit <span className="prix">{formatPrix(montant)}</span>. Le montant est déjà rempli : il suffit de valider.
+            </p>
           </div>
         </li>
         <li className="flex gap-3">
@@ -81,7 +83,7 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
   }
 
   const paiement = (
-    <Paiement montant={montantWave} lienPaiement={lienPaiement} nomComplet={`${prenom} ${nom}`.trim()} telephone={telephone} titre={evenement.titre} />
+    <Paiement prix={prix} montant={montantWave} lienPaiement={lienPaiement} nomComplet={`${prenom} ${nom}`.trim()} telephone={telephone} titre={evenement.titre} />
   );
 
   if (etat === "deja") {
@@ -121,7 +123,7 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
             {evenement.date && (<div className="col-span-2 sm:col-span-1"><dt className="text-creme/60">Date</dt><dd className="font-semibold first-letter:uppercase">{evenement.date}</dd></div>)}
             {evenement.heure && (<div><dt className="text-creme/60">Heure</dt><dd className="font-semibold">{evenement.heure}</dd></div>)}
             {evenement.lieu && (<div className="col-span-2"><dt className="text-creme/60">Lieu</dt><dd className="font-semibold">{evenement.lieu}</dd></div>)}
-            <div className="col-span-2"><dt className="text-creme/60">Participation</dt><dd className="font-semibold"><span className="prix">{formatPrix(prix)}</span> · confirmée à réception du paiement Wave</dd></div>
+            <div className="col-span-2"><dt className="text-creme/60">Participation</dt><dd className="font-semibold"><span className="prix">{formatPrix(prix)}</span> · confirmée à réception du paiement Wave<span className="block text-xs font-normal text-creme/55">+ {formatPrix(montantWave - prix)} de frais Wave</span></dd></div>
           </dl>
         </div>
         <p className="text-sm text-gris mt-5">📸 Faites une capture d&apos;écran de votre invitation pour la garder.</p>

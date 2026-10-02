@@ -98,6 +98,9 @@ export default async function PageMasterclass() {
           <p className="mt-4 text-creme/80">
             Participation : <strong className="prix text-or-clair">{formatPrix(MASTERCLASS.prix)}</strong> · Places limitées
           </p>
+          <p className="mt-1 text-xs text-creme/55">
+            + {formatPrix(MASTERCLASS.montantWave - MASTERCLASS.prix)} de frais Wave
+          </p>
         </div>
       </section>
 
