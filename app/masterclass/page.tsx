@@ -10,7 +10,8 @@ import CompteARebours from "@/components/CompteARebours";
 import { formatPrix } from "@/lib/format";
 
 // Informations lues en direct dans le Google Sheet à chaque visite, dont les
-// places restantes (« Plus que 17 places sur 20 »).
+// places restantes (« Plus que 17 places ») : seules les places PAYÉES comptent,
+// et le total n'est jamais montré (choix de la directrice).
 export const dynamic = "force-dynamic";
 
 // Aperçu de lien fixe : WhatsApp et les autres n'attendent pas la réponse de Google.
@@ -115,11 +116,8 @@ export default async function PageMasterclass() {
           {inscriptionPossible && ev && (
             <div className="mt-8 mx-auto max-w-sm">
               <p className="font-semibold">
-                {ev.restantes === 1 ? "Plus qu'une place !" : `Plus que ${ev.restantes} places sur ${ev.places}`}
+                {ev.restantes === 1 ? "Plus qu'une place !" : `Plus que ${ev.restantes} places`}
               </p>
-              <div className="mt-2 h-2 rounded-full bg-white/10 overflow-hidden" aria-hidden>
-                <div className="h-full rounded-full bg-gradient-to-r from-or-clair to-or" style={{ width: `${Math.max(4, Math.round((ev.inscrits / ev.places) * 100))}%` }} />
-              </div>
               <a
                 href="#inscription"
                 className="mt-6 block rounded-full bg-gradient-to-r from-or to-(--or-fonce) py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] hover:brightness-110"
@@ -176,7 +174,7 @@ export default async function PageMasterclass() {
             <Encart titre="C'est complet !" texte="Suivez @sakababeauty sur Instagram pour les prochaines dates." />
           ) : (
             <>
-              <FormulaireMasterclass evenement={{ titre: ev.titre, date: ev.date, heure: ev.heure, lieu: ev.lieu, restantes: ev.restantes }} prix={MASTERCLASS.prix} montantWave={MASTERCLASS.montantWave} lienPaiement={MASTERCLASS.lienPaiement} />
+              <FormulaireMasterclass evenement={{ titre: titreSansMasterclass, date: ev.date, heure: ev.heure, lieu: ev.lieu, restantes: ev.restantes }} prix={MASTERCLASS.prix} montantWave={MASTERCLASS.montantWave} lienPaiement={MASTERCLASS.lienPaiement} />
             </>
           )}
         </div>

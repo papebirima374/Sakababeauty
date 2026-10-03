@@ -109,3 +109,13 @@ Rien n'est envoyé automatiquement aux clientes. Le tableur prépare les message
    Merci après). Un clic ouvre WhatsApp avec le texte prêt.
 5. Les textes se modifient dans l'onglet **Modèles** (colonne B). Mots remplacés :
    {prenom} {titre} {date} {heure} {lieu}. Relancer le menu après un changement.
+
+## Places comptées seulement après paiement (depuis le 03/10/2026)
+
+- Une réservation arrive avec le Statut **À payer** : elle ne retire PAS de place.
+- La directrice écrit **Payé** quand le paiement Wave est reçu : la place est
+  alors retirée du compteur « Plus que X places » (le total n'est jamais affiché).
+- « Annulé » : la ligne est ignorée (et le numéro peut se réinscrire).
+- Mise à jour du programme : recoller le code, puis Déployer > **Gérer les
+  déploiements** > crayon > Version : **Nouvelle version** > Déployer (l'adresse
+  ne change pas). Ne PAS faire « Nouveau déploiement ».

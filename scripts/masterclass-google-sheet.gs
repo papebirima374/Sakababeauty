@@ -5,8 +5,9 @@
  * docs/MASTERCLASS.md pour la mise en place pas à pas).
  *
  * - Onglet « Réglages » : titre, date, lieu, nombre de places… modifiables à la main.
- * - Onglet « Inscrits » : une ligne par inscription (colonne Statut : écrire
- *   « Annulé » libère la place).
+ * - Onglet « Inscrits » : une ligne par réservation. Colonne Statut : « À payer »
+ *   à la réservation ; écrire « Payé » quand le paiement Wave est reçu (SEULES
+ *   les places payées sont retirées du compteur) ; « Annulé » retire la ligne.
  * - Chaque inscription envoie un email à l'adresse « Email de notification ».
  * - Menu « Masterclass > Préparer les messages WhatsApp » : crée l'onglet
  *   « Messages » avec, pour chaque inscrite, des liens qui ouvrent WhatsApp avec
@@ -108,10 +109,17 @@ function lignesActives_(feuille) {
     .filter(function (l) { return String(l[7]).trim().toLowerCase() !== "annulé" && String(l[7]).trim().toLowerCase() !== "annule"; });
 }
 
+function estPaye_(l) {
+  const statut = String(l[7]).trim().toLowerCase();
+  return statut === "payé" || statut === "paye";
+}
+
 function etat_() {
   const r = lireReglages_();
   const feuille = SpreadsheetApp.getActive().getSheetByName(INSCRITS);
-  const inscrits = lignesActives_(feuille).length;
+  const actives = lignesActives_(feuille);
+  // Les places ne sont comptées qu'une fois le paiement confirmé (« Payé »).
+  const inscrits = actives.filter(estPaye_).length;
   const places = Number(r["Nombre de places"]) || 0;
   return {
     titre: String(r["Titre"] || ""),
@@ -122,6 +130,7 @@ function etat_() {
     description: String(r["Description"] || ""),
     places: places,
     inscrits: inscrits,
+    reservations: actives.length,
     restantes: Math.max(0, places - inscrits),
     ouvert: String(r["Inscriptions ouvertes"] || "").trim().toUpperCase() === "OUI",
   };
@@ -168,7 +177,7 @@ function doPost(e) {
 
     feuille.appendRow([
       new Date(), prenom, nom, telephone, email,
-      String(d.cliente || ""), String(d.attentes || "").trim().slice(0, 1000), "Inscrit",
+      String(d.cliente || ""), String(d.attentes || "").trim().slice(0, 1000), "À payer",
     ]);
     SpreadsheetApp.flush();
     const apres = etat_();
@@ -178,7 +187,7 @@ function doPost(e) {
       try {
         MailApp.sendEmail({
           to: destinataire,
-          subject: "Nouvelle inscription masterclass — " + prenom + " " + nom + " (" + apres.inscrits + "/" + apres.places + ")",
+          subject: "Nouvelle réservation masterclass (à payer) — " + prenom + " " + nom,
           body: [
             "Nouvelle inscription à : " + apres.titre,
             "",
@@ -189,7 +198,8 @@ function doPost(e) {
             "Client(e) Sakaba : " + (d.cliente || "—"),
             "Attentes : " + (d.attentes || "—"),
             "",
-            "Inscrits : " + apres.inscrits + " / " + apres.places + " — places restantes : " + apres.restantes,
+            "Places payées : " + apres.inscrits + " / " + apres.places + " — réservations en cours : " + apres.reservations,
+            "Quand le paiement Wave est reçu : écrire « Payé » dans la colonne Statut.",
             "Liste complète : " + SpreadsheetApp.getActive().getUrl(),
           ].join("\n"),
         });

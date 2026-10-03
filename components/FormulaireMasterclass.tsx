@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPrix } from "@/lib/format";
 import { lienWhatsApp } from "@/lib/config";
 
 type Resume = { titre: string; date: string; heure: string; lieu: string; restantes: number };
-type Etat = "saisie" | "envoi" | "inscrit" | "complet" | "ferme" | "deja" | "erreur";
+type Etat = "saisie" | "envoi" | "wave" | "inscrit" | "complet" | "ferme" | "deja" | "erreur";
 
 const MESSAGES: Partial<Record<Etat, string>> = {
   erreur: "L'inscription n'a pas abouti. Vérifiez votre connexion internet puis réessayez.",
@@ -16,7 +16,7 @@ function Paiement({ prix, montant, lienPaiement, nomComplet, telephone, titre }:
   const message = `Bonjour Sakaba Beauty, je viens de payer ma place pour la ${titre}.\nNom : ${nomComplet}\nTéléphone : ${telephone}\n(capture du paiement Wave ci-jointe)`;
   return (
     <div className="mt-6 rounded-3xl bg-white p-6 text-center shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)] ring-2 ring-or/40">
-      <p className="font-semibold text-lg">Pour confirmer votre place, payez avec Wave</p>
+      <p className="font-semibold text-lg">Paiement pas encore fait ? Payez avec Wave</p>
       <a href={lienPaiement} target="_blank" rel="noopener noreferrer" className="mt-4 block rounded-full bg-[#1DC8FF] py-4 text-lg font-semibold text-[#0B1B33] hover:brightness-105">
         Payer {formatPrix(prix)} avec Wave
       </a>
@@ -33,6 +33,20 @@ function Paiement({ prix, montant, lienPaiement, nomComplet, telephone, titre }:
   );
 }
 
+// Petit bouton pour inviter une amie : ouvre WhatsApp avec un message prêt.
+function BoutonInviter({ evenement }: { evenement: Resume }) {
+  function inviter() {
+    const quand = [evenement.date && `le ${evenement.date}`, evenement.heure && `à ${evenement.heure}`].filter(Boolean).join(" ");
+    const texte = `Je viens de réserver ma place pour la masterclass ${evenement.titre} de Sakaba Beauty${quand ? `, ${quand}` : ""} ✨ Réserve la tienne ici : ${window.location.origin}/masterclass`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(texte)}`, "_blank", "noopener");
+  }
+  return (
+    <button type="button" onClick={inviter} className="mt-4 inline-flex items-center gap-2 rounded-full border border-bordure bg-white px-4 py-2 text-sm font-semibold hover:border-or">
+      <span aria-hidden>✉</span> Inviter une amie sur WhatsApp
+    </button>
+  );
+}
+
 export default function FormulaireMasterclass({ evenement, prix, montantWave, lienPaiement }: { evenement: Resume; prix: number; montantWave: number; lienPaiement: string }) {
   const [etat, setEtat] = useState<Etat>("saisie");
   const [prenom, setPrenom] = useState("");
@@ -40,6 +54,39 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
   const [telephone, setTelephone] = useState("");
   const [site, setSite] = useState(""); // piège anti-robots
   const [tente, setTente] = useState(false);
+
+  // La réservation est gardée sur le téléphone : au retour de Wave, la cliente
+  // retrouve son invitation au lieu d'un formulaire vide.
+  const cle = `masterclass:${evenement.titre}|${evenement.date}`;
+  useEffect(() => {
+    const t = setTimeout(() => {
+      try {
+        const r = JSON.parse(localStorage.getItem(cle) ?? "null");
+        if (r?.prenom) {
+          setPrenom(r.prenom);
+          setNom(r.nom ?? "");
+          setTelephone(r.telephone ?? "");
+          setEtat("inscrit");
+        }
+      } catch {}
+    }, 0);
+    return () => clearTimeout(t);
+  }, [cle]);
+  function memoriser() {
+    try {
+      localStorage.setItem(cle, JSON.stringify({ prenom, nom, telephone }));
+    } catch {}
+  }
+  function oublier() {
+    try {
+      localStorage.removeItem(cle);
+    } catch {}
+    setPrenom("");
+    setNom("");
+    setTelephone("");
+    setTente(false);
+    setEtat("saisie");
+  }
 
   const telOk = telephone.replace(/\D/g, "").length >= 9;
   const valide = prenom.trim() && nom.trim() && telOk;
@@ -56,11 +103,19 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
         body: JSON.stringify({ prenom, nom, telephone, site }),
       });
       const json = await rep.json();
-      if (json.ok) setEtat("inscrit");
-      else if (json.erreur === "complet") setEtat("complet");
+      if (json.ok) {
+        // Réservation enregistrée : on part directement sur Wave pour payer.
+        memoriser();
+        setEtat("wave");
+        window.location.href = lienPaiement;
+        return;
+      }
+      if (json.erreur === "complet") setEtat("complet");
       else if (json.erreur === "ferme") setEtat("ferme");
-      else if (json.erreur === "deja") setEtat("deja");
-      else setEtat("erreur");
+      else if (json.erreur === "deja") {
+        memoriser();
+        setEtat("deja");
+      } else setEtat("erreur");
     } catch {
       setEtat("erreur");
     }
@@ -71,6 +126,16 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
     <Paiement prix={prix} montant={montantWave} lienPaiement={lienPaiement} nomComplet={`${prenom} ${nom}`.trim()} telephone={telephone} titre={evenement.titre} />
   );
 
+  if (etat === "wave") {
+    return (
+      <div className="rounded-3xl bg-white p-8 text-center shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)]">
+        <p className="titre text-3xl">Ouverture de Wave…</p>
+        <p className="text-gris mt-2">Si Wave ne s&apos;ouvre pas, appuyez ici :</p>
+        <a href={lienPaiement} className="mt-4 block rounded-full bg-[#1DC8FF] py-4 text-lg font-semibold text-[#0B1B33]">Payer avec Wave</a>
+      </div>
+    );
+  }
+
   if (etat === "deja") {
     return (
       <div className="text-center">
@@ -78,6 +143,7 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
         <h2 className="titre text-3xl mt-2">Vous êtes déjà inscrit(e)</h2>
         <p className="text-gris mt-2">Ce numéro a déjà réservé une place : inutile de vous réinscrire. Si vous n&apos;avez pas encore payé, c&apos;est ici :</p>
         {paiement}
+        <BoutonInviter evenement={evenement} />
       </div>
     );
   }
@@ -87,8 +153,9 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
       <div className="text-center">
         <div className="mx-auto w-16 h-16 rounded-full grid place-items-center bg-gradient-to-b from-or-clair to-or text-white text-3xl shadow-[0_10px_30px_-8px_rgba(var(--or-rgb),0.7)]">✓</div>
         <h2 className="titre text-4xl mt-4">Votre place est réservée</h2>
-        <p className="text-gris mt-2">Merci {prenom} ! Plus qu&apos;une étape : le paiement.</p>
+        <p className="text-gris mt-2">Merci {prenom} ! Votre place est confirmée dès réception du paiement.</p>
         {paiement}
+        <BoutonInviter evenement={evenement} />
 
         {/* Billet */}
         <div className="relative mt-8 text-left rounded-3xl bg-noir text-creme overflow-hidden shadow-[0_25px_60px_-25px_rgba(20,16,11,0.6)]">
@@ -112,6 +179,9 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
           </dl>
         </div>
         <p className="text-sm text-gris mt-5">📸 Faites une capture d&apos;écran de votre invitation pour la garder.</p>
+        <button type="button" onClick={oublier} className="mt-3 text-xs text-gris underline hover:text-or">
+          Réserver pour une autre personne
+        </button>
       </div>
     );
   }
@@ -138,7 +208,7 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
       <span className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-or-clair via-or to-or-clair" aria-hidden />
       <div className="text-center">
         <h2 className="titre text-4xl">Je réserve ma place</h2>
-        <p className="text-sm text-gris mt-1">30 secondes · puis paiement Wave sur cette page</p>
+        <p className="text-sm text-gris mt-1">30 secondes · paiement par Wave</p>
       </div>
       {MESSAGES[etat] && (
         <p className="rounded-xl p-4 text-sm border-2 border-red-700 bg-red-50">{MESSAGES[etat]}</p>
@@ -164,10 +234,10 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
       <input value={site} onChange={(e) => setSite(e.target.value)} name="site" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
 
       <button type="submit" disabled={etat === "envoi"} className="w-full rounded-full bg-gradient-to-r from-or to-(--or-fonce) py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] transition hover:brightness-110 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0">
-        {etat === "envoi" ? "Réservation en cours…" : "Je réserve ma place"}
+        {etat === "envoi" ? "Réservation en cours…" : "Confirmer ma place et payer avec Wave"}
       </button>
       <p className="text-xs text-gris text-center">
-        Le paiement Wave vous est proposé juste après. Vos coordonnées servent uniquement à l&apos;organisation de l&apos;événement.
+        Vous êtes dirigée vers Wave pour payer {formatPrix(prix)} (+ {formatPrix(montantWave - prix)} de frais). Votre place est confirmée dès réception du paiement. Vos coordonnées servent uniquement à l&apos;organisation de l&apos;événement.
       </p>
     </form>
   );
