@@ -120,6 +120,8 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
 - Page (03/10/2026) : grand « MASTERCLASS » + titre, compte à rebours, « Plus que X
   places sur N », bouton « Réserver ma place » ; formulaire réduit à prénom, nom,
   téléphone (choix de la directrice : simple et direct, tout sur une page).
+- 03/10/2026 : nouveau déploiement Apps Script en ligne (nouvelle URL dans Vercel),
+  vérification « programme : À jour » confirmée par Birima.
 - Compteur : seules les lignes « Payé » retirent une place ; réservation = « À payer ».
   Seul « Plus que X places » est affiché (jamais le total). Bouton du formulaire :
   « Confirmer ma place et payer avec Wave » → redirection directe vers Wave ; la
