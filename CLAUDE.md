@@ -124,6 +124,9 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
   WhatsApp (78 588 54 54). La place est confirmée à réception du paiement : la
   directrice écrit « Payé » dans la colonne Statut (« Annulé » libère la place).
   Le paiement n'est PAS vérifié automatiquement (lien Wave marchand simple).
+- Aucun message automatique aux clientes. Menu du tableur « Masterclass > Préparer
+  les messages WhatsApp » → onglet Messages (liens wa.me pré-remplis), textes dans
+  l'onglet Modèles. WhatsApp 100 % automatique = API WhatsApp Business (payant).
 - Liste des inscrits dans un **Google Sheet** + programme Apps Script
   (`scripts/masterclass-google-sheet.gs`). Onglet « Réglages » : titre, date,
   lieu, places, ouvert OUI/NON — modifiable par la directrice sans code.

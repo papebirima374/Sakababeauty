@@ -93,3 +93,19 @@ afficher le mot secret. On peut la copier-coller à Claude sans risque.
   jamais payée).
 - Laisser la case **Description** de l'onglet Réglages vide : le programme est déjà
   affiché sur la page.
+
+## Messages WhatsApp préparés (depuis le 03/10/2026)
+
+Rien n'est envoyé automatiquement aux clientes. Le tableur prépare les messages :
+
+1. Recoller le programme à jour dans Extensions > Apps Script (tout sélectionner,
+   coller, enregistrer). **Ne pas refaire de déploiement** : le site continue
+   d'utiliser la version déjà publiée.
+2. Recharger le tableur : un menu **Masterclass** apparaît en haut.
+3. Masterclass > **Préparer les messages WhatsApp** (la première fois, Google
+   demande l'autorisation : accepter avec le même compte).
+4. L'onglet **Messages** liste les inscrites non annulées avec un lien
+   « Envoyer » par message (Confirmation, Relance paiement, Rappel la veille,
+   Merci après). Un clic ouvre WhatsApp avec le texte prêt.
+5. Les textes se modifient dans l'onglet **Modèles** (colonne B). Mots remplacés :
+   {prenom} {titre} {date} {heure} {lieu}. Relancer le menu après un changement.

@@ -8,6 +8,9 @@
  * - Onglet « Inscrits » : une ligne par inscription (colonne Statut : écrire
  *   « Annulé » libère la place).
  * - Chaque inscription envoie un email à l'adresse « Email de notification ».
+ * - Menu « Masterclass > Préparer les messages WhatsApp » : crée l'onglet
+ *   « Messages » avec, pour chaque inscrite, des liens qui ouvrent WhatsApp avec
+ *   le message déjà écrit (textes modifiables dans l'onglet « Modèles »).
  * - Le site parle à ce programme avec un mot secret (propriété SECRET), pour que
  *   personne d'autre ne puisse ajouter de lignes.
  */
@@ -196,4 +199,81 @@ function doPost(e) {
   } finally {
     verrou.releaseLock();
   }
+}
+
+
+// ——— Messages WhatsApp préparés ———————————————————————————————————————
+// Rien n'est envoyé tout seul : chaque lien ouvre WhatsApp avec le message déjà
+// écrit, il reste à appuyer sur « Envoyer ». Mots remplacés dans les modèles :
+// {prenom} {titre} {date} {heure} {lieu}.
+const MESSAGES = "Messages";
+const MODELES = "Modèles";
+const MODELES_PAR_DEFAUT = [
+  ["Message", "Texte (modifiable)"],
+  ["Confirmation", "Bonjour {prenom} ! Votre paiement est bien reçu 🎉 Votre place est confirmée pour la masterclass {titre}, le {date} à {heure}, chez {lieu}. À très bientôt ! L'équipe Sakaba Beauty"],
+  ["Relance paiement", "Bonjour {prenom}, merci pour votre réservation à la masterclass {titre}. Pour confirmer votre place, il reste le paiement Wave : https://pay.wave.com/m/M_pOEPO7UxwCJr/c/sn/?amount=20200 — les places sont limitées ! L'équipe Sakaba Beauty"],
+  ["Rappel la veille", "Bonjour {prenom} ! Petit rappel : la masterclass {titre}, c'est demain, {date} à {heure}, chez {lieu}. Nous avons hâte de vous accueillir ✨ L'équipe Sakaba Beauty"],
+  ["Merci après", "Merci {prenom} d'être venue à la masterclass {titre} ! Donnez-nous votre avis en 1 minute : https://sakababeauty-nu.vercel.app/avis — L'équipe Sakaba Beauty"],
+];
+
+/** Ajoute le menu « Masterclass » à l'ouverture du tableur. */
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("Masterclass")
+    .addItem("Préparer les messages WhatsApp", "preparerMessages")
+    .addToUi();
+}
+
+function modeles_() {
+  const classeur = SpreadsheetApp.getActive();
+  let f = classeur.getSheetByName(MODELES);
+  if (!f) {
+    f = classeur.insertSheet(MODELES);
+    f.getRange(1, 1, MODELES_PAR_DEFAUT.length, 2).setValues(MODELES_PAR_DEFAUT);
+    f.getRange(1, 1, 1, 2).setFontWeight("bold").setBackground("#FCF9F3");
+    f.setColumnWidth(1, 170);
+    f.setColumnWidth(2, 700);
+    f.getRange(2, 2, MODELES_PAR_DEFAUT.length - 1, 1).setWrap(true);
+  }
+  return f.getRange(2, 1, Math.max(f.getLastRow() - 1, 1), 2).getValues()
+    .filter(function (l) { return String(l[0]).trim() && String(l[1]).trim(); });
+}
+
+/** Crée ou met à jour l'onglet « Messages » : une ligne par inscrite non annulée. */
+function preparerMessages() {
+  const classeur = SpreadsheetApp.getActive();
+  const ev = etat_();
+  const modeles = modeles_();
+  const lignes = lignesActives_(classeur.getSheetByName(INSCRITS));
+
+  let f = classeur.getSheetByName(MESSAGES);
+  if (!f) f = classeur.insertSheet(MESSAGES);
+  f.clear();
+  const entete = ["Prénom", "Nom", "Téléphone", "Statut"].concat(modeles.map(function (m) { return m[0]; }));
+  f.getRange(1, 1, 1, entete.length).setValues([entete]).setFontWeight("bold").setBackground("#FCF9F3");
+  f.setFrozenRows(1);
+
+  lignes.forEach(function (l, i) {
+    const prenom = String(l[1]).trim();
+    const numero = "221" + telephoneCle_(l[3]);
+    f.getRange(i + 2, 1, 1, 4).setValues([[prenom, l[2], String(l[3]), l[7]]]);
+    modeles.forEach(function (m, j) {
+      const texte = String(m[1])
+        .replace(/\{prenom\}/g, prenom)
+        .replace(/\{titre\}/g, ev.titre)
+        .replace(/\{date\}/g, ev.date)
+        .replace(/\{heure\}/g, ev.heure)
+        .replace(/\{lieu\}/g, ev.lieu);
+      const lien = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texte);
+      f.getRange(i + 2, 5 + j).setRichTextValue(
+        SpreadsheetApp.newRichTextValue().setText("Envoyer").setLinkUrl(lien).build()
+      );
+    });
+  });
+  f.autoResizeColumns(1, entete.length);
+  classeur.setActiveSheet(f);
+  SpreadsheetApp.getUi().alert(
+    lignes.length + " inscrite(s). Cliquez sur « Envoyer » dans la colonne du message voulu : " +
+    "WhatsApp s'ouvre avec le texte prêt, il reste à appuyer sur Envoyer."
+  );
 }
