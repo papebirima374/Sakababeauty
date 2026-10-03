@@ -32,6 +32,10 @@ export async function GET() {
         r.places_restantes = json.evenement?.restantes ?? "";
         // Réglages qui ferment les inscriptions sans qu'on s'en rende compte.
         const ev = json.evenement ?? {};
+        // Le programme du 03/10/2026 (places comptées après paiement) renvoie « reservations ».
+        r.programme = "reservations" in ev
+          ? "À jour : seules les places « Payé » sont décomptées."
+          : "ANCIEN programme : chaque réservation retire une place. Recoller le code et publier une Nouvelle version du BON déploiement (celui dont l'adresse est dans Vercel).";
         if (!(Number(ev.places) > 0))
           r.conclusion = "Liaison OK, MAIS la case « Nombre de places » (onglet Réglages) est vide ou à 0 : la page affiche « C'est complet ». Mettez un nombre, par exemple 30.";
         else if (ev.ouvert === false)
