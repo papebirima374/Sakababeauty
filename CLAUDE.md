@@ -117,6 +117,9 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
 - **Masterclass Acné & hyperpigmentation : samedi 24 octobre 2026, 16 h, chez Sakaba
   (Mermoz). PAYANTE : 20 000 F par Wave** (infos du 01/10/2026). Prix, lien Wave (montant
   pré-rempli 20 200 F, donné le 02/10/2026) et programme : `lib/masterclass-infos.ts`. Date, heure, lieu, places : onglet Réglages.
+- Page (03/10/2026) : grand « MASTERCLASS » + titre, compte à rebours, « Plus que X
+  places sur N », bouton « Réserver ma place » ; formulaire réduit à prénom, nom,
+  téléphone (choix de la directrice : simple et direct, tout sur une page).
 - Parcours : réservation → bouton « Payer avec Wave » → envoi de la capture sur
   WhatsApp (78 588 54 54). La place est confirmée à réception du paiement : la
   directrice écrit « Payé » dans la colonne Statut (« Annulé » libère la place).

@@ -15,32 +15,20 @@ const MESSAGES: Partial<Record<Etat, string>> = {
 function Paiement({ prix, montant, lienPaiement, nomComplet, telephone, titre }: { prix: number; montant: number; lienPaiement: string; nomComplet: string; telephone: string; titre: string }) {
   const message = `Bonjour Sakaba Beauty, je viens de payer ma place pour la ${titre}.\nNom : ${nomComplet}\nTéléphone : ${telephone}\n(capture du paiement Wave ci-jointe)`;
   return (
-    <div className="mt-6 rounded-3xl bg-white p-6 text-left shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)] ring-2 ring-or/40">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-or">Pour confirmer votre place</p>
-      <ol className="mt-4 space-y-4">
-        <li className="flex gap-3">
-          <span className="prix grid place-items-center w-7 h-7 shrink-0 rounded-full bg-noir text-white text-sm">1</span>
-          <div className="flex-1">
-            <p className="font-semibold">Payez <span className="prix">{formatPrix(prix)}</span> avec Wave</p>
-            <a href={lienPaiement} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#1DC8FF] py-3.5 font-semibold text-[#0B1B33] hover:brightness-105">
-              Payer avec Wave
-            </a>
-            <p className="text-xs text-gris mt-1.5">
-              + {formatPrix(montant - prix)} de frais Wave, soit <span className="prix">{formatPrix(montant)}</span>. Le montant est déjà rempli : il suffit de valider.
-            </p>
-          </div>
-        </li>
-        <li className="flex gap-3">
-          <span className="prix grid place-items-center w-7 h-7 shrink-0 rounded-full bg-noir text-white text-sm">2</span>
-          <div className="flex-1">
-            <p className="font-semibold">Envoyez la capture du paiement sur WhatsApp</p>
-            <a href={lienWhatsApp(message)} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center rounded-full border border-bordure py-3.5 font-semibold hover:border-or">
-              Envoyer sur WhatsApp
-            </a>
-          </div>
-        </li>
-      </ol>
-      <p className="text-xs text-gris mt-4">Votre place est confirmée dès réception du paiement.</p>
+    <div className="mt-6 rounded-3xl bg-white p-6 text-center shadow-[0_20px_60px_-25px_rgba(20,16,11,0.35)] ring-2 ring-or/40">
+      <p className="font-semibold text-lg">Pour confirmer votre place, payez avec Wave</p>
+      <a href={lienPaiement} target="_blank" rel="noopener noreferrer" className="mt-4 block rounded-full bg-[#1DC8FF] py-4 text-lg font-semibold text-[#0B1B33] hover:brightness-105">
+        Payer {formatPrix(prix)} avec Wave
+      </a>
+      <p className="text-xs text-gris mt-2">
+        + {formatPrix(montant - prix)} de frais Wave, soit <span className="prix">{formatPrix(montant)}</span>, déjà rempli.
+      </p>
+      <p className="text-sm text-gris mt-5">
+        Après le paiement :{" "}
+        <a href={lienWhatsApp(message)} target="_blank" rel="noopener noreferrer" className="font-semibold text-noir underline hover:text-or">
+          envoyez la capture sur WhatsApp
+        </a>
+      </p>
     </div>
   );
 }
@@ -50,9 +38,6 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [email, setEmail] = useState("");
-  const [cliente, setCliente] = useState("");
-  const [attentes, setAttentes] = useState("");
   const [site, setSite] = useState(""); // piège anti-robots
   const [tente, setTente] = useState(false);
 
@@ -68,7 +53,7 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
       const rep = await fetch("/api/masterclass", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prenom, nom, telephone, email, cliente, attentes, site }),
+        body: JSON.stringify({ prenom, nom, telephone, site }),
       });
       const json = await rep.json();
       if (json.ok) setEtat("inscrit");
@@ -153,7 +138,7 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
       <span className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-or-clair via-or to-or-clair" aria-hidden />
       <div className="text-center">
         <h2 className="titre text-4xl">Je réserve ma place</h2>
-        <p className="text-sm text-gris mt-1">1 minute · participation <span className="prix">{formatPrix(prix)}</span> par Wave</p>
+        <p className="text-sm text-gris mt-1">30 secondes · puis paiement Wave sur cette page</p>
       </div>
       {MESSAGES[etat] && (
         <p className="rounded-xl p-4 text-sm border-2 border-red-700 bg-red-50">{MESSAGES[etat]}</p>
@@ -174,28 +159,6 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
         <span className="text-sm font-semibold">Téléphone (WhatsApp) *</span>
         <input value={telephone} onChange={(e) => setTelephone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="77 123 45 67" className={`${champ} mt-1 ${erreur(telOk)}`} />
         {tente && !telOk && <span className="text-sm text-red-700">Numéro incomplet.</span>}
-      </label>
-
-      <label className="block">
-        <span className="text-sm font-semibold">Email <span className="font-normal text-gris">(facultatif)</span></span>
-        <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" className={`${champ} mt-1 border-bordure`} />
-      </label>
-
-      <fieldset>
-        <legend className="text-sm font-semibold">Êtes-vous déjà client(e) de Sakaba Beauty ?</legend>
-        <div className="mt-2 flex gap-2">
-          {["Oui", "Non"].map((o) => (
-            <button key={o} type="button" aria-pressed={cliente === o} onClick={() => setCliente(cliente === o ? "" : o)}
-              className={`rounded-full border px-6 py-2.5 text-sm font-semibold transition ${cliente === o ? "bg-noir text-white border-noir" : "border-bordure bg-creme/60 hover:border-or"}`}>
-              {o}
-            </button>
-          ))}
-        </div>
-      </fieldset>
-
-      <label className="block">
-        <span className="text-sm font-semibold">Qu&apos;aimeriez-vous apprendre ? <span className="font-normal text-gris">(facultatif)</span></span>
-        <textarea value={attentes} onChange={(e) => setAttentes(e.target.value)} rows={3} className={`${champ} mt-1 border-bordure`} />
       </label>
 
       <input value={site} onChange={(e) => setSite(e.target.value)} name="site" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />

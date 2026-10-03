@@ -9,8 +9,8 @@ import { MASTERCLASS, debutEvenement } from "@/lib/masterclass-infos";
 import CompteARebours from "@/components/CompteARebours";
 import { formatPrix } from "@/lib/format";
 
-// Informations lues en direct dans le Google Sheet à chaque visite (le nombre de
-// places n'est pas affiché : seulement « places limitées », choix de Birima).
+// Informations lues en direct dans le Google Sheet à chaque visite, dont les
+// places restantes (« Plus que 17 places sur 20 »).
 export const dynamic = "force-dynamic";
 
 // Aperçu de lien fixe : WhatsApp et les autres n'attendent pas la réponse de Google.
@@ -67,6 +67,9 @@ export default async function PageMasterclass() {
       ] as const).filter(([, , v]) => v)
     : [];
   const debut = ev ? debutEvenement(ev.date, ev.heure) : null;
+  const inscriptionPossible = Boolean(MASTERCLASS_CONFIGUREE && ev && ev.ouvert && ev.places > 0 && ev.restantes > 0);
+  // « MASTERCLASS » est déjà écrit en grand au-dessus du titre.
+  const titreSansMasterclass = (ev?.titre || MASTERCLASS.theme).replace(/^\s*masterclass\s*[-–—:·]?\s*/i, "") || MASTERCLASS.theme;
 
   return (
     <main className="flex-1 bg-creme">
@@ -84,11 +87,13 @@ export default async function PageMasterclass() {
           <div className="mx-auto w-24 h-24 rounded-full p-[3px] bg-gradient-to-b from-or-clair to-or shadow-[0_0_40px_rgba(var(--or-rgb),0.35)]">
             <Image src="/logo-sakaba.png" alt="Sakaba Beauty" width={96} height={96} className="w-full h-full rounded-full bg-white" priority />
           </div>
-          <p className="mt-6 text-xs sm:text-sm font-semibold uppercase tracking-[0.35em] text-or-clair">
-            Masterclass · Sakaba Beauty
-          </p>
-          <h1 className="titre text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 text-balance break-words">
-            {ev?.titre || `Masterclass ${MASTERCLASS.theme}`}
+          <h1>
+            <span className="block mt-7 text-2xl sm:text-3xl font-semibold uppercase tracking-[0.4em] pl-[0.4em] text-or-clair">
+              Masterclass
+            </span>
+            <span className="block titre text-[2.6rem] sm:text-6xl leading-[1.05] mt-3 text-balance break-words">
+              {titreSansMasterclass}
+            </span>
           </h1>
           {ev?.sousTitre && <p className="titre text-2xl sm:text-3xl italic text-or-clair mt-3">{ev.sousTitre}</p>}
           <div className="mx-auto mt-6 flex items-center justify-center gap-3 text-or" aria-hidden>
@@ -97,7 +102,7 @@ export default async function PageMasterclass() {
             <span className="h-px w-12 bg-gradient-to-l from-transparent to-or" />
           </div>
           <p className="mt-4 text-creme/80">
-            Participation : <strong className="prix text-or-clair">{formatPrix(MASTERCLASS.prix)}</strong> · Places limitées
+            Participation : <strong className="prix text-or-clair">{formatPrix(MASTERCLASS.prix)}</strong>
           </p>
           <p className="mt-1 text-xs text-creme/55">
             + {formatPrix(MASTERCLASS.montantWave - MASTERCLASS.prix)} de frais Wave
@@ -105,6 +110,22 @@ export default async function PageMasterclass() {
           {debut && (
             <div className="mt-7">
               <CompteARebours debut={debut} />
+            </div>
+          )}
+          {inscriptionPossible && ev && (
+            <div className="mt-8 mx-auto max-w-sm">
+              <p className="font-semibold">
+                {ev.restantes === 1 ? "Plus qu'une place !" : `Plus que ${ev.restantes} places sur ${ev.places}`}
+              </p>
+              <div className="mt-2 h-2 rounded-full bg-white/10 overflow-hidden" aria-hidden>
+                <div className="h-full rounded-full bg-gradient-to-r from-or-clair to-or" style={{ width: `${Math.max(4, Math.round((ev.inscrits / ev.places) * 100))}%` }} />
+              </div>
+              <a
+                href="#inscription"
+                className="mt-6 block rounded-full bg-gradient-to-r from-or to-(--or-fonce) py-4 text-lg font-semibold text-white shadow-[0_12px_30px_-10px_rgba(var(--or-rgb),0.8)] hover:brightness-110"
+              >
+                Réserver ma place
+              </a>
             </div>
           )}
         </div>
