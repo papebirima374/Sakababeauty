@@ -4,6 +4,7 @@
 // Masterclass du 24 octobre 2026 (informations données par Birima le 01/10/2026).
 export const MASTERCLASS = {
   theme: "Acné & hyperpigmentation",
+  animee: "Animée par Dr B. Mbaye, dermatologue",
   prix: 20000,
   // Lien de paiement Wave de Sakaba (public par nature : on le donne aux clientes).
   // Le montant est déjà rempli dans le lien (donné par Birima le 02/10/2026).

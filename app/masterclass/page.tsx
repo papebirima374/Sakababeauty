@@ -96,6 +96,7 @@ export default async function PageMasterclass() {
               {titreSansMasterclass}
             </span>
           </h1>
+          <p className="mt-3 text-lg sm:text-xl font-semibold text-or-clair">{MASTERCLASS.animee}</p>
           {ev?.sousTitre && <p className="titre text-2xl sm:text-3xl italic text-or-clair mt-3">{ev.sousTitre}</p>}
           <div className="mx-auto mt-6 flex items-center justify-center gap-3 text-or" aria-hidden>
             <span className="h-px w-12 bg-gradient-to-r from-transparent to-or" />

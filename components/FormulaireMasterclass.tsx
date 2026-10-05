@@ -55,38 +55,13 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
   const [site, setSite] = useState(""); // piège anti-robots
   const [tente, setTente] = useState(false);
 
-  // La réservation est gardée sur le téléphone : au retour de Wave, la cliente
-  // retrouve son invitation au lieu d'un formulaire vide.
-  const cle = `masterclass:${evenement.titre}|${evenement.date}`;
+  // Phase de test (05/10/2026) : on ne garde RIEN sur le téléphone. On efface
+  // aussi ce qu'une version précédente avait pu y enregistrer.
   useEffect(() => {
-    const t = setTimeout(() => {
-      try {
-        const r = JSON.parse(localStorage.getItem(cle) ?? "null");
-        if (r?.prenom) {
-          setPrenom(r.prenom);
-          setNom(r.nom ?? "");
-          setTelephone(r.telephone ?? "");
-          setEtat("inscrit");
-        }
-      } catch {}
-    }, 0);
-    return () => clearTimeout(t);
-  }, [cle]);
-  function memoriser() {
     try {
-      localStorage.setItem(cle, JSON.stringify({ prenom, nom, telephone }));
+      Object.keys(localStorage).filter((k) => k.startsWith("masterclass:")).forEach((k) => localStorage.removeItem(k));
     } catch {}
-  }
-  function oublier() {
-    try {
-      localStorage.removeItem(cle);
-    } catch {}
-    setPrenom("");
-    setNom("");
-    setTelephone("");
-    setTente(false);
-    setEtat("saisie");
-  }
+  }, []);
 
   const telOk = telephone.replace(/\D/g, "").length >= 9;
   const valide = prenom.trim() && nom.trim() && telOk;
@@ -105,17 +80,14 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
       const json = await rep.json();
       if (json.ok) {
         // Réservation enregistrée : on part directement sur Wave pour payer.
-        memoriser();
         setEtat("wave");
         window.location.href = lienPaiement;
         return;
       }
       if (json.erreur === "complet") setEtat("complet");
       else if (json.erreur === "ferme") setEtat("ferme");
-      else if (json.erreur === "deja") {
-        memoriser();
-        setEtat("deja");
-      } else setEtat("erreur");
+      else if (json.erreur === "deja") setEtat("deja");
+ else setEtat("erreur");
     } catch {
       setEtat("erreur");
     }
@@ -179,9 +151,6 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
           </dl>
         </div>
         <p className="text-sm text-gris mt-5">📸 Faites une capture d&apos;écran de votre invitation pour la garder.</p>
-        <button type="button" onClick={oublier} className="mt-3 text-xs text-gris underline hover:text-or">
-          Réserver pour une autre personne
-        </button>
       </div>
     );
   }
