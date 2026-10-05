@@ -62,3 +62,20 @@ export async function inscrire(i: Inscription): Promise<ReponseInscription> {
     return { ok: false, erreur: "indisponible" };
   }
 }
+
+export type Billet = { code: string; prenom: string; nom: string; statut: string; paye: boolean; annule: boolean };
+
+// Invitation retrouvée par son code (celui du QR code). null : code inconnu ou
+// Google injoignable ; on distingue les deux pour l'affichage.
+export async function lireBillet(code: string): Promise<{ billet: Billet; evenement: Evenement } | "inconnu" | "indisponible"> {
+  if (!MASTERCLASS_CONFIGUREE) return "indisponible";
+  try {
+    const url = `${URL_SCRIPT}?secret=${encodeURIComponent(SECRET)}&code=${encodeURIComponent(code)}`;
+    const rep = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(15000) });
+    const json = await rep.json();
+    if (json.ok && json.billet) return { billet: json.billet as Billet, evenement: json.evenement as Evenement };
+    return json.erreur === "inconnu" ? "inconnu" : "indisponible";
+  } catch {
+    return "indisponible";
+  }
+}

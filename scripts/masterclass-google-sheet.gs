@@ -20,8 +20,38 @@ const INSCRITS = "Inscrits";
 const REGLAGES = "Réglages";
 const COLONNES = [
   "Date d'inscription", "Prénom", "Nom", "Téléphone", "Email",
-  "Client(e) Sakaba", "Attentes", "Statut",
+  "Client(e) Sakaba", "Attentes", "Statut", "Code billet",
 ];
+// Adresse du site : sert aux liens d'invitation (QR code) envoyés aux clientes.
+const SITE = "https://sakababeauty-nu.vercel.app";
+const CARACTERES_CODE = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sans 0/O ni 1/I
+
+function nouveauCode_() {
+  let c = "";
+  for (let i = 0; i < 8; i++) c += CARACTERES_CODE.charAt(Math.floor(Math.random() * CARACTERES_CODE.length));
+  return c;
+}
+
+/** Donne un code billet aux lignes qui n'en ont pas (colonne I). */
+function assurerCodes_(feuille) {
+  if (String(feuille.getRange(1, 9).getValue()).trim() === "") {
+    feuille.getRange(1, 9).setValue("Code billet").setFontWeight("bold").setBackground("#FCF9F3");
+  }
+  const n = feuille.getLastRow() - 1;
+  if (n < 1) return;
+  const plage = feuille.getRange(2, 9, n, 1);
+  const codes = plage.getValues();
+  const prenoms = feuille.getRange(2, 2, n, 1).getValues();
+  let change = false;
+  codes.forEach(function (l, i) {
+    if (!String(l[0]).trim() && String(prenoms[i][0]).trim()) { l[0] = nouveauCode_(); change = true; }
+  });
+  if (change) plage.setValues(codes);
+}
+
+function lienBillet_(code) {
+  return SITE + "/masterclass/billet/" + code;
+}
 const REGLAGES_PAR_DEFAUT = [
   ["Titre", "Masterclass Sakaba Beauty"],
   ["Sous-titre", ""],
@@ -148,7 +178,25 @@ function secretOk_(valeur) {
 /** Lecture : informations de l'événement et places restantes. */
 function doGet(e) {
   if (!secretOk_(e && e.parameter && e.parameter.secret)) return reponse_({ ok: false, erreur: "acces" });
+  const code = String((e.parameter && e.parameter.code) || "").trim().toUpperCase();
+  if (code) return reponse_(billet_(code));
   return reponse_({ ok: true, evenement: etat_() });
+}
+
+/** Invitation d'une cliente, retrouvée par son code (QR code). */
+function billet_(code) {
+  const feuille = SpreadsheetApp.getActive().getSheetByName(INSCRITS);
+  if (feuille.getLastRow() < 2) return { ok: false, erreur: "inconnu" };
+  const lignes = feuille.getRange(2, 1, feuille.getLastRow() - 1, COLONNES.length).getValues();
+  const l = lignes.find(function (x) { return String(x[8]).trim().toUpperCase() === code; });
+  if (!l) return { ok: false, erreur: "inconnu" };
+  const statut = String(l[7]).trim();
+  const annule = ["annulé", "annule"].indexOf(statut.toLowerCase()) >= 0;
+  return {
+    ok: true,
+    billet: { code: code, prenom: String(l[1]), nom: String(l[2]), statut: statut, paye: !annule && estPaye_(l), annule: annule },
+    evenement: etat_(),
+  };
 }
 
 /** Inscription. */
@@ -175,9 +223,10 @@ function doPost(e) {
     const deja = lignesActives_(feuille).some(function (l) { return telephoneCle_(l[3]) === cle; });
     if (deja) return reponse_({ ok: false, erreur: "deja", evenement: ev });
 
+    assurerCodes_(feuille);
     feuille.appendRow([
       new Date(), prenom, nom, telephone, email,
-      String(d.cliente || ""), String(d.attentes || "").trim().slice(0, 1000), "À payer",
+      String(d.cliente || ""), String(d.attentes || "").trim().slice(0, 1000), "À payer", nouveauCode_(),
     ]);
     SpreadsheetApp.flush();
     const apres = etat_();
@@ -215,12 +264,12 @@ function doPost(e) {
 // ——— Messages WhatsApp préparés ———————————————————————————————————————
 // Rien n'est envoyé tout seul : chaque lien ouvre WhatsApp avec le message déjà
 // écrit, il reste à appuyer sur « Envoyer ». Mots remplacés dans les modèles :
-// {prenom} {titre} {date} {heure} {lieu}.
+// {prenom} {titre} {date} {heure} {lieu} {lien_billet}.
 const MESSAGES = "Messages";
 const MODELES = "Modèles";
 const MODELES_PAR_DEFAUT = [
   ["Message", "Texte (modifiable)"],
-  ["Confirmation", "Bonjour {prenom} ! Votre paiement est bien reçu 🎉 Votre place est confirmée pour la masterclass {titre}, le {date} à {heure}, chez {lieu}. À très bientôt ! L'équipe Sakaba Beauty"],
+  ["Confirmation", "Bonjour {prenom} ! Votre paiement est bien reçu 🎉 Votre place est confirmée pour la masterclass {titre}, le {date} à {heure}, chez {lieu}. Votre invitation (à présenter à l'entrée) : {lien_billet} À très bientôt ! L'équipe Sakaba Beauty"],
   ["Relance paiement", "Bonjour {prenom}, merci pour votre réservation à la masterclass {titre}. Pour confirmer votre place, il reste le paiement Wave : https://pay.wave.com/m/M_pOEPO7UxwCJr/c/sn/?amount=20200 — les places sont limitées ! L'équipe Sakaba Beauty"],
   ["Rappel la veille", "Bonjour {prenom} ! Petit rappel : la masterclass {titre}, c'est demain, {date} à {heure}, chez {lieu}. Nous avons hâte de vous accueillir ✨ L'équipe Sakaba Beauty"],
   ["Merci après", "Merci {prenom} d'être venue à la masterclass {titre} ! Donnez-nous votre avis en 1 minute : https://sakababeauty-nu.vercel.app/avis — L'équipe Sakaba Beauty"],
@@ -245,6 +294,12 @@ function modeles_() {
     f.setColumnWidth(2, 700);
     f.getRange(2, 2, MODELES_PAR_DEFAUT.length - 1, 1).setWrap(true);
   }
+  // Ancien texte de confirmation (sans lien d'invitation) : mis à jour tout seul.
+  const ancien = "Bonjour {prenom} ! Votre paiement est bien reçu 🎉 Votre place est confirmée pour la masterclass {titre}, le {date} à {heure}, chez {lieu}. À très bientôt ! L'équipe Sakaba Beauty";
+  const valeurs = f.getRange(2, 1, Math.max(f.getLastRow() - 1, 1), 2).getValues();
+  valeurs.forEach(function (l, i) {
+    if (String(l[0]) === "Confirmation" && String(l[1]) === ancien) f.getRange(i + 2, 2).setValue(MODELES_PAR_DEFAUT[1][1]);
+  });
   return f.getRange(2, 1, Math.max(f.getLastRow() - 1, 1), 2).getValues()
     .filter(function (l) { return String(l[0]).trim() && String(l[1]).trim(); });
 }
@@ -254,12 +309,14 @@ function preparerMessages() {
   const classeur = SpreadsheetApp.getActive();
   const ev = etat_();
   const modeles = modeles_();
-  const lignes = lignesActives_(classeur.getSheetByName(INSCRITS));
+  const inscritsF = classeur.getSheetByName(INSCRITS);
+  assurerCodes_(inscritsF);
+  const lignes = lignesActives_(inscritsF);
 
   let f = classeur.getSheetByName(MESSAGES);
   if (!f) f = classeur.insertSheet(MESSAGES);
   f.clear();
-  const entete = ["Prénom", "Nom", "Téléphone", "Statut"].concat(modeles.map(function (m) { return m[0]; }));
+  const entete = ["Prénom", "Nom", "Téléphone", "Statut", "Invitation"].concat(modeles.map(function (m) { return m[0]; }));
   f.getRange(1, 1, 1, entete.length).setValues([entete]).setFontWeight("bold").setBackground("#FCF9F3");
   f.setFrozenRows(1);
 
@@ -267,15 +324,19 @@ function preparerMessages() {
     const prenom = String(l[1]).trim();
     const numero = "221" + telephoneCle_(l[3]);
     f.getRange(i + 2, 1, 1, 4).setValues([[prenom, l[2], String(l[3]), l[7]]]);
+    f.getRange(i + 2, 5).setRichTextValue(
+      SpreadsheetApp.newRichTextValue().setText("Voir").setLinkUrl(lienBillet_(l[8])).build()
+    );
     modeles.forEach(function (m, j) {
       const texte = String(m[1])
         .replace(/\{prenom\}/g, prenom)
         .replace(/\{titre\}/g, ev.titre)
         .replace(/\{date\}/g, ev.date)
         .replace(/\{heure\}/g, ev.heure)
-        .replace(/\{lieu\}/g, ev.lieu);
+        .replace(/\{lieu\}/g, ev.lieu)
+        .replace(/\{lien_billet\}/g, lienBillet_(l[8]));
       const lien = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texte);
-      f.getRange(i + 2, 5 + j).setRichTextValue(
+      f.getRange(i + 2, 6 + j).setRichTextValue(
         SpreadsheetApp.newRichTextValue().setText("Envoyer").setLinkUrl(lien).build()
       );
     });

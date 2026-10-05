@@ -122,6 +122,11 @@ Code dans `app/(boutique)/`. Photos produits recadrées au carré sur fond blanc
   téléphone (choix de la directrice : simple et direct, tout sur une page).
 - 03/10/2026 : nouveau déploiement Apps Script en ligne (nouvelle URL dans Vercel),
   vérification « programme : À jour » confirmée par Birima.
+- 05/10/2026 : plus AUCUN souvenir de la réservation dans le navigateur (demande de
+  la directrice, phase de test). « Animée par Dr B. Mbaye, dermatologue ».
+- Invitations QR : code billet (colonne I), page `/masterclass/billet/[code]`
+  (valide / en attente / annulée / introuvable), carte PNG téléchargeable ;
+  scan du QR à l'entrée le jour J. Demande un nouveau programme du tableur.
 - Compteur : seules les lignes « Payé » retirent une place ; réservation = « À payer ».
   Seul « Plus que X places » est affiché (jamais le total). Bouton du formulaire :
   « Confirmer ma place et payer avec Wave » → redirection directe vers Wave ; la

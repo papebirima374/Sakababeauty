@@ -119,3 +119,18 @@ Rien n'est envoyé automatiquement aux clientes. Le tableur prépare les message
 - Mise à jour du programme : recoller le code, puis Déployer > **Gérer les
   déploiements** > crayon > Version : **Nouvelle version** > Déployer (l'adresse
   ne change pas). Ne PAS faire « Nouveau déploiement ».
+
+## Invitations avec QR code (depuis le 05/10/2026)
+
+- Chaque réservation reçoit un **code billet** (colonne I « Code billet », 8 lettres
+  et chiffres). Les anciennes lignes en reçoivent un au prochain menu « Préparer
+  les messages WhatsApp ».
+- Lien de l'invitation : `/masterclass/billet/CODE`. Il est dans la colonne
+  « Invitation » de l'onglet Messages et dans le message « Confirmation »
+  ({lien_billet}).
+- Tant que le Statut n'est pas « Payé », la page affiche « Paiement en attente ».
+  Une fois « Payé » : carte avec QR code + bouton « Télécharger mon invitation (PNG) ».
+- **Le jour J** : scanner le QR code avec l'appareil photo d'un téléphone. La page
+  affiche en grand : vert « Invitation valide » (payée), orange « Paiement en
+  attente », rouge « annulée » ou « introuvable ». Vérifier que le nom correspond
+  à la personne.
