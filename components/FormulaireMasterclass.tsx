@@ -196,7 +196,7 @@ export default function FormulaireMasterclass({ evenement, prix, montantWave, li
 
       <label className="block">
         <span className="text-sm font-semibold">Téléphone (WhatsApp) *</span>
-        <input value={telephone} onChange={(e) => setTelephone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="77 123 45 67" className={`${champ} mt-1 ${erreur(telOk)}`} />
+        <input value={telephone} onChange={(e) => setTelephone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" className={`${champ} mt-1 ${erreur(telOk)}`} />
         {tente && !telOk && <span className="text-sm text-red-700">Numéro incomplet.</span>}
       </label>
 
