@@ -141,3 +141,12 @@ Sur la page /masterclass, la cliente tape le téléphone et le nom de famille de
 réservation : elle arrive sur son invitation (carte + QR + téléchargement PNG si
 « Payé », sinon « Paiement en attente »). Demande le programme du tableur du
 06/10/2026 (recherche par téléphone) : Gérer les déploiements > crayon > Nouvelle version.
+
+## Ce que voit qui (06/10/2026)
+
+- **Seule la directrice valide** une invitation, en écrivant « Payé » dans le tableur.
+- **La cliente** (lien WhatsApp ou « Déjà payé ? ») : sa carte et le bouton de
+  téléchargement si payé, sinon « disponible dès que Sakaba aura confirmé votre
+  paiement ». Aucun bandeau « valide / non valide ».
+- **Le contrôle à l'entrée** : le QR code ouvre `…/billet/CODE?controle=1`, avec le
+  grand bandeau vert (valide), orange (paiement non confirmé) ou rouge.

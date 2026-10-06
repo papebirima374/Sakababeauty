@@ -8,9 +8,12 @@ import { formatPrix } from "@/lib/format";
 import { lireBillet } from "@/lib/masterclass";
 import { MASTERCLASS } from "@/lib/masterclass-infos";
 
-// Page d'une invitation (lien envoyé à la cliente et contenu du QR code).
-// Elle sert aussi au contrôle à l'entrée : le bandeau du haut dit tout de suite
-// si l'invitation est valide (statut « Payé » dans le Google Sheet).
+// Page d'une invitation. Deux usages :
+// - la cliente (lien WhatsApp, « Déjà payé ? ») : seulement sa carte à télécharger,
+//   sans bandeau de validité ;
+// - le contrôle à l'entrée (?controle=1, ce que contient le QR code) : grand
+//   bandeau vert / orange / rouge. Seule la directrice valide, en écrivant
+//   « Payé » dans le Google Sheet.
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -32,7 +35,17 @@ function Bandeau({ couleur, titre, texte }: { couleur: "vert" | "orange" | "roug
   );
 }
 
-export default async function PageBillet({ params }: PageProps<"/masterclass/billet/[code]">) {
+function Message({ titre, texte }: { titre: string; texte: string }) {
+  return (
+    <div className="rounded-3xl bg-white p-6 text-center ring-1 ring-bordure/70">
+      <p className="titre text-3xl">{titre}</p>
+      <p className="text-gris mt-2">{texte}</p>
+    </div>
+  );
+}
+
+export default async function PageBillet({ params, searchParams }: PageProps<"/masterclass/billet/[code]">) {
+  const controle = (await searchParams).controle === "1";
   if (BOUTIQUE_ACTIVE.id !== "sakaba") redirect("/gestion/solution");
   const { code: brut } = await params;
   const code = decodeURIComponent(brut).trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
@@ -40,17 +53,21 @@ export default async function PageBillet({ params }: PageProps<"/masterclass/bil
 
   let contenu: React.ReactNode;
   if (r === "indisponible") {
-    contenu = <Bandeau couleur="orange" titre="Vérification impossible" texte="La connexion ne répond pas. Réessayez dans un instant." />;
-  } else if (r === "inconnu") {
-    contenu = <Bandeau couleur="rouge" titre="✕ Invitation introuvable" texte={`Aucune réservation avec le code ${code}.`} />;
-  } else if (r.billet.annule) {
-    contenu = <Bandeau couleur="rouge" titre="✕ Invitation annulée" texte={`${r.billet.prenom} ${r.billet.nom} · ${code}`} />;
+    contenu = controle
+      ? <Bandeau couleur="orange" titre="Vérification impossible" texte="La connexion ne répond pas. Réessayez dans un instant." />
+      : <Message titre="Un instant…" texte="La connexion ne répond pas. Réessayez dans un instant." />;
+  } else if (r === "inconnu" || r.billet.annule) {
+    contenu = controle
+      ? <Bandeau couleur="rouge" titre={r === "inconnu" ? "✕ Invitation introuvable" : "✕ Invitation annulée"} texte={r === "inconnu" ? `Aucune réservation avec le code ${code}.` : `${r.billet.prenom} ${r.billet.nom} · ${code}`} />
+      : <Message titre="Invitation introuvable" texte="Contactez Sakaba Beauty sur WhatsApp au 78 588 54 54." />;
   } else if (!r.billet.paye) {
-    contenu = (
+    contenu = controle ? (
+      <Bandeau couleur="orange" titre="Paiement non confirmé" texte={`${r.billet.prenom} ${r.billet.nom} · ${code}`} />
+    ) : (
       <>
-        <Bandeau couleur="orange" titre="Paiement en attente" texte={`${r.billet.prenom} ${r.billet.nom} · ${code}`} />
+        <Message titre={`Bonjour ${r.billet.prenom}`} texte="Votre invitation sera disponible ici dès que Sakaba Beauty aura confirmé votre paiement." />
         <div className="mt-5 rounded-3xl bg-white p-6 text-center">
-          <p className="text-gris">L&apos;invitation sera disponible ici dès que le paiement Wave aura été reçu et vérifié.</p>
+          <p className="text-gris">Pas encore payé ?</p>
           <a href={MASTERCLASS.lienPaiement} className="mt-4 block rounded-full bg-[#1DC8FF] py-4 text-lg font-semibold text-[#0B1B33]">
             Payer {formatPrix(MASTERCLASS.prix)} avec Wave
           </a>
@@ -62,8 +79,8 @@ export default async function PageBillet({ params }: PageProps<"/masterclass/bil
     const titre = (r.evenement?.titre || MASTERCLASS.theme).replace(/^\s*masterclass\s*[-–—:·]?\s*/i, "") || MASTERCLASS.theme;
     contenu = (
       <>
-        <Bandeau couleur="vert" titre="✓ Invitation valide" texte={`Payée · ${r.billet.prenom} ${r.billet.nom}`} />
-        <div className="mt-6">
+        {controle && <Bandeau couleur="vert" titre="✓ Invitation valide" texte={`Payée · ${r.billet.prenom} ${r.billet.nom}`} />}
+        <div className={controle ? "mt-6" : ""}>
           <CarteInvitation
             infos={{
               code,
@@ -73,7 +90,7 @@ export default async function PageBillet({ params }: PageProps<"/masterclass/bil
               date: r.evenement?.date ?? "",
               heure: r.evenement?.heure ?? "",
               lieu: r.evenement?.lieu ?? "",
-              lien: `${URL_SITE}/masterclass/billet/${code}`,
+              lien: `${URL_SITE}/masterclass/billet/${code}?controle=1`,
             }}
           />
         </div>
