@@ -134,3 +134,10 @@ Rien n'est envoyé automatiquement aux clientes. Le tableur prépare les message
   affiche en grand : vert « Invitation valide » (payée), orange « Paiement en
   attente », rouge « annulée » ou « introuvable ». Vérifier que le nom correspond
   à la personne.
+
+## « Déjà payé ? Télécharger mon invitation » (depuis le 06/10/2026)
+
+Sur la page /masterclass, la cliente tape le téléphone et le nom de famille de sa
+réservation : elle arrive sur son invitation (carte + QR + téléchargement PNG si
+« Payé », sinon « Paiement en attente »). Demande le programme du tableur du
+06/10/2026 (recherche par téléphone) : Gérer les déploiements > crayon > Nouvelle version.

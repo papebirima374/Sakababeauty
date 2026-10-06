@@ -5,6 +5,7 @@ import Image from "next/image";
 import { headers } from "next/headers";
 import { lireEvenement, MASTERCLASS_CONFIGUREE } from "@/lib/masterclass";
 import FormulaireMasterclass from "@/components/FormulaireMasterclass";
+import RetrouverInvitation from "@/components/RetrouverInvitation";
 import { MASTERCLASS, debutEvenement } from "@/lib/masterclass-infos";
 import CompteARebours from "@/components/CompteARebours";
 import { formatPrix } from "@/lib/format";
@@ -127,6 +128,11 @@ export default async function PageMasterclass() {
               </a>
             </div>
           )}
+          {ev && (
+            <a href="#invitation" className="mt-4 inline-block text-sm text-creme/70 underline hover:text-or-clair">
+              Déjà payé ? Télécharger mon invitation
+            </a>
+          )}
         </div>
       </section>
 
@@ -180,9 +186,20 @@ export default async function PageMasterclass() {
           )}
         </div>
 
+        {MASTERCLASS_CONFIGUREE && ev && <RetrouverInvitation />}
+
         <footer className="mt-12 text-center">
           <p className="titre text-lg text-or">Sakaba Beauty</p>
-          <p className="text-xs text-gris mt-1">La beauté authentique, avec le bon conseil · Mermoz Ancienne Piste, Dakar</p>
+          <p className="text-sm text-gris mt-1">Mermoz Ancienne Piste, à côté de la <span className="whitespace-nowrap">Case des Tout-Petits</span></p>
+          <p className="text-sm mt-1">
+            <span aria-hidden>📞 </span>
+            {BOUTIQUE_ACTIVE.telephones.map((t, i) => (
+              <span key={t.lien}>
+                {i > 0 && <span className="text-gris"> ou </span>}
+                <a href={t.lien} className="prix font-semibold text-noir hover:text-or">{t.affiche}</a>
+              </span>
+            ))}
+          </p>
         </footer>
       </div>
     </main>

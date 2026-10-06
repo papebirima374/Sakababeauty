@@ -79,3 +79,17 @@ export async function lireBillet(code: string): Promise<{ billet: Billet; evenem
     return "indisponible";
   }
 }
+
+// Retrouver une invitation avec le téléphone et le nom de famille de la cliente.
+export async function chercherBillet(telephone: string, nom: string): Promise<{ code: string; paye: boolean } | "inconnu" | "indisponible"> {
+  if (!MASTERCLASS_CONFIGUREE) return "indisponible";
+  try {
+    const url = `${URL_SCRIPT}?secret=${encodeURIComponent(SECRET)}&tel=${encodeURIComponent(telephone)}&nom=${encodeURIComponent(nom)}`;
+    const rep = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(15000) });
+    const json = await rep.json();
+    if (json.ok && json.billet) return { code: json.billet.code, paye: Boolean(json.billet.paye) };
+    return json.erreur === "inconnu" ? "inconnu" : "indisponible";
+  } catch {
+    return "indisponible";
+  }
+}

@@ -180,7 +180,28 @@ function doGet(e) {
   if (!secretOk_(e && e.parameter && e.parameter.secret)) return reponse_({ ok: false, erreur: "acces" });
   const code = String((e.parameter && e.parameter.code) || "").trim().toUpperCase();
   if (code) return reponse_(billet_(code));
+  if (e.parameter && e.parameter.tel) return reponse_(billetParTelephone_(e.parameter.tel, e.parameter.nom));
   return reponse_({ ok: true, evenement: etat_() });
+}
+
+function simplifier_(t) {
+  return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z]/g, "");
+}
+
+/**
+ * La cliente retrouve son invitation avec son téléphone ET son nom de famille
+ * (les deux doivent correspondre à une réservation non annulée).
+ */
+function billetParTelephone_(tel, nom) {
+  const cleTel = telephoneCle_(tel);
+  const cleNom = simplifier_(nom);
+  if (cleTel.length < 9 || !cleNom) return { ok: false, erreur: "inconnu" };
+  const feuille = SpreadsheetApp.getActive().getSheetByName(INSCRITS);
+  assurerCodes_(feuille);
+  const l = lignesActives_(feuille).filter(function (x) {
+    return telephoneCle_(x[3]) === cleTel && simplifier_(x[2]) === cleNom;
+  }).pop();
+  return l ? billet_(String(l[8]).trim().toUpperCase()) : { ok: false, erreur: "inconnu" };
 }
 
 /** Invitation d'une cliente, retrouvée par son code (QR code). */
