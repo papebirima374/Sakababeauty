@@ -44,7 +44,7 @@ function assurerCodes_(feuille) {
   const prenoms = feuille.getRange(2, 2, n, 1).getValues();
   let change = false;
   codes.forEach(function (l, i) {
-    if (!String(l[0]).trim() && String(prenoms[i][0]).trim()) { l[0] = nouveauCode_(); change = true; }
+    if (!String(l[0] || "").trim() && String(prenoms[i][0] || "").trim()) { l[0] = nouveauCode_(); change = true; }
   });
   if (change) plage.setValues(codes);
 }
@@ -250,6 +250,7 @@ function doPost(e) {
       String(d.cliente || ""), String(d.attentes || "").trim().slice(0, 1000), "À payer", nouveauCode_(),
     ]);
     SpreadsheetApp.flush();
+    try { preparerMessages(true); } catch (err) { /* l'inscription reste valable */ }
     const apres = etat_();
 
     const destinataire = String(lireReglages_()["Email de notification"] || "").trim();
@@ -296,6 +297,16 @@ const MODELES_PAR_DEFAUT = [
   ["Merci après", "Merci {prenom} d'être venue à la masterclass {titre} ! Donnez-nous votre avis en 1 minute : https://sakababeauty-nu.vercel.app/avis — L'équipe Sakaba Beauty"],
 ];
 
+/**
+ * Quand on modifie l'onglet Inscrits (par exemple « Payé » dans la colonne
+ * Statut), l'onglet Messages se met à jour tout seul.
+ */
+function onEdit(e) {
+  try {
+    if (e && e.range && e.range.getSheet().getName() === INSCRITS) preparerMessages(true);
+  } catch (err) { /* jamais bloquant */ }
+}
+
 /** Ajoute le menu « Masterclass » à l'ouverture du tableur. */
 function onOpen() {
   SpreadsheetApp.getUi()
@@ -326,7 +337,7 @@ function modeles_() {
 }
 
 /** Crée ou met à jour l'onglet « Messages » : une ligne par inscrite non annulée. */
-function preparerMessages() {
+function preparerMessages(silencieux) {
   const classeur = SpreadsheetApp.getActive();
   const ev = etat_();
   const modeles = modeles_();
@@ -363,6 +374,7 @@ function preparerMessages() {
     });
   });
   f.autoResizeColumns(1, entete.length);
+  if (silencieux === true) return;
   classeur.setActiveSheet(f);
   SpreadsheetApp.getUi().alert(
     lignes.length + " inscrite(s). Cliquez sur « Envoyer » dans la colonne du message voulu : " +

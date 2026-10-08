@@ -150,3 +150,9 @@ réservation : elle arrive sur son invitation (carte + QR + téléchargement PNG
   paiement ». Aucun bandeau « valide / non valide ».
 - **Le contrôle à l'entrée** : le QR code ouvre `…/billet/CODE?controle=1`, avec le
   grand bandeau vert (valide), orange (paiement non confirmé) ou rouge.
+
+## Onglet Messages à jour tout seul (depuis le 08/10/2026)
+
+L'onglet Messages se remet à jour quand on modifie l'onglet Inscrits (ex. « Payé »)
+et après chaque nouvelle réservation. Le menu Masterclass > Préparer les messages
+WhatsApp reste disponible pour forcer la mise à jour.
