@@ -288,6 +288,7 @@ function doPost(e) {
 // écrit, il reste à appuyer sur « Envoyer ». Mots remplacés dans les modèles :
 // {prenom} {titre} {date} {heure} {lieu} {lien_billet}.
 const MESSAGES = "Messages";
+const RELANCES = "Relances";
 const MODELES = "Modèles";
 const MODELES_PAR_DEFAUT = [
   ["Message", "Texte (modifiable)"],
@@ -336,7 +337,11 @@ function modeles_() {
     .filter(function (l) { return String(l[0]).trim() && String(l[1]).trim(); });
 }
 
-/** Crée ou met à jour l'onglet « Messages » : une ligne par inscrite non annulée. */
+/**
+ * Onglet « Messages » : seulement les clientes « Payé » (invitation, confirmation,
+ * rappel, merci). Onglet « Relances » : seulement les « À payer » (relance du
+ * paiement). Les « Annulé » n'apparaissent nulle part.
+ */
 function preparerMessages(silencieux) {
   const classeur = SpreadsheetApp.getActive();
   const ev = etat_();
@@ -344,21 +349,42 @@ function preparerMessages(silencieux) {
   const inscritsF = classeur.getSheetByName(INSCRITS);
   assurerCodes_(inscritsF);
   const lignes = lignesActives_(inscritsF);
+  const payees = lignes.filter(estPaye_);
+  const aPayer = lignes.filter(function (l) { return !estPaye_(l); });
+  const estRelance = function (m) { return String(m[0]).toLowerCase().indexOf("relance") >= 0; };
 
-  let f = classeur.getSheetByName(MESSAGES);
-  if (!f) f = classeur.insertSheet(MESSAGES);
+  remplirOnglet_(MESSAGES, payees, modeles.filter(function (m) { return !estRelance(m); }), true, ev);
+  remplirOnglet_(RELANCES, aPayer, modeles.filter(estRelance), false, ev);
+
+  if (silencieux === true) return;
+  classeur.setActiveSheet(classeur.getSheetByName(MESSAGES));
+  SpreadsheetApp.getUi().alert(
+    payees.length + " cliente(s) payée(s) dans l'onglet Messages, " + aPayer.length +
+    " à relancer dans l'onglet Relances. Cliquez sur « Envoyer » : WhatsApp s'ouvre avec le texte prêt."
+  );
+}
+
+function remplirOnglet_(nom, lignes, modeles, avecInvitation, ev) {
+  const classeur = SpreadsheetApp.getActive();
+  let f = classeur.getSheetByName(nom);
+  if (!f) f = classeur.insertSheet(nom);
   f.clear();
-  const entete = ["Prénom", "Nom", "Téléphone", "Statut", "Invitation"].concat(modeles.map(function (m) { return m[0]; }));
+  const entete = ["Prénom", "Nom", "Téléphone", "Statut"]
+    .concat(avecInvitation ? ["Invitation"] : [])
+    .concat(modeles.map(function (m) { return m[0]; }));
   f.getRange(1, 1, 1, entete.length).setValues([entete]).setFontWeight("bold").setBackground("#FCF9F3");
   f.setFrozenRows(1);
+  const debut = avecInvitation ? 6 : 5;
 
   lignes.forEach(function (l, i) {
     const prenom = String(l[1]).trim();
     const numero = "221" + telephoneCle_(l[3]);
     f.getRange(i + 2, 1, 1, 4).setValues([[prenom, l[2], String(l[3]), l[7]]]);
-    f.getRange(i + 2, 5).setRichTextValue(
-      SpreadsheetApp.newRichTextValue().setText("Voir").setLinkUrl(lienBillet_(l[8])).build()
-    );
+    if (avecInvitation) {
+      f.getRange(i + 2, 5).setRichTextValue(
+        SpreadsheetApp.newRichTextValue().setText("Voir").setLinkUrl(lienBillet_(l[8])).build()
+      );
+    }
     modeles.forEach(function (m, j) {
       const texte = String(m[1])
         .replace(/\{prenom\}/g, prenom)
@@ -368,16 +394,10 @@ function preparerMessages(silencieux) {
         .replace(/\{lieu\}/g, ev.lieu)
         .replace(/\{lien_billet\}/g, lienBillet_(l[8]));
       const lien = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texte);
-      f.getRange(i + 2, 6 + j).setRichTextValue(
+      f.getRange(i + 2, debut + j).setRichTextValue(
         SpreadsheetApp.newRichTextValue().setText("Envoyer").setLinkUrl(lien).build()
       );
     });
   });
   f.autoResizeColumns(1, entete.length);
-  if (silencieux === true) return;
-  classeur.setActiveSheet(f);
-  SpreadsheetApp.getUi().alert(
-    lignes.length + " inscrite(s). Cliquez sur « Envoyer » dans la colonne du message voulu : " +
-    "WhatsApp s'ouvre avec le texte prêt, il reste à appuyer sur Envoyer."
-  );
 }

@@ -156,3 +156,10 @@ réservation : elle arrive sur son invitation (carte + QR + téléchargement PNG
 L'onglet Messages se remet à jour quand on modifie l'onglet Inscrits (ex. « Payé »)
 et après chaque nouvelle réservation. Le menu Masterclass > Préparer les messages
 WhatsApp reste disponible pour forcer la mise à jour.
+
+## Messages / Relances (depuis le 08/10/2026)
+
+- Onglet **Messages** : seulement les clientes « Payé » (Invitation, Confirmation,
+  Rappel la veille, Merci après).
+- Onglet **Relances** : seulement les clientes « À payer » (Relance paiement).
+- Les deux se mettent à jour tout seuls (modification d'Inscrits, nouvelle réservation).
