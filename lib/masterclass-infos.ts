@@ -10,6 +10,11 @@ export const MASTERCLASS = {
   // Le montant est déjà rempli dans le lien (donné par Birima le 02/10/2026).
   montantWave: 20200,
   lienPaiement: "https://pay.wave.com/m/M_pOEPO7UxwCJr/c/sn/?amount=20200",
+  // Nombre maximum de places restantes AFFICHÉ (« Plus que 10 places »), pour
+  // montrer qu'il y a déjà des inscrites (demande de Birima, 13/10/2026). Le vrai
+  // nombre, tiré du Google Sheet, s'affiche dès qu'il passe en dessous, et c'est
+  // toujours lui qui décide quand c'est complet.
+  placesAfficheesMax: 10,
   programme: [
     "Comprendre l'acné et les taches",
     "Découvrir une routine adaptée",
