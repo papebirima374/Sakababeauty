@@ -13,7 +13,7 @@ import { formatPrix } from "@/lib/format";
 // Informations lues en direct dans le Google Sheet à chaque visite, dont les
 // places restantes (« Plus que 17 places ») : seules les places PAYÉES comptent,
 // et le total n'est jamais montré (choix de la directrice). L'affichage est
-// plafonné à MASTERCLASS.placesAfficheesMax (10).
+// plafonné à MASTERCLASS.placesAfficheesMax (8).
 export const dynamic = "force-dynamic";
 
 // Aperçu de lien fixe : WhatsApp et les autres n'attendent pas la réponse de Google.

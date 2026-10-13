@@ -115,9 +115,9 @@ Rien n'est envoyé automatiquement aux clientes. Le tableur prépare les message
 - Une réservation arrive avec le Statut **À payer** : elle ne retire PAS de place.
 - La directrice écrit **Payé** quand le paiement Wave est reçu : la place est
   alors retirée du compteur « Plus que X places » (le total n'est jamais affiché).
-- Le site affiche **au maximum 10** places restantes (`placesAfficheesMax` dans
-  `lib/masterclass-infos.ts`) : avec 20 places, la page dit « Plus que 10 places ».
-  Le vrai nombre apparaît dès qu'il passe sous 10 ; « complet » suit le vrai nombre.
+- Le site affiche **au maximum 8** places restantes (`placesAfficheesMax` dans
+  `lib/masterclass-infos.ts`) : avec 20 places, la page dit « Plus que 8 places ».
+  Le vrai nombre apparaît dès qu'il passe sous 8 ; « complet » suit le vrai nombre.
 - « Annulé » : la ligne est ignorée (et le numéro peut se réinscrire).
 - Mise à jour du programme : recoller le code, puis Déployer > **Gérer les
   déploiements** > crayon > Version : **Nouvelle version** > Déployer (l'adresse
