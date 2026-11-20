@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Votre avis compte · Sakaba Beauty</title>
+<meta name="description" content="Partagez une suggestion, signalez un problème ou faites une réclamation. Votre avis aide Sakaba Beauty à améliorer ses services.">
+<meta property="og:title" content="Sakaba Beauty — Votre avis compte">
+<meta property="og:description" content="Partagez une suggestion, signalez un problème ou faites une réclamation. Votre avis aide Sakaba Beauty à améliorer ses services.">
+<meta property="og:image" content="__ORIGINE__/apercu.jpg">
+<meta property="og:image:alt" content="Sakaba Beauty — Votre avis compte">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#14100B">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/logo-sakaba.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --or:#C59735; --or-clair:#E3C77E; --or-fonce:#B0852A; --noir:#14100B; --creme:#FCF9F3; --gris:#6b6258; --bordure:#ebe3d4; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--creme); color:var(--noir); font-family:Manrope, system-ui, sans-serif; font-size:16px; line-height:1.5; }
+  .titre { font-family:"Cormorant Garamond", Georgia, serif; font-weight:600; letter-spacing:.01em; }
+  header { position:relative; overflow:hidden; background:var(--noir); color:var(--creme); text-align:center; padding:40px 16px 96px; }
+  header::before { content:""; position:absolute; inset:0; opacity:.7; background:radial-gradient(60% 55% at 50% 0%, rgba(197,151,53,.35), transparent 70%); }
+  header > * { position:relative; }
+  .logo { width:96px; height:96px; margin:0 auto; border-radius:50%; padding:3px; background:linear-gradient(var(--or-clair), var(--or)); box-shadow:0 0 40px rgba(197,151,53,.35); }
+  .logo img { width:100%; height:100%; border-radius:50%; background:#fff; display:block; }
+  .marque { margin:24px 0 0; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.35em; color:var(--or-clair); }
+  h1 { font-size:48px; line-height:1.05; margin:12px 0 0; }
+  .filet { margin:20px auto 0; display:flex; align-items:center; justify-content:center; gap:12px; color:var(--or); font-size:14px; }
+  .filet span.l { height:1px; width:48px; background:linear-gradient(to right, transparent, var(--or)); }
+  .filet span.r { height:1px; width:48px; background:linear-gradient(to left, transparent, var(--or)); }
+  .intro { max-width:640px; margin:16px auto 0; color:rgba(252,249,243,.8); }
+  main { max-width:672px; margin:-56px auto 0; padding:0 16px 56px; position:relative; }
+  .bloc { border-radius:24px; background:#fff; padding:24px; box-shadow:0 18px 50px -28px rgba(20,16,11,.45); margin-bottom:20px; }
+  .q { font-weight:600; font-size:18px; display:block; }
+  .num { margin-right:8px; display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%; background:linear-gradient(var(--or-clair), var(--or)); color:#fff; font-size:14px; vertical-align:middle; }
+  .rouge { color:#b91c1c; }
+  .aide { font-size:14px; color:var(--gris); margin:4px 0 0; }
+  .choix { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .choix button { font:inherit; color:inherit; cursor:pointer; border-radius:999px; border:1px solid var(--bordure); background:rgba(252,249,243,.6); padding:10px 20px; }
+  .choix button[aria-checked="true"] { background:var(--noir); color:#fff; border-color:var(--noir); }
+  textarea, input[type=text] { font:inherit; width:100%; border-radius:16px; border:1px solid var(--bordure); background:rgba(252,249,243,.6); padding:14px 16px; outline:none; margin-top:12px; }
+  textarea:focus, input[type=text]:focus { background:#fff; border-color:var(--or); box-shadow:0 0 0 4px rgba(197,151,53,.15); }
+  .err { font-size:14px; color:#b91c1c; margin:8px 0 0; }
+  .alerte { border-radius:16px; border:2px solid #b91c1c; background:#fef2f2; padding:16px; font-size:14px; margin:0 0 20px; }
+  .envoyer { font:inherit; width:100%; border:0; cursor:pointer; border-radius:999px; background:linear-gradient(to right, var(--or), var(--or-fonce)); padding:16px; font-size:18px; font-weight:600; color:#fff; box-shadow:0 12px 30px -10px rgba(197,151,53,.8); }
+  .envoyer:disabled { opacity:.6; }
+  .petit { font-size:12px; color:var(--gris); text-align:center; }
+  .merci { text-align:center; padding:32px; }
+  .coche { margin:0 auto; width:64px; height:64px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(var(--or-clair), var(--or)); color:#fff; font-size:30px; }
+  .merci h2 { font-size:36px; margin:16px 0 0; }
+  footer { margin-top:48px; text-align:center; }
+  footer p { margin:4px 0 0; font-size:14px; }
+  footer a { color:var(--noir); font-weight:600; text-decoration:none; font-variant-numeric:tabular-nums; }
+  .cache { display:none; }
+  @media (min-width:640px) { header { padding-top:56px; } h1 { font-size:60px; } .bloc { padding:28px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><img src="/logo-sakaba.png" alt="Sakaba Beauty" width="96" height="96"></div>
+  <p class="marque">Sakaba Beauty</p>
+  <h1 class="titre">Votre avis compte</h1>
+  <div class="filet" aria-hidden="true"><span class="l"></span><span>✦</span><span class="r"></span></div>
+  <p class="intro">Partagez une suggestion, signalez un problème ou faites une réclamation. Votre avis aide Sakaba Beauty à améliorer ses services.</p>
+</header>
+<main>
+  <div id="zone">
+    <form id="formulaire" novalidate>
+      <p id="alerte" class="alerte cache">L'envoi n'a pas abouti. Vérifiez votre connexion internet puis appuyez de nouveau sur « Envoyer ».</p>
+      <div class="bloc" id="q-objet">
+        <span class="q"><span class="num">1</span>Quel est l'objet de votre message&nbsp;?&nbsp;<span class="rouge">*</span></span>
+        <div class="choix" role="radiogroup" aria-label="Objet du message" data-champ="objet">
+          <button type="button" role="radio" aria-checked="false">Suggestion</button>
+          <button type="button" role="radio" aria-checked="false">Réclamation</button>
+          <button type="button" role="radio" aria-checked="false">Problème rencontré</button>
+        </div>
+        <p class="err cache" data-err="objet">Choisissez l'objet de votre message.</p>
+      </div>
+      <div class="bloc" id="q-message">
+        <label class="q" for="message"><span class="num">2</span>Que souhaitez-vous nous dire&nbsp;?&nbsp;<span class="rouge">*</span></label>
+        <p class="aide">En quelques mots ou quelques phrases.</p>
+        <textarea id="message" rows="4"></textarea>
+        <p class="err cache" data-err="message">Écrivez votre message.</p>
+      </div>
+      <div class="bloc" id="q-recontact">
+        <span class="q"><span class="num">3</span>Souhaitez-vous que Sakaba vous recontacte&nbsp;?&nbsp;<span class="rouge">*</span></span>
+        <div class="choix" role="radiogroup" aria-label="Être recontacté(e)" data-champ="recontact">
+          <button type="button" role="radio" aria-checked="false">Oui</button>
+          <button type="button" role="radio" aria-checked="false">Non</button>
+        </div>
+        <p class="err cache" data-err="recontact">Répondez Oui ou Non.</p>
+        <div id="q-contact" class="cache" style="margin-top:20px">
+          <label for="contact" style="font-weight:600">Quelle est votre adresse e-mail ou votre numéro de téléphone ?</label>
+          <input type="text" id="contact" placeholder="exemple@gmail.com ou 77 000 00 00">
+          <p class="err cache" data-err="contact">Indiquez un e-mail ou un numéro pour qu'on puisse vous recontacter.</p>
+        </div>
+      </div>
+      <input type="checkbox" id="piege" class="cache" tabindex="-1" aria-hidden="true">
+      <button type="submit" class="envoyer" id="bouton">Envoyer</button>
+      <p class="petit">Vos réponses sont transmises uniquement à l'équipe Sakaba Beauty.</p>
+    </form>
+  </div>
+  <footer>
+    <p class="titre" style="font-size:18px;color:var(--or)">Sakaba Beauty</p>
+    <p style="color:var(--gris)">Mermoz Ancienne Piste, à côté de la <span style="white-space:nowrap">Case des Tout-Petits</span></p>
+    <p><a href="tel:+221785885454">78 588 54 54</a><span style="color:var(--gris)"> ou </span><a href="tel:+221783032424">78 303 24 24</a></p>
+  </footer>
+</main>
+<script>
+(function () {
+  var CLE = "__CLE_WEB3FORMS__";
+  var zone = document.getElementById("zone");
+  if (!CLE) {
+    zone.innerHTML = '<p class="bloc" style="text-align:center">Le formulaire n\'est pas encore activé. Merci de revenir un peu plus tard.</p>';
+    return;
+  }
+  var val = { objet: "", recontact: "" };
+  var verifier = false;
+  var message = document.getElementById("message");
+  var contact = document.getElementById("contact");
+  var blocContact = document.getElementById("q-contact");
+
+  document.querySelectorAll(".choix").forEach(function (groupe) {
+    groupe.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      groupe.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-checked", String(x === b)); });
+      val[groupe.dataset.champ] = b.textContent;
+      if (groupe.dataset.champ === "recontact") {
+        blocContact.classList.toggle("cache", b.textContent !== "Oui");
+        if (b.textContent === "Oui") verifier = false;
+      }
+      afficherErreurs();
+    });
+  });
+  message.addEventListener("input", afficherErreurs);
+  contact.addEventListener("input", afficherErreurs);
+
+  function manques() {
+    return {
+      objet: !val.objet,
+      message: !message.value.trim(),
+      recontact: !val.recontact,
+      contact: val.recontact === "Oui" && !contact.value.trim(),
+    };
+  }
+  function afficherErreurs() {
+    var m = manques();
+    Object.keys(m).forEach(function (k) {
+      document.querySelector('[data-err="' + k + '"]').classList.toggle("cache", !(verifier && m[k]));
+    });
+  }
+
+  document.getElementById("formulaire").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var m = manques();
+    var premier = Object.keys(m).filter(function (k) { return m[k]; })[0];
+    if (premier) {
+      verifier = true;
+      afficherErreurs();
+      document.getElementById("q-" + premier).scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    if (document.getElementById("piege").checked) return;
+    var bouton = document.getElementById("bouton");
+    bouton.disabled = true;
+    bouton.textContent = "Envoi en cours…";
+    document.getElementById("alerte").classList.add("cache");
+
+    var coordonnees = val.recontact === "Oui" ? contact.value.trim() : "";
+    var donnees = {
+      access_key: CLE,
+      subject: val.objet + " — avis client Sakaba Beauty",
+      from_name: "Formulaire avis Sakaba Beauty",
+      botcheck: false,
+      "Objet": val.objet,
+      "Message": message.value.trim(),
+      "Souhaite être recontacté(e)": val.recontact,
+      "E-mail ou téléphone": coordonnees || "—",
+    };
+    if (/^\S+@\S+\.\S+$/.test(coordonnees)) donnees.replyto = coordonnees;
+
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(donnees),
+    })
+      .then(function (rep) { return rep.json().catch(function () { return {}; }).then(function (j) { return rep.ok && j.success; }); })
+      .catch(function () { return false; })
+      .then(function (ok) {
+        if (ok) {
+          zone.innerHTML =
+            '<div class="bloc merci"><div class="coche">✓</div><h2 class="titre">Merci pour votre message !</h2>' +
+            '<p style="color:var(--gris);margin-top:12px">Il a bien été transmis à l\'équipe Sakaba Beauty.' +
+            (val.recontact === "Oui" ? " Nous vous recontacterons dès que possible." : "") +
+            '</p><p class="titre" style="font-size:24px;color:var(--or);margin-top:24px">À très bientôt à Mermoz ✦</p></div>';
+        } else {
+          document.getElementById("alerte").classList.remove("cache");
+          bouton.disabled = false;
+          bouton.textContent = "Envoyer";
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+  });
+})();
+</script>
+</body>
+</html>
